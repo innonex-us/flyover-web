@@ -14,6 +14,11 @@
                                  alt="{{ $post->title }}" 
                                  class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 ease-in-out">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                            @if(!$post->is_published)
+                                <div class="absolute top-4 right-4 bg-red-600/90 backdrop-blur text-white text-xs font-bold px-2 py-1 rounded shadow-sm border border-red-400">
+                                    DRAFT (Admin View)
+                                </div>
+                            @endif
                         </a>
                         <div class="flex-1 p-8 flex flex-col">
                             <div class="flex items-center text-sm text-gray-500 mb-3 space-x-4">
