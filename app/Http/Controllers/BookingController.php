@@ -8,6 +8,9 @@ use App\Models\Package;
 use App\Models\Visa;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Gate;
+
 class BookingController extends Controller
 {
     public function store(Request $request)
@@ -52,15 +55,26 @@ class BookingController extends Controller
 
         $booking = Booking::create($bookingData);
 
-        return redirect()->route('bookings.confirmation', $booking)->with('success', 'Booking request submitted successfully!');
+        return redirect()->to(URL::signedRoute('bookings.confirmation', $booking))->with('success', 'Booking request submitted successfully!');
     }
 
-    public function confirmation(Booking $booking)
+    public function confirmation(Request $request, Booking $booking)
     {
-        // Simple security check: if it's a guest booking, maybe check session or just allow for now based on ID (low risk for this confirmed non-PII invoice)
-        // Ideally we'd sign the URL, but for this quick add, ID is fine.
-        
-        $booking->load('payable');
-        return view('bookings.confirmation', compact('booking'));
+        // Hybrid Security:
+        // 1. If the URL has a valid signature, allow access (Guest/Public Access via Signed Link)
+        if ($request->hasValidSignature()) {
+            $booking->load('payable');
+            return view('bookings.confirmation', compact('booking'));
+        }
+
+        // 2. If no signature (or invalid), check if user is logged in and authorized (Persistent Access for Owners)
+        if (Auth::check()) {
+             Gate::authorize('view', $booking);
+             $booking->load('payable');
+             return view('bookings.confirmation', compact('booking'));
+        }
+
+        // 3. Otherwise, deny access (403 invalid signature)
+        abort(403, 'Invalid or expired confirmation link.');
     }
 }
