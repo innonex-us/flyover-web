@@ -29,9 +29,13 @@ class BlogController extends Controller
 
         $post = $query->firstOrFail();
         
-        $recentPosts = Post::published()
-            ->where('id', '!=', $post->id)
-            ->latest('published_at')
+        $recentQuery = Post::where('id', '!=', $post->id);
+
+        if (!auth()->check() || auth()->user()->role !== 'admin') {
+            $recentQuery->published();
+        }
+
+        $recentPosts = $recentQuery->latest('published_at')
             ->take(3)
             ->get();
 
