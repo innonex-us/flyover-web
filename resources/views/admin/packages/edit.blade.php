@@ -36,6 +36,11 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
                         <input type="text" name="location" value="{{ old('location', $package->location) }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Start Date</label>
+                        <input type="date" name="start_date" value="{{ old('start_date', optional($package->start_date)->format('Y-m-d')) }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                    </div>
                 </div>
             </div>
 
@@ -55,6 +60,26 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements</label>
                         <textarea name="requirements" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements', $package->requirements) }}</textarea>
+                    </div>
+
+                    <!-- Itinerary Builder -->
+                    <div x-data="{ days: {{ json_encode($package->itinerary ?? [['day' => 1, 'activity' => '']]) }} }">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Itinerary</label>
+                        <div class="space-y-4">
+                            <template x-for="(day, index) in days" :key="index">
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative">
+                                    <div class="flex justify-between mb-2">
+                                        <h4 class="font-bold text-gray-700" x-text="'Day ' + (index + 1)"></h4>
+                                        <button type="button" @click="days.splice(index, 1)" class="text-red-500 hover:text-red-700 text-sm">Remove</button>
+                                    </div>
+                                    <input type="hidden" :name="'itinerary[' + index + '][day]'" :value="index + 1">
+                                    <input type="text" :name="'itinerary[' + index + '][activity]'" x-model="day.activity" placeholder="Activity description..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm">
+                                </div>
+                            </template>
+                        </div>
+                        <button type="button" @click="days.push({ day: days.length + 1, activity: '' })" class="mt-2 text-sm text-blue-600 font-bold hover:underline">
+                            + Add Day
+                        </button>
                     </div>
                 </div>
             </div>
@@ -95,10 +120,23 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Thumbnail Image</label>
                         @if($package->thumbnail)
-                            <img src="{{ Storage::url($package->thumbnail) }}" alt="Current Thumbnail" class="h-32 w-48 object-cover rounded-lg mb-2">
+                            <img src="{{ Storage::url($package->thumbnail) }}" alt="Current Thumbnail" class="h-32 w-48 object-cover rounded-lg mb-2 shadow-sm">
                         @endif
                         <input type="file" name="thumbnail" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
                         <p class="text-xs text-gray-400 mt-1">Leave blank to keep current thumbnail</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Gallery Images</label>
+                        @if($package->images && count($package->images) > 0)
+                            <div class="flex gap-2 mb-3 overflow-x-auto py-2">
+                                @foreach($package->images as $img)
+                                    <img src="{{ Storage::url($img) }}" class="h-20 w-20 object-cover rounded-lg shadow-sm border border-gray-200">
+                                @endforeach
+                            </div>
+                        @endif
+                        <input type="file" name="images[]" multiple accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p class="text-xs text-gray-400 mt-1">Upload multiple images to append to the gallery.</p>
                     </div>
                 </div>
             </div>
