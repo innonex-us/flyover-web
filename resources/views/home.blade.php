@@ -3,11 +3,7 @@
     <div 
         x-data="{
             activeSlide: 0,
-            slides: [
-                '{{ asset('banner/hero-banner-1.png') }}',
-                '{{ asset('banner/helo-banner-2.png') }}',
-                '{{ asset('banner/hero-banner-3.png') }}'
-            ],
+            slides: [0, 1, 2],
             init() {
                 setInterval(() => {
                     this.activeSlide = (this.activeSlide + 1) % this.slides.length;
@@ -16,25 +12,23 @@
         }"
         class="relative bg-white overflow-hidden h-[600px] flex items-center justify-center"
     >
-        <!-- Background Images (Slider) -->
-        <template x-for="(slide, index) in slides" :key="index">
-            <div 
-                class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
-                :style="`background-image: url('${slide}')`"
-                :class="activeSlide === index ? 'opacity-100' : 'opacity-0'"
-                /* Preload first image logic handled by browser naturally if defined first, 
-                   but strictly ensuring LCP for first image is best done by rendering it statically first 
-                   or ensuring it's the first in DOM. Alpine x-for handles DOM insertion.
-                   To ensure LCP, we can render the first image normally and overlay others, 
-                   but purely Alpine approach is cleaner for code. 
-                   For pure LCP optimization, putting the first image static is better. */
-            ></div>
-        </template>
+        <!-- Background Images (Slider) - Hardcoded for Instant Loading -->
+        <div 
+            class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
+            style="background-image: url('{{ asset('banner/hero-banner-1.png') }}')"
+            :class="activeSlide === 0 ? 'opacity-100' : 'opacity-0'"
+        ></div>
         
-        <!-- Static Fallback / LCP Optimizer for 1st Image (Hidden if JS runs, or visible initially) -->
-        <div class="absolute inset-0 bg-cover bg-center opacity-100 x-cloak-hidden" 
-             style="background-image: url('{{ asset('banner/hero-banner-1.png') }}'); z-index: -1;"
-             x-show="false"
+        <div 
+            class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
+            style="background-image: url('{{ asset('banner/helo-banner-2.png') }}')"
+            :class="activeSlide === 1 ? 'opacity-100' : 'opacity-0'"
+        ></div>
+
+        <div 
+            class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
+            style="background-image: url('{{ asset('banner/hero-banner-3.png') }}')"
+            :class="activeSlide === 2 ? 'opacity-100' : 'opacity-0'"
         ></div>
         
         <div class="absolute inset-0 bg-black/40"></div> <!-- Overlay for contrast -->
