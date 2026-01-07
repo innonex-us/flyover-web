@@ -27,7 +27,7 @@
                 <!-- Left Column: Details -->
                 <div class="lg:col-span-2">
                     <div class="flex items-start mb-8">
-                        <img src="{{ $visa->thumbnail ?? 'https://via.placeholder.com/100x70?text=Flag' }}" alt="{{ $visa->country }}" class="w-24 h-auto shadow-md rounded-lg mr-6 object-cover border border-gray-100">
+                        <img src="{{ Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : Storage::url($visa->thumbnail) }}" alt="{{ $visa->country }}" class="w-24 h-auto shadow-md rounded-lg mr-6 object-cover border border-gray-100">
                         <div>
                             <h1 class="text-3xl font-extrabold text-gray-900 mb-2">{{ $visa->country }} Visa</h1>
                             <div class="flex flex-wrap gap-2">

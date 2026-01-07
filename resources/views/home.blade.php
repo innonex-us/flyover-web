@@ -186,37 +186,104 @@
         </div>
     </div>
 
-    <!-- Why Choose Us -->
+    <!-- Visa Services Section -->
     <div class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose FlyoverBD?</h2>
-                <p class="text-gray-600">We provide top-notch travel services to ensure your journey is memorable and stress-free.</p>
-            </div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Visa Processing Services</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center p-6 bg-white rounded-lg shadow-sm">
-                    <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Global Coverage</h3>
-                    <p class="text-gray-500">We cover destinations all around the globe with specialized local guides.</p>
+            @if(isset($visas) && $visas->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    @foreach($visas as $visa)
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition flex flex-col h-full border border-gray-100">
+                             <a href="{{ route('visas.show', $visa->slug) }}" class="block relative h-48 overflow-hidden group">
+                                <div 
+                                    class="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
+                                    style="background-image: url('{{ Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : Storage::url($visa->thumbnail) }}');"
+                                ></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                <div class="absolute bottom-4 left-4 right-4">
+                                     <h3 class="text-xl font-bold text-white shadow-sm">{{ $visa->country }}</h3>
+                                </div>
+                            </a>
+                            <div class="p-6 flex-grow flex flex-col">
+                                <div class="flex items-center space-x-2 mb-3">
+                                    <span class="px-2 py-1 text-xs font-semibold rounded bg-blue-100 text-blue-800">{{ $visa->visa_type }}</span>
+                                    <span class="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">{{ $visa->processing_time }}</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
+                                    <div>
+                                        <p class="text-xs text-gray-500 uppercase">Starting from</p>
+                                        <span class="text-xl font-bold text-red-600">৳{{ number_format($visa->price) }}</span>
+                                    </div>
+                                    <a href="{{ route('visas.show', $visa->slug) }}" class="text-red-600 font-semibold hover:text-red-700 text-sm">Details &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-                <div class="text-center p-6 bg-white rounded-lg shadow-sm">
-                    <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Best Price Guarantee</h3>
-                    <p class="text-gray-500">Competitive pricing without compromising on quality and comfort.</p>
+                <div class="mt-12 text-center">
+                    <a href="{{ route('visas.index') }}" class="inline-block border-2 border-red-600 text-red-600 font-bold py-3 px-8 rounded-md hover:bg-red-600 hover:text-white transition">
+                        View All Visa Services
+                    </a>
                 </div>
-                <div class="text-center p-6 bg-white rounded-lg shadow-sm">
-                    <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">24/7 Support</h3>
-                    <p class="text-gray-500">Our dedicated support team is available round the clock to assist you.</p>
+            @else
+                <div class="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
+                    <p class="text-gray-500">Visa services coming soon.</p>
                 </div>
-            </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Latest Blog Posts -->
+    <div class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Latest Travel Insights</h2>
+
+            @if(isset($recentPosts) && $recentPosts->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    @foreach($recentPosts as $post)
+                        <article class="flex flex-col bg-white rounded-2xl shadow-lg hover:shadow-xl transition overflow-hidden border border-gray-100 group">
+                            <a href="{{ route('blog.show', $post->slug) }}" class="overflow-hidden h-56 relative">
+                                <img src="{{ $post->image ? Storage::url($post->image) : 'https://via.placeholder.com/800x600?text=FlyoverBD+Blog' }}" 
+                                     alt="{{ $post->title }}" 
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 ease-in-out">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                            </a>
+                            <div class="flex-1 p-6 flex flex-col">
+                                <div class="flex items-center text-sm text-gray-500 mb-3 space-x-4">
+                                    <span class="flex items-center">
+                                        <svg class="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        {{ $post->published_at ? $post->published_at->format('M d, Y') : 'Draft' }}
+                                    </span>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-red-600 transition">
+                                    <a href="{{ route('blog.show', $post->slug) }}">
+                                        {{ $post->title }}
+                                    </a>
+                                </h3>
+                                <p class="text-gray-600 mb-4 flex-1 line-clamp-3">
+                                    {{ $post->seo_description ?? Str::limit(strip_tags($post->content), 100) }}
+                                </p>
+                                <div class="mt-auto">
+                                    <a href="{{ route('blog.show', $post->slug) }}" class="inline-flex items-center text-red-600 font-semibold hover:text-red-700">
+                                        Read Article 
+                                        <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+                <div class="mt-12 text-center">
+                    <a href="{{ route('blog.index') }}" class="inline-block border-2 border-red-600 text-red-600 font-bold py-3 px-8 rounded-md hover:bg-red-600 hover:text-white transition">
+                        Read More Articles
+                    </a>
+                </div>
+            @else
+                <div class="text-center py-12 bg-gray-50 rounded-lg">
+                    <p class="text-gray-500">No blog posts available at the moment.</p>
+                </div>
+            @endif
         </div>
     </div>
 </x-app-layout>

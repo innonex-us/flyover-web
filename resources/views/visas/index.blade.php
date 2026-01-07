@@ -16,7 +16,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @forelse($visas as $visa)
                      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                        <img src="{{ $visa->thumbnail ?? 'https://via.placeholder.com/640x360?text=Visa+Service' }}" alt="{{ $visa->country }}" class="w-full h-40 object-cover">
+                        <img src="{{ Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : Storage::url($visa->thumbnail) }}" alt="{{ $visa->country }}" class="w-full h-40 object-cover">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $visa->country }}</h3>
                             <p class="text-xs text-red-600 uppercase font-semibold mb-2">{{ $visa->type }} Visa</p>
