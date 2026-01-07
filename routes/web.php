@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('cp')->name('admin.')->
 
     Route::resource('packages', \App\Http\Controllers\Admin\PackageController::class);
     Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);
+    Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'show', 'update', 'destroy']);
 });
 
 require __DIR__.'/auth.php';
