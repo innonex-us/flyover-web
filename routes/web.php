@@ -15,6 +15,9 @@ Route::post('/tours/{package}/customize', [PackageController::class, 'customize'
 Route::get('/visas', [VisaController::class, 'index'])->name('visas.index');
 Route::get('/visas/{slug}', [VisaController::class, 'show'])->name('visas.show');
 
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+
 Route::post('/bookings', [App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store')->middleware('throttle:booking_submission');
 Route::get('/bookings/{booking}/confirmation', [App\Http\Controllers\BookingController::class, 'confirmation'])->name('bookings.confirmation');
 
@@ -44,6 +47,7 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'show', 'update', 'destroy']);
     Route::resource('customizations', \App\Http\Controllers\Admin\CustomizationController::class)->only(['index', 'update']);
+    Route::resource('blog', \App\Http\Controllers\Admin\BlogController::class);
 });
 
 require __DIR__.'/auth.php';
