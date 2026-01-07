@@ -9,10 +9,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Fetch featured packages (for now just latest 6)
+        // Fetch featured packages (4x6 grid = 24 items)
         $packages = Package::where('is_active', true)
                            ->latest()
-                           ->take(6)
+                           ->take(24)
                            ->get();
 
         return view('home', compact('packages'));

@@ -118,7 +118,7 @@
             <h2 class="text-3xl font-bold text-gray-900 mb-8">Featured Tour Packages</h2>
             
             @if($packages->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     @foreach($packages as $package)
                         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
                             <img src="{{ $package->thumbnail ?? 'https://via.placeholder.com/640x360?text=Tour+Package' }}" alt="{{ $package->title }}" class="w-full h-48 object-cover">
