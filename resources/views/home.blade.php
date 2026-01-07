@@ -121,7 +121,44 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     @foreach($packages as $package)
                         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                            <img src="{{ $package->thumbnail ?? 'https://via.placeholder.com/640x360?text=Tour+Package' }}" alt="{{ $package->title }}" class="w-full h-48 object-cover">
+                            <!-- Image Slider -->
+                            <div class="relative h-48 overflow-hidden group"
+                                x-data="{
+                                    activeSlide: 0,
+                                    slides: [
+                                        '{{ $package->thumbnail ?? 'https://via.placeholder.com/640x360?text=Tour+Package' }}',
+                                        @if(!empty($package->images) && is_array($package->images))
+                                            @foreach($package->images as $img)
+                                                '{{ $img }}',
+                                            @endforeach
+                                        @endif
+                                    ],
+                                    init() {
+                                        if (this.slides.length > 1) {
+                                            setInterval(() => {
+                                                this.activeSlide = (this.activeSlide + 1) % this.slides.length;
+                                            }, 3000 + (Math.random() * 2000)); // Random offset to prevent synchronized sliding
+                                        }
+                                    }
+                                }"
+                            >
+                                <a href="{{ route('packages.show', $package->slug) }}" class="block w-full h-full">
+                                    <template x-for="(slide, index) in slides" :key="index">
+                                        <div 
+                                            class="absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-in-out"
+                                            :style="`background-image: url('${slide}')`"
+                                            :class="activeSlide === index ? 'opacity-100' : 'opacity-0'"
+                                        ></div>
+                                    </template>
+                                    
+                                    <!-- Static First Image (LCP) -->
+                                    <div 
+                                        class="absolute inset-0 bg-cover bg-center opacity-100 x-cloak-hidden"
+                                        style="background-image: url('{{ $package->thumbnail ?? 'https://via.placeholder.com/640x360?text=Tour+Package' }}'); z-index: 10;"
+                                        x-show="false"
+                                    ></div>
+                                </a>
+                            </div>
                             <div class="p-6">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $package->title }}</h3>
