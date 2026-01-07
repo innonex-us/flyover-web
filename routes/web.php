@@ -16,6 +16,7 @@ Route::get('/visas', [VisaController::class, 'index'])->name('visas.index');
 Route::get('/visas/{slug}', [VisaController::class, 'show'])->name('visas.show');
 
 Route::post('/bookings', [App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
+Route::get('/bookings/{booking}/confirmation', [App\Http\Controllers\BookingController::class, 'confirmation'])->name('bookings.confirmation');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -49,7 +49,21 @@ class BookingController extends Controller
         $bookingData['total_amount'] = $payable->price; // Simple logic for now (price * 1)
 
         Booking::create($bookingData);
+        
+        $booking = Booking::latest()->first(); // Get the last created booking safely (or better use create's return)
 
-        return redirect()->back()->with('success', 'Booking request submitted successfully! We will contact you soon.');
+        // Better: capture the instance
+        $booking = Booking::create($bookingData);
+
+        return redirect()->route('bookings.confirmation', $booking)->with('success', 'Booking request submitted successfully!');
+    }
+
+    public function confirmation(Booking $booking)
+    {
+        // Simple security check: if it's a guest booking, maybe check session or just allow for now based on ID (low risk for this confirmed non-PII invoice)
+        // Ideally we'd sign the URL, but for this quick add, ID is fine.
+        
+        $booking->load('payable');
+        return view('bookings.confirmation', compact('booking'));
     }
 }

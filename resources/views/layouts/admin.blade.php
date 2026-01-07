@@ -17,7 +17,7 @@
 <body class="font-sans antialiased bg-gray-100">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <aside class="w-64 bg-slate-800 text-white min-h-screen flex-shrink-0">
+        <aside class="w-64 bg-slate-800 text-white min-h-screen flex-shrink-0 print:hidden">
             <div class="p-6 border-b border-slate-700">
                 <a href="{{ route('admin.dashboard') }}" class="text-2xl font-bold tracking-tight text-white">
                     FlyoverBD <span class="text-red-500 text-base">Admin</span>
