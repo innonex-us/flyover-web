@@ -34,7 +34,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
-                                    <img class="h-10 w-10 rounded-lg object-cover" src="{{ Storage::url($package->thumbnail) }}" alt="">
+                                    <img class="h-10 w-10 rounded-lg object-cover" src="{{ Str::startsWith($package->thumbnail, 'http') ? $package->thumbnail : Storage::url($package->thumbnail) }}" alt="">
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">{{ $package->title }}</div>

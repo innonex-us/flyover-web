@@ -46,6 +46,7 @@ class VisaController extends Controller
             'important_notes' => 'nullable|string',
             'terms' => 'nullable|string',
             'required_documents' => 'nullable|array',
+            'is_active' => 'boolean',
         ]);
 
         $validated['slug'] = Str::slug($validated['country'] . '-' . $validated['type']);
@@ -56,6 +57,8 @@ class VisaController extends Controller
 
         // Filter empty documents
         $validated['required_documents'] = array_filter($validated['required_documents'] ?? [], fn($value) => !is_null($value) && $value !== '');
+
+        $validated['is_active'] = $request->has('is_active');
 
         Visa::create($validated);
 
@@ -89,6 +92,7 @@ class VisaController extends Controller
             'important_notes' => 'nullable|string',
             'terms' => 'nullable|string',
             'required_documents' => 'nullable|array',
+            'is_active' => 'boolean',
         ]);
 
         $validated['slug'] = Str::slug($validated['country'] . '-' . $validated['type']);
@@ -102,6 +106,8 @@ class VisaController extends Controller
 
         // Filter empty documents
         $validated['required_documents'] = array_filter($validated['required_documents'] ?? [], fn($value) => !is_null($value) && $value !== '');
+
+        $validated['is_active'] = $request->has('is_active');
 
         $visa->update($validated);
 

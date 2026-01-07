@@ -18,6 +18,8 @@
                 <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-6">Basic Information</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
+
+
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Country</label>
                         <input type="text" name="country" value="{{ old('country', $visa->country) }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
                     </div>
@@ -118,7 +120,16 @@
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-gray-100 flex justify-end">
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                <div class="flex items-center">
+                    <label class="flex items-center space-x-3 cursor-pointer bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', $visa->is_active) ? 'checked' : '' }} class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50 h-5 w-5">
+                        <div>
+                            <span class="text-sm font-bold text-gray-900 block">Active Status</span>
+                            <span class="text-xs text-gray-500 block">Show on website</span>
+                        </div>
+                    </label>
+                </div>
                 <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
                     Update Visa Service
                 </button>

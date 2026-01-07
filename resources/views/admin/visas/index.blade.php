@@ -23,6 +23,7 @@
                     <tr>
                         <th class="px-6 py-4 text-left">Country / Type</th>
                         <th class="px-6 py-4 text-left">Price</th>
+                        <th class="px-6 py-4 text-center">Status</th>
                         <th class="px-6 py-4 text-left">Processing Time</th>
                         <th class="px-6 py-4 text-center">Actions</th>
                     </tr>
@@ -33,7 +34,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
-                                    <img class="h-10 w-10 rounded-lg object-cover" src="{{ Storage::url($visa->thumbnail) }}" alt="">
+                                    <img class="h-10 w-10 rounded-lg object-cover" src="{{ Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : Storage::url($visa->thumbnail) }}" alt="">
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">{{ $visa->country }}</div>
@@ -43,6 +44,17 @@
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">
                             ৳{{ number_format($visa->price) }}
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            @if($visa->is_active)
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Active
+                                </span>
+                            @else
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    Inactive
+                                </span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">
                             {{ $visa->processing_time }}
@@ -64,7 +76,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-500">
                             No visas found. Start by adding one!
                         </td>
                     </tr>

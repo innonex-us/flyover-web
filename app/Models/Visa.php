@@ -23,7 +23,9 @@ class Visa extends Model
         'important_notes',
         'required_documents',
         'terms',
+        'terms',
         'fees',
+        'is_active',
     ];
 
     protected $casts = [
