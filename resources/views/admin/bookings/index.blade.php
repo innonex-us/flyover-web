@@ -1,9 +1,40 @@
 <x-admin-layout>
-    <div class="mb-8 flex justify-between items-center">
+    <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h2 class="text-3xl font-bold text-gray-800">Bookings</h2>
             <p class="text-sm text-gray-500 mt-1">Track and manage all bookings</p>
         </div>
+        
+        <form action="{{ route('admin.bookings.index') }}" method="GET" class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+            <div class="relative">
+                 <select name="status" class="w-full md:w-40 pl-3 pr-10 py-2 text-sm border-gray-300 focus:border-red-500 focus:ring-red-200 rounded-lg shadow-sm" onchange="this.form.submit()">
+                    <option value="">All Statuses</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                </select>
+            </div>
+            
+            <div class="relative">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search ID, Name..." class="w-full md:w-64 pl-10 pr-4 py-2 text-sm border-gray-300 focus:border-red-500 focus:ring-red-200 rounded-lg shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">
+                Filter
+            </button>
+            
+            @if(request()->hasAny(['search', 'status']))
+                <a href="{{ route('admin.bookings.index') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition">
+                    Clear
+                </a>
+            @endif
+        </form>
     </div>
 
     @if(session('success'))

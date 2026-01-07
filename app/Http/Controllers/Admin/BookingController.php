@@ -11,9 +11,28 @@ class BookingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bookings = Booking::with(['user', 'payable'])->latest()->paginate(10);
+        $query = Booking::with(['user', 'payable'])->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%$search%")
+                    ->orWhereHas('user', function ($q) use ($search) {
+                        $q->where('name', 'like', "%$search%")
+                            ->orWhere('email', 'like', "%$search%");
+                    })
+                    ->orWhere('guest_name', 'like', "%$search%")
+                    ->orWhere('guest_email', 'like', "%$search%");
+            });
+        }
+
+        $bookings = $query->paginate(10)->withQueryString();
         return view('admin.bookings.index', compact('bookings'));
     }
 
