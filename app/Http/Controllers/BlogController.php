@@ -15,7 +15,13 @@ class BlogController extends Controller
 
     public function show($slug)
     {
-        $post = Post::published()->where('slug', $slug)->firstOrFail();
+        $query = Post::where('slug', $slug);
+
+        if (!auth()->check() || auth()->user()->role !== 'admin') {
+            $query->published();
+        }
+
+        $post = $query->firstOrFail();
         return view('blog.show', compact('post'));
     }
 }

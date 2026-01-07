@@ -18,7 +18,7 @@
                 <!-- Content -->
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Content</label>
-                    <textarea name="content" rows="15" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 p-4" placeholder="Write your article content here...">{{ old('content') }}</textarea>
+                    <textarea name="content" rows="15" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 p-4" placeholder="Write your article content here...">{{ old('content') }}</textarea>
                     @error('content') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
