@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -21,8 +22,8 @@
                     <div class="flex">
                         <!-- Logo -->
                         <div class="shrink-0 flex items-center">
-                            <a href="{{ route('home') }}" class="font-bold text-2xl text-red-600">
-                                FlyoverBD
+                            <a href="{{ route('home') }}">
+                                <img src="{{ asset('logo.png') }}" alt="FlyoverBD" class="h-10 w-auto">
                             </a>
                         </div>
 
