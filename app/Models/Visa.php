@@ -18,5 +18,16 @@ class Visa extends Model
         'requirements',
         'description',
         'thumbnail',
+        'entry_type',
+        'validity_info',
+        'important_notes',
+        'required_documents',
+        'terms',
+        'fees',
+    ];
+
+    protected $casts = [
+        'required_documents' => 'array',
+        'price' => 'decimal:2',
     ];
 }

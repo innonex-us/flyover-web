@@ -96,15 +96,76 @@ Refund
 Refund will not be provided if the tour is cancelled less than Seven (7) days before the beginning of the experience/tour.",
         ]);
 
-        // Seed Visas
+        // Seed Visas with Rich Data
+        $docsJobHolders = [
+            "A passport valid for at least seven (7) months, along with the old passport (if applicable).",
+            "Two recent photographs taken within the last 3 months (white background, photo size 35 mm x 45 mm, matt paper).",
+            "Bank statements for the last six months with a bank solvency certificate (minimum balance BDT 80,000 for each applicant and BDT 200,000 for Family applications).",
+            "Visiting card.",
+            "No Objection Certificate (NOC) from the employer must mention the travel dates, which should fall within a 30-day period.",
+            "Copy of office/organization ID card.",
+            "Occupational verification document (BMDC certificate for doctors, BAR Council & BAR Association Certificate for advocates)."
+        ];
+        
+        $docsBusinessOwner = [
+             "A passport valid for at least seven (7) months, along with the old passport (if applicable).",
+             "Two recent photographs taken within the last 3 months (white background, photo size 35 mm x 45 mm, matt paper).",
+             "Bank statements for the last six months with a bank solvency certificate (minimum balance BDT 80,000 for each applicant and BDT 200,000 for Family applications).",
+             "Copy of public notarized & updated trade license (If in Bangla, notarize the English translation and submit both versions).",
+             "Memorandum for Limited Company.",
+             "Blank page of the business pad.",
+             "Visiting card."
+        ];
+
+        
         Visa::create([
             'country' => 'Thailand',
             'slug' => 'thailand-tourist-visa',
             'type' => 'Tourist',
-            'price' => 5500,
-            'processing_time' => '5-7 Working Days',
+            'entry_type' => 'Tourist Visa(E-Visa)',
+            'price' => 6500,
+            'fees' => 'BDT 6,500 (Without Airport Transfer)',
+            'processing_time' => '07 to 10 working days',
+            'validity_info' => '07 to 10 working days',
+            
             'requirements' => "1. Original Passport\n2. 2 Photos (3.5x4.5cm, White Background)\n3. Bank Statement (Last 6 months)\n4. Visiting Card",
+            
             'description' => 'Get your Thailand tourist visa processed hassle-free with us. We ensure accurate documentation.',
+            
+            'important_notes' => "It is advisable to refrain from booking flight tickets until the visa confirmation letter has been received.
+GoZayaan cannot guarantee visa approval, as it depends solely on the embassy.
+The applicant is advised to provide accurate documents and share only true information. Do not hide any information.
+Visa processing times may vary and are determined by the embassy. GoZayaan has no authority over the visa application process.
+It is your responsibility to follow visa terms and depart on time. Any overstay penalties are solely the applicant’s responsibility.
+The applicant's passport must have at least seven (7) months' validity before applying for a visa. The applicant is responsible for ensuring this.
+GoZayaan cannot be held accountable for any issues arising from visa refusal or rejection.
+Emergency modifications or cancellations may incur extra charges.
+GoZayaan is not liable for losses or damages due to visa denials, travel plan changes, or unforeseen circumstances.
+For individual submissions, GoZayaan only handles the paperwork. Applicants must attend embassy interviews independently if required.
+If traveling with children, ensure they have the necessary travel documents, including passports and visas, as required by the destination country.
+If the applicant's visa is denied, GoZayaan may assist with understanding the reasons and appeal options.
+GoZayaan reserves the right to modify these terms and conditions without prior notice.
+Visa fees and charges are non-refundable.",
+
+            'required_documents' => [
+                'Job Holders' => $docsJobHolders,
+                'Business Owners' => $docsBusinessOwner,
+                'Students' => [
+                     "A passport valid for at least seven (7) months, along with the old passport (if applicable).",
+                     "Two recent photographs taken within the last 3 months (white background, photo size 35 mm x 45 mm, matt paper).",
+                     "Bank statements for the last six months with a bank solvency certificate (minimum balance BDT 80,000 for each applicant and BDT 200,000 for Family applications).",
+                     "Copy of student ID card (If in Bangla, notarize the English translation and submit both versions).",
+                     "Birth certificate (for children and infants).",
+                     "Parents / Guardian’s bank statement with solvency certificate and supporting documents"
+                ],
+                'Other Relations' => [
+                    "A passport valid for at least seven (7) months, along with the old passport (if applicable).",
+                    "Two recent photographs taken within the last 3 months (white background, photo size 35 mm x 45 mm, matt paper).",
+                    "Bank statements for the last six months with a bank solvency certificate.",
+                    "Marriage certificate or Nikahnama copy if not mention spouse name in passport."
+                ]
+            ],
+            
              'thumbnail' => 'https://plus.unsplash.com/premium_photo-1674391673810-749e7bdfa5a5?q=80&w=2614&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         ]);
 
@@ -112,11 +173,16 @@ Refund will not be provided if the tour is cancelled less than Seven (7) days be
             'country' => 'Malaysia',
             'slug' => 'malaysia-e-visa',
             'type' => 'E-Visa',
-            'price' => 4500,
+            'entry_type' => 'Tourist E-Visa',
+             'price' => 4500,
+             'fees' => 'BDT 4,500',
             'processing_time' => '2-3 Working Days',
+             'validity_info' => '2-3 Working Days',
             'requirements' => "1. Passport Scan Copy\n2. Photo (White Background)\n3. Return Ticket\n4. Hotel Booking",
             'description' => 'Quick and easy Malaysia E-Visa processing. No need to submit physical passport.',
             'thumbnail' => 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+             'important_notes' => 'Visa fees are non-refundable.',
+             'required_documents' => ['General' => ['Passport copy', 'Photo', 'Ticket']],
         ]);
 
          Visa::create([
