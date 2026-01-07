@@ -32,7 +32,6 @@
                             </h3>
                             <p class="text-gray-600 ml-12">
                                 +880 1335 111370<br>
-                                +880 9678 332211
                             </p>
                         </div>
 
@@ -58,28 +57,44 @@
 
                 <!-- Contact Form -->
                 <div class="bg-white rounded-2xl shadow-lg p-8 lg:p-12">
+                     @if(session('success'))
+                        <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                            <span class="block sm:inline">{{ session('success') }}</span>
+                        </div>
+                     @endif
+
+                     @if ($errors->any())
+                        <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <ul class="list-disc pl-5">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                     @endif
+
                      <h3 class="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
-                     <form action="#" method="POST" class="space-y-6">
+                     <form action="{{ route('contact.store') }}" method="POST" class="space-y-6">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
-                                <input type="text" name="first_name" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required>
+                                <input type="text" name="first_name" value="{{ old('first_name') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
-                                <input type="text" name="last_name" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required>
+                                <input type="text" name="last_name" value="{{ old('last_name') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-                            <input type="email" name="email" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required>
+                            <input type="email" name="email" value="{{ old('email') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required>
                         </div>
 
                          <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
-                            <input type="text" name="phone" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required>
+                            <input type="text" name="phone" value="{{ old('phone') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required>
                         </div>
 
                         <div>
@@ -94,10 +109,10 @@
 
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Message</label>
-                            <textarea name="message" rows="4" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required></textarea>
+                            <textarea name="message" rows="4" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" required>{{ old('message') }}</textarea>
                         </div>
 
-                        <button type="button" class="w-full bg-red-600 text-white font-bold py-4 rounded-xl hover:bg-red-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-xl hover:bg-red-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                             Send Message
                         </button>
                      </form>

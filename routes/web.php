@@ -23,7 +23,10 @@ Route::get('/bookings/{booking}/confirmation', [App\Http\Controllers\BookingCont
 
 // Static Pages
 Route::view('/about', 'pages.about')->name('about');
-Route::view('/contact', 'pages.contact')->name('contact');
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
+Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
 Route::view('/privacy', 'pages.privacy')->name('privacy');
 
 Route::get('/dashboard', function () {
@@ -52,6 +55,7 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'show', 'update', 'destroy']);
     Route::resource('customizations', \App\Http\Controllers\Admin\CustomizationController::class)->only(['index', 'update']);
+    Route::resource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy']);
     Route::resource('blog', \App\Http\Controllers\Admin\BlogController::class);
 });
 
