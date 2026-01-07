@@ -37,7 +37,7 @@
             <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-md">
                 MAKE YOUR LIFE BORDERLESS
             </h1>
-            <p class="text-xl text-red-100 mb-10 max-w-2xl drop-shadow-sm">
+            <p class="text-xl text-white mb-10 mx-auto drop-shadow-sm">
                 Explore the world with us. Book tour packages and get your visa processed hassle-free.
             </p>
             
@@ -45,7 +45,7 @@
             <div class="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8" x-data="{ activeTab: 'tours' }">
                 
                 <!-- Tabs -->
-                <div class="flex space-x-8 border-b border-gray-200 pb-4 mb-6 justify-center md:justify-start">
+                <div class="flex space-x-8 border-b border-gray-200 pb-4 mb-6 justify-center">
                     <button 
                         @click="activeTab = 'tours'" 
                         :class="activeTab === 'tours' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-red-600'"
