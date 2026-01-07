@@ -57,9 +57,29 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Policy</label>
                         <textarea name="policy" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('policy') }}</textarea>
                     </div>
-                      <div>
+                    <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements</label>
                         <textarea name="requirements" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements') }}</textarea>
+                    </div>
+
+                    <!-- Itinerary Builder -->
+                    <div x-data="{ days: [{ day: 1, activity: '' }] }">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Itinerary</label>
+                        <div class="space-y-4">
+                            <template x-for="(day, index) in days" :key="index">
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative">
+                                    <div class="flex justify-between mb-2">
+                                        <h4 class="font-bold text-gray-700" x-text="'Day ' + (index + 1)"></h4>
+                                        <button type="button" @click="days.splice(index, 1)" x-show="days.length > 1" class="text-red-500 hover:text-red-700 text-sm">Remove</button>
+                                    </div>
+                                    <input type="hidden" :name="'itinerary[' + index + '][day]'" :value="index + 1">
+                                    <input type="text" :name="'itinerary[' + index + '][activity]'" x-model="day.activity" placeholder="Activity description..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm" required>
+                                </div>
+                            </template>
+                        </div>
+                        <button type="button" @click="days.push({ day: days.length + 1, activity: '' })" class="mt-2 text-sm text-blue-600 font-bold hover:underline">
+                            + Add Day
+                        </button>
                     </div>
                 </div>
             </div>

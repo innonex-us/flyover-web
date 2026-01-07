@@ -59,5 +59,46 @@
             {{ $slot }}
         </main>
     </div>
+
+    <!-- Toast Notifications -->
+    <div x-data="{ 
+            show: false, 
+            message: '', 
+            type: 'success',
+            init() {
+                @if(session('success'))
+                    this.notify('{{ session('success') }}', 'success');
+                @endif
+                @if(session('error'))
+                    this.notify('{{ session('error') }}', 'error');
+                @endif
+                @if($errors->any())
+                    this.notify('Check the form for errors.', 'error');
+                @endif
+            },
+            notify(message, type) {
+                this.message = message;
+                this.type = type;
+                this.show = true;
+                setTimeout(() => this.show = false, 3000);
+            }
+        }"
+        x-show="show" 
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform translate-y-2"
+        x-transition:enter-end="opacity-100 transform translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 transform translate-y-0"
+        x-transition:leave-end="opacity-0 transform translate-y-2"
+        class="fixed bottom-5 right-5 z-50 px-6 py-4 rounded-lg shadow-lg text-white"
+        :class="type === 'success' ? 'bg-green-600' : 'bg-red-600'"
+        style="display: none;"
+    >
+        <div class="flex items-center">
+            <svg x-show="type === 'success'" class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <svg x-show="type === 'error'" class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <span x-text="message" class="font-medium"></span>
+        </div>
+    </div>
 </body>
 </html>
