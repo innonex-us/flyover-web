@@ -50,11 +50,6 @@ class BookingController extends Controller
 
         $bookingData['total_amount'] = $payable->price * $bookingData['quantity'];
 
-        Booking::create($bookingData);
-        
-        $booking = Booking::latest()->first(); // Get the last created booking safely (or better use create's return)
-
-        // Better: capture the instance
         $booking = Booking::create($bookingData);
 
         return redirect()->route('bookings.confirmation', $booking)->with('success', 'Booking request submitted successfully!');
