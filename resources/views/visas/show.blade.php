@@ -1,5 +1,5 @@
 <x-app-layout>
-    @push('meta')
+    {{-- @push('meta')
     <script type="application/ld+json">
     {
       "@context": "https://schema.org/",
@@ -16,7 +16,7 @@
       }
     }
     </script>
-    @endpush
+    @endpush --}}
     <div class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -249,7 +249,7 @@
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
                                         <input type="text" name="guest_phone" required placeholder="+8801..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
                                     </div>
-                                @endguest
+                                @endauth
                             </div>
 
                             <button type="submit" class="w-full bg-red-600 text-white text-lg font-bold py-4 px-6 rounded-xl hover:bg-red-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-6">

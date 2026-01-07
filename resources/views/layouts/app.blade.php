@@ -8,7 +8,7 @@
 
     <!-- SEO Meta Tags -->
     <title>{{ $title ?? config('app.name', 'FlyoverBD') }}</title>
-    <meta name="description" content="{{ $meta_description ?? 'FlyoverBD is your trusted partner for visa processing, tour packages, and travel consulting in Bangladesh.' }}">
+    {{-- <meta name="description" content="{{ $meta_description ?? 'FlyoverBD is your trusted partner for visa processing, tour packages, and travel consulting in Bangladesh.' }}">
     <meta name="keywords" content="{{ $meta_keywords ?? 'visa processing, tour packages, travel agency bangladesh, flyoverbd, tourist visa, business visa' }}">
     <link rel="canonical" href="{{ url()->current() }}">
 
@@ -24,7 +24,7 @@
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="{{ $title ?? config('app.name', 'FlyoverBD') }}">
     <meta name="twitter:description" content="{{ $meta_description ?? 'Your trusted partner for hassle-free visa processing and unforgettable tour packages.' }}">
-    <meta name="twitter:image" content="{{ $meta_image ?? asset('logo.png') }}">
+    <meta name="twitter:image" content="{{ $meta_image ?? asset('logo.png') }}"> --}}
 
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
 
@@ -41,9 +41,7 @@
             x-data="{ 
                 showNavLinks: {{ request()->routeIs('home') ? 'false' : 'true' }} 
             }"
-            @if(request()->routeIs('home'))
-                @scroll.window="showNavLinks = (window.scrollY > 500)"
-            @endif
+            {{ request()->routeIs('home') ? '@scroll.window="showNavLinks = (window.scrollY > 500)"' : '' }}
             class="bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-50 transition-all duration-300"
         >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

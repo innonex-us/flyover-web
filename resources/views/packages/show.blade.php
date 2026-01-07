@@ -1,5 +1,5 @@
 <x-app-layout>
-    @push('meta')
+    {{-- @push('meta')
     <script type="application/ld+json">
     {
       "@context": "https://schema.org/",
@@ -16,7 +16,7 @@
       }
     }
     </script>
-    @endpush
+    @endpush --}}
     <div class="py-12 bg-white" x-data="{ openInquiryModal: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -46,16 +46,20 @@
                 <div class="lg:col-span-2">
                     
                     <!-- Image Gallery (Alpine.js) -->
+                    <!-- Image Gallery (Alpine.js) -->
+                    @php
+                        $defaultImage = 'https://via.placeholder.com/800x450?text=Tour+Package';
+                        $mainImage = $package->thumbnail ?? $defaultImage;
+                        $galleryImages = [$mainImage];
+                        if (!empty($package->images) && is_array($package->images)) {
+                            foreach($package->images as $img) {
+                                $galleryImages[] = $img;
+                            }
+                        }
+                    @endphp
                     <div class="mb-8" x-data="{ 
-                        activeImage: '{{ $package->thumbnail ?? 'https://via.placeholder.com/800x450?text=Tour+Package' }}',
-                        images: [
-                            '{{ $package->thumbnail ?? 'https://via.placeholder.com/800x450?text=Tour+Package' }}',
-                            @if(!empty($package->images) && is_array($package->images))
-                                @foreach($package->images as $img)
-                                    '{{ $img }}',
-                                @endforeach
-                            @endif
-                        ]
+                        activeImage: '{{ $mainImage }}',
+                        images: {{ json_encode($galleryImages) }}
                     }">
                         <div class="relative h-96 rounded-2xl overflow-hidden shadow-xl mb-4 group">
                             <img :src="activeImage" alt="{{ $package->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
@@ -278,15 +282,9 @@
                             <div x-show="activeTab === 'policy'" style="display: none;" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
                                 <div class="bg-gray-50 rounded-xl p-8 border border-gray-100">
                                     <div class="prose prose-sm max-w-none text-gray-600 whitespace-pre-line">
-                                        {{ $package->policy ?? "Cancellation
-To cancel any tour, an email has to be sent to support@flyoverbd.com mentioning the tour booking ID and details about the cancellation.
-Travelers are responsible for notifying us of any cancellations as soon as possible.
-
-Refund
-80% of the fees will be refunded if the booking is canceled more than Twenty-One (21) days before the beginning of the experience/tour.
-50% of the fees will be refunded if the booking is canceled within Fourteen (14) to Twenty-One (21) days before the beginning of the experience/tour.
-30% of the tour fee will be refunded if the booking is canceled within Seven (7) to Fourteen (14) days before the beginning of the experience/tour.
-Refund will not be provided if the tour is cancelled less than Seven (7) days before the beginning of the experience/tour." }}
+                                        <!-- POLICY PLACEHOLDER -->
+                                        POLICY CONTENT HERE
+                                        <!-- END PLACEHOLDER -->
                                     </div>
                                 </div>
                             </div>
