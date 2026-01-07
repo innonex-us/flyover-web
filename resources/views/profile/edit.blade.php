@@ -5,23 +5,17 @@
             <p class="text-sm text-gray-500 mt-1">Manage your account information and password</p>
         </div>
 
-        <div class="space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-xl border border-gray-100">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="p-6 bg-white shadow-sm rounded-xl border border-gray-100">
+                @include('profile.partials.update-profile-information-form')
             </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-xl border border-gray-100">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
+            <div class="p-6 bg-white shadow-sm rounded-xl border border-gray-100">
+                @include('profile.partials.update-password-form')
             </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-xl border border-gray-100">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
+            <div class="lg:col-span-2 p-6 bg-white shadow-sm rounded-xl border border-red-100">
+                @include('profile.partials.delete-user-form')
             </div>
         </div>
     </x-admin-layout>
