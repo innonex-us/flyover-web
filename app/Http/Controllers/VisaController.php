@@ -23,6 +23,14 @@ class VisaController extends Controller
     public function show($slug)
     {
         $visa = Visa::where('slug', $slug)->firstOrFail();
-        return view('visas.show', compact('visa'));
+
+        // SEO Data
+        $title = $visa->country . ' Visa Processing - ' . $visa->type . ' | FlyoverBD';
+        $meta_description = \Illuminate\Support\Str::limit(strip_tags($visa->description), 155);
+        $meta_image = $visa->thumbnail 
+            ? (\Illuminate\Support\Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : \Illuminate\Support\Facades\Storage::url($visa->thumbnail))
+            : asset('logo.png');
+
+        return view('visas.show', compact('visa', 'title', 'meta_description', 'meta_image'));
     }
 }

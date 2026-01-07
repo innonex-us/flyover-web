@@ -23,7 +23,15 @@ class PackageController extends Controller
     public function show($slug)
     {
         $package = Package::where('slug', $slug)->where('is_active', true)->firstOrFail();
-        return view('packages.show', compact('package'));
+
+        // SEO Data
+        $title = $package->title . ' - Tour Package | FlyoverBD';
+        $meta_description = \Illuminate\Support\Str::limit(strip_tags($package->description), 155);
+        $meta_image = $package->thumbnail 
+            ? (\Illuminate\Support\Str::startsWith($package->thumbnail, 'http') ? $package->thumbnail : \Illuminate\Support\Facades\Storage::url($package->thumbnail))
+            : asset('logo.png');
+
+        return view('packages.show', compact('package', 'title', 'meta_description', 'meta_image'));
     }
 
     public function customize(Request $request, Package $package)

@@ -1,4 +1,22 @@
 <x-app-layout>
+    @push('meta')
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "{{ $visa->country }} Visa Processing",
+      "description": "{{ \Illuminate\Support\Str::limit(strip_tags($visa->description), 160) }}",
+      "image": "{{ $meta_image ?? '' }}",
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "BDT",
+        "price": "{{ $visa->price }}",
+        "availability": "https://schema.org/InStock",
+        "url": "{{ url()->current() }}"
+      }
+    }
+    </script>
+    @endpush
     <div class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             

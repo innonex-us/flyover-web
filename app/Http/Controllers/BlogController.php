@@ -39,6 +39,13 @@ class BlogController extends Controller
             ->take(3)
             ->get();
 
-        return view('blog.show', compact('post', 'recentPosts'));
+        // SEO Data
+        $title = $post->title . ' | FlyoverBD Blog';
+        $meta_description = $post->seo_description ?? \Illuminate\Support\Str::limit(strip_tags($post->content), 155);
+        $meta_image = $post->image 
+            ? (\Illuminate\Support\Str::startsWith($post->image, 'http') ? $post->image : \Illuminate\Support\Facades\Storage::url($post->image))
+            : asset('logo.png');
+
+        return view('blog.show', compact('post', 'recentPosts', 'title', 'meta_description', 'meta_image'));
     }
 }

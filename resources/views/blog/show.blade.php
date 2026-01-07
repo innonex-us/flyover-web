@@ -1,4 +1,21 @@
 <x-app-layout>
+    @push('meta')
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Article",
+      "headline": "{{ $post->title }}",
+      "description": "{{ $post->seo_description ?? \Illuminate\Support\Str::limit(strip_tags($post->content), 160) }}",
+      "image": "{{ $meta_image ?? '' }}",
+      "author": {
+        "@type": "Person",
+        "name": "{{ $post->custom_author ?? $post->author->name ?? 'FlyoverBD' }}"
+      },
+      "datePublished": "{{ $post->published_at ? $post->published_at->toIso8601String() : '' }}",
+      "dateModified": "{{ $post->updated_at->toIso8601String() }}"
+    }
+    </script>
+    @endpush
     <x-slot name="header">
         <meta name="description" content="{{ $post->seo_description ?? Str::limit(strip_tags($post->content), 160) }}">
         <meta property="og:title" content="{{ $post->seo_title ?? $post->title }} - FlyoverBD">
