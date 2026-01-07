@@ -20,11 +20,19 @@ class Package extends Model
         'images',
         'start_date',
         'is_active',
+        'inclusions',
+        'exclusions',
+        'requirements',
+        'itinerary',
+        'policy',
     ];
 
     protected $casts = [
         'images' => 'array',
         'start_date' => 'date',
         'is_active' => 'boolean',
+        'inclusions' => 'array',
+        'exclusions' => 'array',
+        'itinerary' => 'array',
     ];
 }

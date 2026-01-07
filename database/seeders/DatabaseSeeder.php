@@ -39,6 +39,10 @@ class DatabaseSeeder extends Seeder
             'location' => 'Thailand',
             'thumbnail' => 'https://plus.unsplash.com/premium_photo-1661919589683-f11880119fb7?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3',
             'is_active' => true,
+            'inclusions' => ['3 Nights Hotel Accommodation', 'Daily Breakfast', 'Airport Transfers', 'City Tour'],
+            'exclusions' => ['Airfare', 'Lunch & Dinner', 'Personal Expenses'],
+            'requirements' => "1. Copy of NID card\n2. Passport Validity 6 months",
+            'policy' => "80% of the fees will be refunded if the booking is canceled more than Twenty-One (21) days before the beginning of the experience/tour.",
         ]);
 
         Package::create([
@@ -50,6 +54,9 @@ class DatabaseSeeder extends Seeder
             'location' => 'Indonesia',
             'thumbnail' => 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2688&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             'is_active' => true,
+            'inclusions' => ['Villa Stay', 'Candle Light Dinner', 'Spa Treatment', 'Island Tour'],
+            'exclusions' => ['Visa Fees', 'Travel Insurance'],
+            'requirements' => "1. Passport\n2. Marriage Certificate Copy",
         ]);
 
          Package::create([
@@ -61,6 +68,8 @@ class DatabaseSeeder extends Seeder
             'location' => 'UAE',
             'thumbnail' => 'https://images.unsplash.com/photo-1546412414-e1885259563a?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             'is_active' => true,
+            'inclusions' => ['Desert Safari', 'Dhow Cruise Dinner', 'Burj Khalifa Ticket', 'Hotel Stay'],
+            'exclusions' => ['Shopping Expenses', 'Tips'],
         ]);
 
           Package::create([
@@ -72,6 +81,19 @@ class DatabaseSeeder extends Seeder
             'location' => 'Bangladesh',
             'thumbnail' => 'https://images.unsplash.com/photo-1599579737526-f7f6fd918239?q=80&w=2669&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             'is_active' => true,
+            'inclusions' => ['AC Bus Ticket', '3 Star Hotel Stay', 'Breakfast'],
+            'exclusions' => ['Lunch', 'Dinner', 'Sightseeing Entry Fees'],
+            'requirements' => "Copy of NID card",
+            'policy' => "Cancellation
+To cancel any tour, an email has to be sent to tours@gozayaan.com mentioning the tour booking ID and details about the cancellation.
+Travelers are responsible for notifying GoZayaan of any cancellations as soon as possible.
+The email acts as the final application for cancellation. Phone calls to GoZayaan's hotline or contacting any team member directly will not be considered as cancellation requests.
+
+Refund
+80% of the fees will be refunded if the booking is canceled more than Twenty-One (21) days before the beginning of the experience/tour.
+50% of the fees will be refunded if the booking is canceled within Fourteen (14) to Twenty-One (21) days before the beginning of the experience/tour.
+30% of the tour fee will be refunded if the booking is canceled within Seven (7) to Fourteen (14) days before the beginning of the experience/tour.
+Refund will not be provided if the tour is cancelled less than Seven (7) days before the beginning of the experience/tour.",
         ]);
 
         // Seed Visas
