@@ -9,7 +9,13 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = Post::published()->latest('published_at')->paginate(9);
+        $query = Post::latest('published_at');
+
+        if (!auth()->check() || auth()->user()->role !== 'admin') {
+            $query->published();
+        }
+
+        $posts = $query->paginate(9);
         return view('blog.index', compact('posts'));
     }
 
@@ -22,6 +28,13 @@ class BlogController extends Controller
         }
 
         $post = $query->firstOrFail();
-        return view('blog.show', compact('post'));
+        
+        $recentPosts = Post::published()
+            ->where('id', '!=', $post->id)
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
+        return view('blog.show', compact('post', 'recentPosts'));
     }
 }

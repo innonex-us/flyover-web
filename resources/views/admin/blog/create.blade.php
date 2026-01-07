@@ -15,6 +15,12 @@
                     @error('title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
+                <!-- Custom Author -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Author Name (Optional)</label>
+                    <input type="text" name="custom_author" value="{{ old('custom_author') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. Travel Guide (Leave empty for default)">
+                </div>
+
                 <!-- Content -->
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Content</label>

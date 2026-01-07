@@ -34,6 +34,7 @@ class BlogController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'custom_author' => 'nullable|string|max:255',
             'content' => 'required|string',
             'image' => 'nullable|image|max:2048',
             'seo_title' => 'nullable|string|max:255',
@@ -54,6 +55,7 @@ class BlogController extends Controller
 
         Post::create([
             'user_id' => auth()->id(),
+            'custom_author' => $validated['custom_author'],
             'title' => $validated['title'],
             'slug' => $slug,
             'content' => $validated['content'],
@@ -90,6 +92,7 @@ class BlogController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'custom_author' => 'nullable|string|max:255',
             'content' => 'required|string',
             'image' => 'nullable|image|max:2048',
             'seo_title' => 'nullable|string|max:255',
@@ -114,6 +117,7 @@ class BlogController extends Controller
         }
 
         $blog->title = $validated['title'];
+        $blog->custom_author = $validated['custom_author'];
         $blog->content = $validated['content'];
         $blog->seo_title = $validated['seo_title'];
         $blog->seo_description = $validated['seo_description'];
