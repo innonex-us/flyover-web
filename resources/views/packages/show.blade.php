@@ -298,8 +298,26 @@ Refund will not be provided if the tour is cancelled less than Seven (7) days be
                                     <label class="block text-sm font-bold text-gray-700 mb-2">When do you want to go?</label>
                                     <input type="date" name="booking_date" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" min="{{ date('Y-m-d') }}">
                                 </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-2">Number of Persons</label>
+                                    <input type="number" name="quantity" value="1" min="1" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
+                                </div>
                                 
-                                @guest
+                                @auth
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
+                                        <input type="text" value="{{ Auth::user()->name }}" readonly class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100 cursor-not-allowed text-gray-500 focus:ring-0 focus:border-gray-300 py-3">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+                                        <input type="email" value="{{ Auth::user()->email }}" readonly class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100 cursor-not-allowed text-gray-500 focus:ring-0 focus:border-gray-300 py-3">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
+                                        <input type="text" value="{{ Auth::user()->phone }}" readonly class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100 cursor-not-allowed text-gray-500 focus:ring-0 focus:border-gray-300 py-3">
+                                    </div>
+                                @else
                                     <div>
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
                                         <input type="text" name="guest_name" required placeholder="John Doe" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
@@ -312,7 +330,7 @@ Refund will not be provided if the tour is cancelled less than Seven (7) days be
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
                                         <input type="text" name="guest_phone" required placeholder="+8801..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
                                     </div>
-                                @endguest
+                                @endauth
 
                             </div>
 

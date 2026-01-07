@@ -43,9 +43,10 @@
                             <h3 class="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-3">Service Details</h3>
                              @if($booking->payable)
                                 <div class="text-gray-900 font-medium">
-                                    <p class="mb-1">{{ $booking->payable->title ?? $booking->payable->country . ' (' . $booking->payable->type . ')' }}</p>
+                                     <p class="mb-1">{{ $booking->payable->title ?? $booking->payable->country . ' (' . $booking->payable->type . ')' }}</p>
                                      <p class="text-sm text-gray-500">{{ class_basename($booking->payable_type) }}</p>
                                      <p class="mt-2 text-sm">Travel Date: <span class="font-semibold">{{ $booking->booking_date->format('M d, Y') }}</span></p>
+                                     <p class="text-sm">Persons: <span class="font-semibold">{{ $booking->quantity }}</span></p>
                                 </div>
                              @else
                                 <span class="text-red-500 italic">Service info unavailable</span>

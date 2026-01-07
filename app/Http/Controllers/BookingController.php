@@ -19,11 +19,13 @@ class BookingController extends Controller
             'guest_name' => 'nullable|required_without:user_id|string|max:255',
             'guest_email' => 'nullable|required_without:user_id|email|max:255',
             'guest_phone' => 'nullable|required_without:user_id|string|max:20',
+            'quantity' => 'required|integer|min:1',
         ]);
 
         $bookingData = [
             'payable_id' => $validated['payable_id'],
             'booking_date' => $validated['booking_date'],
+            'quantity' => $validated['quantity'],
             'status' => 'pending',
             'payment_status' => 'unpaid',
         ];
@@ -46,7 +48,7 @@ class BookingController extends Controller
             $bookingData['payable_type'] = Visa::class;
         }
 
-        $bookingData['total_amount'] = $payable->price; // Simple logic for now (price * 1)
+        $bookingData['total_amount'] = $payable->price * $bookingData['quantity'];
 
         Booking::create($bookingData);
         

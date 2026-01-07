@@ -18,6 +18,7 @@ class Booking extends Model
         'payable_id',
         'status',
         'payment_status',
+        'quantity',
         'total_amount',
         'booking_date',
         'notes',
