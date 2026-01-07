@@ -1,8 +1,45 @@
 <x-app-layout>
     <!-- Hero Section -->
-    <div class="relative bg-red-600 h-[600px]">
-        <div class="absolute inset-0 bg-gradient-to-r from-red-800 to-red-600 opacity-90"></div>
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center">
+    <div 
+        x-data="{
+            activeSlide: 0,
+            slides: [
+                '{{ asset('banner/hero-banner-1.png') }}',
+                '{{ asset('banner/helo-banner-2.png') }}',
+                '{{ asset('banner/hero-banner-3.png') }}'
+            ],
+            init() {
+                setInterval(() => {
+                    this.activeSlide = (this.activeSlide + 1) % this.slides.length;
+                }, 5000);
+            }
+        }"
+        class="relative bg-white overflow-hidden h-[600px] flex items-center justify-center"
+    >
+        <!-- Background Images (Slider) -->
+        <template x-for="(slide, index) in slides" :key="index">
+            <div 
+                class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
+                :style="`background-image: url('${slide}')`"
+                :class="activeSlide === index ? 'opacity-100' : 'opacity-0'"
+                /* Preload first image logic handled by browser naturally if defined first, 
+                   but strictly ensuring LCP for first image is best done by rendering it statically first 
+                   or ensuring it's the first in DOM. Alpine x-for handles DOM insertion.
+                   To ensure LCP, we can render the first image normally and overlay others, 
+                   but purely Alpine approach is cleaner for code. 
+                   For pure LCP optimization, putting the first image static is better. */
+            ></div>
+        </template>
+        
+        <!-- Static Fallback / LCP Optimizer for 1st Image (Hidden if JS runs, or visible initially) -->
+        <div class="absolute inset-0 bg-cover bg-center opacity-100 x-cloak-hidden" 
+             style="background-image: url('{{ asset('banner/hero-banner-1.png') }}'); z-index: -1;"
+             x-show="false"
+        ></div>
+        
+        <div class="absolute inset-0 bg-black/40"></div> <!-- Overlay for contrast -->
+
+        <div class="relative z-10 text-center w-full max-w-4xl px-4">
             <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-md">
                 Explore the World with Us
             </h1>
