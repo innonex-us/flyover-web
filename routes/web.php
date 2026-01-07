@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified', 'admin'])->prefix('cp')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
 
     Route::resource('packages', \App\Http\Controllers\Admin\PackageController::class);
     Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);
