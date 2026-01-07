@@ -35,10 +35,10 @@
 
         <div class="relative z-10 text-center w-full max-w-4xl px-4">
             <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-md">
-                Explore the World with Us
+                MAKE YOUR LIFE BORDERLESS
             </h1>
             <p class="text-xl text-red-100 mb-10 max-w-2xl drop-shadow-sm">
-                Discover amazing places, book tour packages, and get your visa processed hassle-free.
+                Explore the world with us. Book tour packages and get your visa processed hassle-free.
             </p>
             
             <!-- Search Widget -->

@@ -279,7 +279,7 @@ Refund will not be provided if the tour is cancelled less than Seven (7) days be
 
                 <!-- Right Column: Booking Card -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white rounded-2xl shadow-xl p-8 sticky top-24 border border-gray-100 transform transition hover:scale-[1.01]">
+                    <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 sticky top-24 border border-gray-100 transform transition hover:scale-[1.01]">
                         <div class="mb-6 pb-6 border-b border-gray-100">
                             <p class="text-gray-500 text-sm uppercase tracking-wide font-semibold mb-1">Starting from</p>
                             <div class="flex items-baseline">
@@ -321,9 +321,100 @@ Refund will not be provided if the tour is cancelled less than Seven (7) days be
                             </button>
                         </form>
                         
-                        <button class="w-full border-2 border-red-100 text-red-600 font-bold py-3 px-6 rounded-xl hover:bg-red-50 transition">
-                            Ask a Question
-                        </button>
+                        <!-- Ask a Question Modal Trigger -->
+                        <div x-data="{ openInquiryModal: false }">
+                            <button 
+                                @click="openInquiryModal = true"
+                                class="w-full border-2 border-red-100 text-red-600 font-bold py-3 px-6 rounded-xl hover:bg-red-50 transition"
+                            >
+                                Ask a Question
+                            </button>
+
+                            <!-- Inquiry Modal -->
+                            <div 
+                                x-show="openInquiryModal" 
+                                style="display: none;"
+                                class="fixed inset-0 z-50 overflow-y-auto" 
+                                aria-labelledby="modal-title" 
+                                role="dialog" 
+                                aria-modal="true"
+                            >
+                                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                    
+                                    <div 
+                                        x-show="openInquiryModal" 
+                                        x-transition:enter="ease-out duration-300" 
+                                        x-transition:enter-start="opacity-0" 
+                                        x-transition:enter-end="opacity-100" 
+                                        x-transition:leave="ease-in duration-200" 
+                                        x-transition:leave-start="opacity-100" 
+                                        x-transition:leave-end="opacity-0"
+                                        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+                                        @click="openInquiryModal = false"
+                                        aria-hidden="true"
+                                    ></div>
+
+                                    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                                    <div 
+                                        x-show="openInquiryModal" 
+                                        x-transition:enter="ease-out duration-300" 
+                                        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                                        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" 
+                                        x-transition:leave="ease-in duration-200" 
+                                        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
+                                        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full"
+                                    >
+                                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                            <div class="sm:flex sm:items-start">
+                                                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                                        Ask a Question about {{ $package->title }}
+                                                    </h3>
+                                                    <div class="mt-2">
+                                                        <p class="text-sm text-gray-500 mb-4">
+                                                            Have a question? Fill out the form below and our team will get back to you shortly.
+                                                        </p>
+                                                        
+                                                        <form action="{{ route('packages.customize', $package->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="space-y-4">
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700">Name</label>
+                                                                    <input type="text" name="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring-red-500">
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                                                                    <input type="email" name="email" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring-red-500">
+                                                                </div>
+                                                                   <div>
+                                                                    <label class="block text-sm font-medium text-gray-700">Phone</label>
+                                                                    <input type="text" name="phone" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring-red-500">
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700">Your Question</label>
+                                                                    <textarea name="message" rows="3" required placeholder="Type your question here..." class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring-red-500"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                                                                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:col-start-2 sm:text-sm">
+                                                                    Send Inquiry
+                                                                </button>
+                                                                <button type="button" @click="openInquiryModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                                                                    Cancel
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="mt-8 pt-6 border-t border-gray-100 text-sm text-gray-500 space-y-3">
                             <p class="flex items-center">
