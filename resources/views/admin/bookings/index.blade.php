@@ -2,7 +2,17 @@
     <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h2 class="text-3xl font-bold text-gray-800">Bookings</h2>
-            <p class="text-sm text-gray-500 mt-1">Track and manage all bookings</p>
+            <div class="flex space-x-1 bg-gray-100 p-1 rounded-lg mt-2 inline-flex">
+                <a href="{{ route('admin.bookings.index') }}" class="px-4 py-2 text-sm font-medium rounded-md transition {{ !request('type') ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
+                    All
+                </a>
+                <a href="{{ route('admin.bookings.index', ['type' => 'package']) }}" class="px-4 py-2 text-sm font-medium rounded-md transition {{ request('type') == 'package' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
+                    Tours
+                </a>
+                <a href="{{ route('admin.bookings.index', ['type' => 'visa']) }}" class="px-4 py-2 text-sm font-medium rounded-md transition {{ request('type') == 'visa' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
+                    Visas
+                </a>
+            </div>
         </div>
         
         <form action="{{ route('admin.bookings.index') }}" method="GET" class="flex flex-col md:flex-row gap-3 w-full md:w-auto">

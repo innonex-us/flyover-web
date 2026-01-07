@@ -15,6 +15,14 @@ class BookingController extends Controller
     {
         $query = Booking::with(['user', 'payable'])->latest();
 
+        if ($request->filled('type')) {
+            if ($request->type === 'package') {
+                $query->where('payable_type', 'App\Models\Package');
+            } elseif ($request->type === 'visa') {
+                $query->where('payable_type', 'App\Models\Visa');
+            }
+        }
+
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
