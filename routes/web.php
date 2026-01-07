@@ -31,6 +31,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('cp')->name('admin.')->
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+
+    Route::resource('packages', \App\Http\Controllers\Admin\PackageController::class);
+    Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);
 });
 
 require __DIR__.'/auth.php';

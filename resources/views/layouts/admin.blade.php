@@ -28,10 +28,10 @@
                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('admin.dashboard') ? 'bg-red-600 text-white shadow-lg' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }} transition">
                     Dashboard
                 </a>
-                <a href="#" class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition">
+                <a href="{{ route('admin.packages.index') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('admin.packages.*') ? 'bg-red-600 text-white shadow-lg' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }} transition">
                     Manage Packages
                 </a>
-                <a href="#" class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition">
+                <a href="{{ route('admin.visas.index') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('admin.visas.*') ? 'bg-red-600 text-white shadow-lg' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }} transition">
                     Manage Visas
                 </a>
                 <a href="#" class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition">
