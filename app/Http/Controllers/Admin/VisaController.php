@@ -55,12 +55,7 @@ class VisaController extends Controller
         }
 
         // Filter empty documents
-        if (isset($validated['required_documents'])) {
-             // Structure is expected to be array of categories with lists
-            // For simplicity in this quick implementation, we might receive key-value or similar.
-            // Let's assume the form sends a structured array or we process it.
-            // If the UI sends simple arrays, we clean them.
-        }
+        $validated['required_documents'] = array_filter($validated['required_documents'] ?? [], fn($value) => !is_null($value) && $value !== '');
 
         Visa::create($validated);
 
@@ -104,6 +99,9 @@ class VisaController extends Controller
             }
             $validated['thumbnail'] = $request->file('thumbnail')->store('visas/thumbnails', 'public');
         }
+
+        // Filter empty documents
+        $validated['required_documents'] = array_filter($validated['required_documents'] ?? [], fn($value) => !is_null($value) && $value !== '');
 
         $visa->update($validated);
 

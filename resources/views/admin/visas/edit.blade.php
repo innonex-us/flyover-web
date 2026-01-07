@@ -84,10 +84,19 @@
                 </div>
                 
                 <div x-show="tabs === 'required_documents'"> 
-                     
-                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements</label>
-                        <textarea name="requirements" rows="6" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements', $visa->requirements) }}</textarea>
+                    <div x-data="{ docs: {{ json_encode($visa->required_documents ?? ['']) }} }">
+                        <label class="block text-sm font-semibold text-gray-700 mb-4">Required Documents List</label>
+                        <template x-for="(doc, index) in docs" :key="index">
+                            <div class="flex gap-2 mb-3">
+                                <input type="text" name="required_documents[]" x-model="docs[index]" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. Original Passport">
+                                <button type="button" @click="docs.splice(index, 1)" x-show="docs.length > 0" class="text-red-500 hover:text-red-700 p-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
+                        </template>
+                        <button type="button" @click="docs.push('')" class="mt-2 text-sm text-red-600 font-bold hover:underline py-2 px-3 bg-red-50 rounded-lg border border-red-100">
+                            + Add Another Document
+                        </button>
                     </div>
                 </div>
 
