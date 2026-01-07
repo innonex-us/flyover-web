@@ -10,6 +10,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/tours', [PackageController::class, 'index'])->name('packages.index');
 Route::get('/tours/{slug}', [PackageController::class, 'show'])->name('packages.show');
+Route::post('/tours/{package}/customize', [PackageController::class, 'customize'])->name('packages.customize');
 
 Route::get('/visas', [VisaController::class, 'index'])->name('visas.index');
 Route::get('/visas/{slug}', [VisaController::class, 'show'])->name('visas.show');
