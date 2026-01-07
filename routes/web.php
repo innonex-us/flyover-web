@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::resource('packages', \App\Http\Controllers\Admin\PackageController::class);
     Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::resource('customizations', \App\Http\Controllers\Admin\CustomizationController::class)->only(['index', 'update']);
 });
 
 require __DIR__.'/auth.php';

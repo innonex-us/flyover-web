@@ -35,8 +35,13 @@ class PackageController extends Controller
             'message' => 'required|string|max:1000',
         ]);
 
-        // In a real app, we would send an email or save this to the database.
-        // For now, just flash a success message.
+        \App\Models\CustomizationRequest::create([
+            'package_id' => $package->id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'message' => $request->message,
+        ]);
 
         return back()->with('success', 'Your customization request has been sent! We will contact you shortly.');
     }
