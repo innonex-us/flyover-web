@@ -13,6 +13,10 @@
             <div class="p-6 bg-white shadow-sm rounded-xl border border-gray-100">
                 @include('profile.partials.update-password-form')
             </div>
+            
+            <div class="md:col-span-2 p-6 bg-white shadow-sm rounded-xl border border-blue-100">
+                @include('profile.partials.two-factor-form')
+            </div>
 
             <div class="lg:col-span-2 p-6 bg-white shadow-sm rounded-xl border border-red-100">
                 @include('profile.partials.delete-user-form')

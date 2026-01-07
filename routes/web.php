@@ -19,15 +19,23 @@ Route::post('/bookings', [App\Http\Controllers\BookingController::class, 'store'
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'two-factor'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'two-factor'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // 2FA Routes
+    Route::get('/2fa/setup', [App\Http\Controllers\TwoFactorController::class, 'enable'])->name('two-factor.enable');
+    Route::post('/2fa/confirm', [App\Http\Controllers\TwoFactorController::class, 'store'])->name('two-factor.confirm');
+    Route::delete('/2fa/disable', [App\Http\Controllers\TwoFactorController::class, 'destroy'])->name('two-factor.disable');
 });
 
-Route::middleware(['auth', 'verified', 'admin'])->prefix('cp')->name('admin.')->group(function () {
+Route::get('/2fa/challenge', [App\Http\Controllers\TwoFactorController::class, 'index'])->name('2fa.index')->middleware('auth');
+Route::post('/2fa/challenge', [App\Http\Controllers\TwoFactorController::class, 'verify'])->name('2fa.verify')->middleware('auth');
+
+Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
 
