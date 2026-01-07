@@ -1,4 +1,4 @@
-</x-app-layout>
+<x-app-layout>
     <div class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -94,7 +94,7 @@
                                     You can visit our Experience Center for a free Visa consultation with our travel experts and get started on your application.
                                 </p>
                                 <div class="bg-white p-4 rounded-lg border border-blue-200 mb-4">
-                                    <p class="font-semibold text-gray-900">Sheltech Ayaan, House 58, Road 6 & 11, Block C, Level 2, Banani, Dhaka.</p>
+                                    <p class="font-semibold text-gray-900">House 45, Road 13, Block D, Banani, Dhaka</p>
                                 </div>
                                 <div class="flex flex-col sm:flex-row gap-4">
                                     <a href="#" class="flex items-center text-blue-700 font-semibold hover:underline">
@@ -247,3 +247,4 @@
             </div>
         </div>
     </div>
+</x-app-layout>
