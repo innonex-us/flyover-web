@@ -1,5 +1,5 @@
 <x-app-layout>
-    @push('meta')
+    {{-- @push('meta')
     <script type="application/ld+json">
     {
       "@context": "https://schema.org/",
@@ -22,7 +22,7 @@
         <meta property="og:description" content="{{ $post->seo_description ?? Str::limit(strip_tags($post->content), 160) }}">
         <meta property="og:image" content="{{ $post->image ? Storage::url($post->image) : '' }}">
         <title>{{ $post->seo_title ?? $post->title }} - FlyoverBD</title>
-    </x-slot>
+    </x-slot> --}}
 
     <div class="bg-gray-50 min-h-screen pb-12">
         @if(!$post->is_published)
@@ -135,8 +135,25 @@
                     <div class="bg-white rounded-2xl shadow-sm p-6">
                         <h3 class="text-lg font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">Recent Articles</h3>
                         <div class="space-y-6">
-                            <!-- Forelse removed for debugging -->
-                            <p>Loading recent posts...</p>
+                            @forelse($recentPosts as $recent)
+                                <div class="group flex space-x-4">
+                                    <a href="{{ route('blog.show', $recent->slug) }}" class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
+                                        <img src="{{ $recent->image ? Storage::url($recent->image) : 'https://via.placeholder.com/150' }}" 
+                                             alt="{{ $recent->title }}" 
+                                             class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                    </a>
+                                    <div class="flex-1">
+                                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-red-600 transition leading-snug mb-1">
+                                            <a href="{{ route('blog.show', $recent->slug) }}">
+                                                {{ $recent->title }}
+                                            </a>
+                                        </h4>
+                                        <p class="text-xs text-gray-500">{{ $recent->published_at ? $recent->published_at->format('M d, Y') : '' }}</p>
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="text-gray-500 text-sm">No recent posts.</p>
+                            @endforelse
                         </div>
                     </div>
                 </aside>
