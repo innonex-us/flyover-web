@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
+
         \Illuminate\Support\Facades\RateLimiter::for('booking_submission', function (\Illuminate\Http\Request $request) {
             if (app()->environment('local')) {
                 return \Illuminate\Cache\RateLimiting\Limit::perMinute(1000);
