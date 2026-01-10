@@ -42,23 +42,58 @@
             </p>
             
             <!-- Search Widget -->
-            <div class="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8" x-data="{ activeTab: 'tours' }">
+            <div class="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8" 
+                x-data="{ 
+                    activeTab: 'tours',
+                    query: '',
+                    suggestions: [],
+                    showSuggestions: false,
+                    fetchTimer: null,
+                    
+                    fetchSuggestions() {
+                        // if (this.query.length < 2) {
+                        //     this.suggestions = [];
+                        //     this.showSuggestions = false;
+                        //     return;
+                        // }
+                        
+                        clearTimeout(this.fetchTimer);
+                        this.fetchTimer = setTimeout(() => {
+                            fetch(`{{ route('search.suggestions') }}?type=${this.activeTab}&query=${this.query}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    this.suggestions = data;
+                                    this.showSuggestions = data.length > 0;
+                                });
+                        }, 300);
+                    },
+                    selectSuggestion(url) {
+                        window.location.href = url;
+                    },
+                    switchTab(tab) {
+                        this.activeTab = tab;
+                        this.query = '';
+                        this.suggestions = [];
+                        this.showSuggestions = false;
+                    }
+                }"
+                @click.away="showSuggestions = false"
+            >
                 
                 <!-- Tabs -->
                 <div class="flex space-x-8 border-b border-gray-200 pb-4 mb-6 justify-center">
                     <button 
-                        @click="activeTab = 'tours'" 
+                        @click="switchTab('tours')" 
                         :class="activeTab === 'tours' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-red-600'"
                         class="flex items-center pb-2 font-bold transition duration-300 text-lg"
                     >
                         <!-- Flight/Plane Icon -->
-                        {{-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACWUlEQVR4nO2avW7UQBDHf6K4JDSYAgTp8gKhgAroQEI08Aa5VGmiVERECTUEXgB4CEiegAgIygctke6OD4lEuRR8BKGjXxTpb2kVGZ+9vvWai0cayTPeWc3P3t0ZS4YTIA3gCXAAmMDaBZaVU255XAEAc0wfuYB0FXyV8HLNejO5JX4KVRHjmk8N4klMDcIJB4mAaWAVaAN/pG35mhpTVj7kDRwFFoBfGerBIXBfMb7ycQocB7YTEn5lXa8l3N8CLlYFZBzY1divwEtdfwLGrHnG5DMaE8fsZoQxPkFGrTexqbX/UfadhHnu6roDnD0WOxISZEFjPgPngCvWUz6VMM+Rb0/2ZeA88EX2fCiQyNrYt+R7IPtpyjzPZS/Jvm0dAFEIkGndf2354v0xkzLPjOwXlm9dvmaBfJwDV3V/1vLtyHcjZZ6bsj9YvjnrECgdJN7Uk5bvp3wTKfNMyP5u+S7J1y6Qj3NgL0Phy6u9YQH5HQKkk7C0fuRYWt8SllarQD7OgSvDstmbuv9mAMfvO/mmCuTjHBipiNkFcUn2swwFcTGhIJ4JAYJa8UG1KPcGkE+hpnFL47bVCHZyNI3vZW+EbhpRC2635P9q40/rzcWbes9q/S/QX4xvkBhmM6EurPX5sNrICFEaCFoa89YBkKaH2hMjHvMpHBjpaF5RgetJW1pSU31Op8qA+BJTg1CDeBFTg1CDVB+koe9q41nXywBplQDy1jdISDE1CDWIFzE1CEMC0lXg0e8ToeW6ctl3CV4uoV7k1YcuIA3BxG8mpO4Lwuk3p/9K/gI5HHNwyRPgDAAAAABJRU5ErkJggg==" alt="Tour" class="w-6 h-6 mr-2"> --}}
-                        <img src="data:image/png;base64,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" alt="around-the-globe"  alt="Tour" class="w-6 h-6 mr-2">
+                         <img src="data:image/png;base64,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" alt="around-the-globe"  alt="Tour" class="w-6 h-6 mr-2">
                         Tour Packages
                     </button>
                     
                     <button 
-                        @click="activeTab = 'visas'" 
+                        @click="switchTab('visas')" 
                         :class="activeTab === 'visas' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-red-600'"
                         class="flex items-center pb-2 font-bold transition duration-300 text-lg"
                     >
@@ -69,7 +104,7 @@
                 </div>
 
                 <!-- Tours Search Form -->
-                <div x-show="activeTab === 'tours'" class="animate-fade-in-up">
+                <div x-show="activeTab === 'tours'" class="animate-fade-in-up relative">
                     <form action="{{ route('packages.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                         <div class="flex-grow">
                             <label class="block text-left text-xs font-bold text-gray-500 uppercase mb-1">Destination</label>
@@ -77,8 +112,38 @@
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                 </div>
-                                <input type="text" name="search" placeholder="Where do you want to go?" class="pl-10 w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 py-3">
+                                <input 
+                                    type="text" 
+                                    name="search" 
+                                    x-model="query"
+                                    @input="fetchSuggestions()"
+                                    @focus="fetchSuggestions()"
+                                    placeholder="Where do you want to go?" 
+                                    class="pl-10 w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 py-3"
+                                    autocomplete="off"
+                                >
                             </div>
+                            
+                            <!-- Suggestions Dropdown -->
+                            <div 
+                                x-show="showSuggestions && activeTab === 'tours'" 
+                                x-transition.opacity 
+                                class="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 text-left overflow-hidden"
+                                style="display: none;"
+                            >
+                                <ul>
+                                    <template x-for="item in suggestions" :key="item.slug">
+                                        <li @click="selectSuggestion(item.url)" class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 flex items-center">
+                                            <img :src="item.image" class="w-10 h-10 rounded object-cover mr-3" alt="">
+                                            <div>
+                                                <div class="text-sm font-bold text-gray-800" x-text="item.text"></div>
+                                                <div class="text-xs text-gray-500" x-text="item.subtext"></div>
+                                            </div>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+
                         </div>
                         <div class="w-full md:w-auto flex items-end">
                             <button type="submit" class="w-full md:w-auto bg-red-600 text-white font-bold py-3 px-10 rounded-lg hover:bg-red-700 transition shadow-lg transform hover:-translate-y-0.5">
@@ -89,7 +154,7 @@
                 </div>
 
                 <!-- Visa Search Form -->
-                <div x-show="activeTab === 'visas'" class="animate-fade-in-up" style="display: none;">
+                <div x-show="activeTab === 'visas'" class="animate-fade-in-up relative" style="display: none;">
                     <form action="{{ route('visas.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                          <div class="flex-grow">
                             <label class="block text-left text-xs font-bold text-gray-500 uppercase mb-1">Country</label>
@@ -97,8 +162,40 @@
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 </div>
-                                <input type="text" name="search" placeholder="Which country visa do you need?" class="pl-10 w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 py-3">
+                                <input 
+                                    type="text" 
+                                    name="search" 
+                                    x-model="query"
+                                    @input="fetchSuggestions()"
+                                    @focus="fetchSuggestions()"
+                                    placeholder="Which country visa do you need?" 
+                                    class="pl-10 w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 py-3"
+                                    autocomplete="off"
+                                >
                             </div>
+
+                             <!-- Suggestions Dropdown -->
+                             <div 
+                                x-show="showSuggestions && activeTab === 'visas'" 
+                                x-transition.opacity 
+                                class="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 text-left overflow-hidden"
+                                style="display: none;"
+                            >
+                                <ul>
+                                    <template x-for="item in suggestions" :key="item.slug">
+                                        <li @click="selectSuggestion(item.url)" class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 flex items-center">
+                                            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3 text-xl">
+                                                🌍
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-bold text-gray-800" x-text="item.text"></div>
+                                                <div class="text-xs text-gray-500" x-text="item.subtext"></div>
+                                            </div>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+
                         </div>
                          <div class="w-full md:w-auto flex items-end">
                             <button type="submit" class="w-full md:w-auto bg-red-600 text-white font-bold py-3 px-10 rounded-lg hover:bg-red-700 transition shadow-lg transform hover:-translate-y-0.5">

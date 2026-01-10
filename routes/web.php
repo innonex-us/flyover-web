@@ -21,6 +21,9 @@ Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])
 Route::post('/bookings', [App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store')->middleware('throttle:booking_submission');
 Route::get('/bookings/{booking}/confirmation', [App\Http\Controllers\BookingController::class, 'confirmation'])->name('bookings.confirmation');
 
+Route::get('/search/suggestions', [App\Http\Controllers\SearchController::class, 'suggestions'])->name('search.suggestions');
+
+
 // Static Pages
 Route::view('/about', 'pages.about')->name('about');
 Route::get('/contact', function () {
