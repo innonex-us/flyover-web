@@ -7,10 +7,27 @@
         <h2 class="text-3xl font-bold text-gray-800">Edit Package: {{ $package->title }}</h2>
     </div>
 
-    <form action="{{ route('admin.packages.update', $package) }}" method="POST" enctype="multipart/form-data" class="max-w-4xl">
+    <form action="{{ route('admin.packages.update', $package) }}" method="POST" enctype="multipart/form-data" class="max-w-4xl relative" x-data="formUploader" @submit.prevent="submitForm">
         @csrf
         @method('PUT')
         
+        <!-- Upload Overlay -->
+        <div x-show="uploading" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center rounded-xl"
+            style="display: none;">
+            <div class="w-64 bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
+                <div class="bg-red-600 h-4 rounded-full transition-all duration-300" :style="`width: ${progress}%`"></div>
+            </div>
+            <div class="text-gray-800 font-bold text-lg">Uploading... <span x-text="progress + '%'"></span></div>
+            <div class="text-gray-500 text-sm mt-2">Please wait while we process your files.</div>
+        </div>
+
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 space-y-8">
             
             <!-- Basic Info -->
@@ -117,16 +134,19 @@
             <div>
                 <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-6">Media</h3>
                 <div class="space-y-6">
-                    <div>
+                    <div x-data="fileUploader">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Thumbnail Image</label>
                         @if($package->thumbnail)
                             <img src="{{ Storage::url($package->thumbnail) }}" alt="Current Thumbnail" class="h-32 w-48 object-cover rounded-lg mb-2 shadow-sm">
                         @endif
-                        <input type="file" name="thumbnail" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                        <input type="file" name="thumbnail" @change="handleFileChange" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
                         <p class="text-xs text-gray-400 mt-1">Leave blank to keep current thumbnail</p>
+                        <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display: none;">
+                            Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
+                        </div>
                     </div>
 
-                    <div>
+                    <div x-data="fileUploader">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Gallery Images</label>
                         @if($package->images && count($package->images) > 0)
                             <div class="flex gap-2 mb-3 overflow-x-auto py-2">
@@ -135,8 +155,11 @@
                                 @endforeach
                             </div>
                         @endif
-                        <input type="file" name="images[]" multiple accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <input type="file" name="images[]" @change="handleFileChange" multiple accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         <p class="text-xs text-gray-400 mt-1">Upload multiple images to append to the gallery.</p>
+                        <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display: none;">
+                            Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
+                        </div>
                     </div>
                 </div>
             </div>

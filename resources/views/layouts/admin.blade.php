@@ -113,6 +113,97 @@
         </div>
     </div>
     </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('formUploader', () => ({
+                progress: 0,
+                uploading: false,
+                submitForm(event) {
+                    const form = event.target;
+                    const formData = new FormData(form);
+                    const xhr = new XMLHttpRequest();
+
+                    this.uploading = true;
+                    this.progress = 0;
+
+                    xhr.upload.addEventListener('progress', (e) => {
+                        if (e.lengthComputable) {
+                            this.progress = Math.round((e.loaded / e.total) * 100);
+                        }
+                    });
+
+                    xhr.addEventListener('load', () => {
+                        this.uploading = false;
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            // If successful redirect or content content, usually we can just reload or follow redirect
+                            // But since we want to mimic standard form submission, let's see what the response is.
+                            // If it's a redirect, the browser won't automatically follow it with XHR unless we handle it.
+                            // However, Laravel returns a redirect response. XHR follows redirects automatically for GET, but 
+                            // for POST it might return the content of the redirected page if it follows.
+                            // The easiest way to handle the "UI" update is to replace the document content 
+                            // with the response if it's HTML, or follow the redirect if it's a JSON redirect.
+                            
+                            if (xhr.responseURL && xhr.responseURL !== window.location.href) {
+                                window.location.href = xhr.responseURL;
+                            } else {
+                                // If the response is the same page (validation errors), replace the body
+                                document.open();
+                                document.write(xhr.responseText);
+                                document.close();
+                            }
+                        } else {
+                            // Handle errors (like 422 validation error returning HTML)
+                             document.open();
+                             document.write(xhr.responseText);
+                             document.close();
+                        }
+                    });
+
+                    xhr.addEventListener('error', () => {
+                        this.uploading = false;
+                        alert('Upload failed. Please try again.');
+                    });
+
+                    xhr.open(form.method, form.action);
+                    
+                    // Add X-CSRF-TOKEN
+                    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    if (token) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                    }
+                    
+                    // We need to request HTML response to render validation errors correctly if any
+                    xhr.setRequestHeader('Accept', 'text/html, application/xhtml+xml');
+
+                    xhr.send(formData);
+                }
+            }));
+
+            Alpine.data('fileUploader', () => ({
+                fileSize: null,
+                fileName: null,
+                handleFileChange(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.fileName = file.name;
+                        this.fileSize = this.formatBytes(file.size);
+                    } else {
+                        this.fileName = null;
+                        this.fileSize = null;
+                    }
+                },
+                formatBytes(bytes, decimals = 2) {
+                    if (bytes === 0) return '0 Bytes';
+                    const k = 1024;
+                    const dm = decimals < 0 ? 0 : decimals;
+                    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+                }
+            }));
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

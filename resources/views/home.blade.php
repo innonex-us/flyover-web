@@ -35,14 +35,10 @@
 
         <div class="relative z-10 text-center w-full max-w-4xl px-4">
             <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-md">
-                MAKE YOUR LIFE BORDERLESS
+                Welcome to FLYOVER
             </h1>
-            <p class="text-xl text-white mb-10 mx-auto drop-shadow-sm">
-                Explore the world with us. Book tour packages and get your visa processed hassle-free.
-            </p>
-            
             <!-- Search Widget -->
-            <div class="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8" 
+            <div class="w-full max-w-2xl mx-auto bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8" 
                 x-data="{ 
                     activeTab: 'tours',
                     query: '',

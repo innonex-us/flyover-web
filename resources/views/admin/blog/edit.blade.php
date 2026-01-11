@@ -4,7 +4,24 @@
         <p class="text-sm text-gray-500 mt-1">Updating: {{ $post->title }}</p>
     </div>
 
-    <form action="{{ route('admin.blog.update', $post) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+    <form action="{{ route('admin.blog.update', $post) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 relative" x-data="formUploader" @submit.prevent="submitForm">
+        
+        <!-- Upload Overlay -->
+        <div x-show="uploading" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center rounded-xl"
+            style="display: none;">
+            <div class="w-64 bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
+                <div class="bg-red-600 h-4 rounded-full transition-all duration-300" :style="`width: ${progress}%`"></div>
+            </div>
+            <div class="text-gray-800 font-bold text-lg">Uploading... <span x-text="progress + '%'"></span></div>
+            <div class="text-gray-500 text-sm mt-2">Please wait while we process your files.</div>
+        </div>
         @csrf
         @method('PUT')
         
@@ -44,7 +61,7 @@
                 </div>
 
                 <!-- Featured Image -->
-                <div>
+                <div x-data="fileUploader">
                     <label class="block text-sm font-bold text-gray-700 mb-2">Featured Image</label>
                      @if($post->image)
                         <div class="mb-2">
@@ -62,10 +79,13 @@
                                 <p class="text-[10px] text-center text-gray-400">Recommended size: 1200x630px</p>
                             </div>
                             <img id="image-preview" src="{{ $post->image ? Storage::url($post->image) : '#' }}" class="{{ $post->image ? '' : 'hidden' }} absolute inset-0 w-full h-full object-cover" />
-                            <input type="file" name="image" class="hidden" accept="image/*" onchange="previewImage(this)" />
+                            <input type="file" name="image" class="hidden" accept="image/*" @change="handleFileChange($event); previewImage($event.target)" />
                         </label>
                     </div>
                      @error('image') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                     <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display: none;">
+                        Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
+                    </div>
                 </div>
                 
                 <!-- Itinerary Section -->
