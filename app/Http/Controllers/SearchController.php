@@ -32,14 +32,14 @@ class SearchController extends Controller
                     });
                 })
                 ->latest()
-                ->limit(8)
+                ->limit(5)
                 ->get(['title', 'slug', 'location', 'thumbnail'])
                 ->map(function ($package) {
                     return [
                         'text' => $package->title,
                         'subtext' => $package->location,
                         'url' => route('packages.show', $package->slug),
-                        'image' => $package->thumbnail,
+                        'image' => $package->thumbnail ? \Storage::url($package->thumbnail) : 'https://via.placeholder.com/100x100?text=Tour',
                     ];
                 });
         } elseif ($type === 'visas') {
@@ -48,14 +48,14 @@ class SearchController extends Controller
                     $q->where('country', 'like', "%{$query}%");
                 })
                 ->latest()
-                ->limit(8)
+                ->limit(5)
                 ->get(['country', 'slug', 'thumbnail'])
                 ->map(function ($visa) {
                     return [
-                        'text' => $visa->country, // Country Name
+                        'text' => $visa->country,
                         'subtext' => 'Visa Service',
                         'url' => route('visas.show', $visa->slug),
-                         'image' => $visa->thumbnail,
+                        'image' => $visa->thumbnail ? \Storage::url($visa->thumbnail) : 'https://via.placeholder.com/100x100?text=Visa',
                     ];
                 });
         }

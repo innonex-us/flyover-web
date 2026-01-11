@@ -44,22 +44,22 @@
                     query: '',
                     suggestions: [],
                     showSuggestions: false,
+                    loading: false,
                     fetchTimer: null,
                     
                     fetchSuggestions() {
-                        // if (this.query.length < 2) {
-                        //     this.suggestions = [];
-                        //     this.showSuggestions = false;
-                        //     return;
-                        // }
-                        
+                        this.loading = true;
                         clearTimeout(this.fetchTimer);
                         this.fetchTimer = setTimeout(() => {
                             fetch(`{{ route('search.suggestions') }}?type=${this.activeTab}&query=${this.query}`)
                                 .then(res => res.json())
                                 .then(data => {
                                     this.suggestions = data;
-                                    this.showSuggestions = data.length > 0;
+                                    this.showSuggestions = true;
+                                    this.loading = false;
+                                })
+                                .catch(() => {
+                                    this.loading = false;
                                 });
                         }, 300);
                     },
@@ -119,24 +119,44 @@
                                     autocomplete="off"
                                 >
                             </div>
-                            
-                            <!-- Suggestions Dropdown -->
+                                                       <!-- Suggestions Dropdown -->
                             <div 
                                 x-show="showSuggestions && activeTab === 'tours'" 
-                                x-transition.opacity 
-                                class="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 text-left overflow-hidden"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 translate-y-2"
+                                x-transition:enter-end="opacity-100 translate-y-0"
+                                class="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-2xl z-50 text-left overflow-hidden border border-gray-100"
                                 style="display: none;"
                             >
-                                <ul>
+                                <div class="p-3 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" x-text="query ? 'Search Results' : 'Latest Packages'"></span>
+                                    <div x-show="loading" class="animate-spin rounded-full h-3 w-3 border-b-2 border-red-600"></div>
+                                </div>
+                                <ul class="divide-y divide-gray-50 max-h-[400px] overflow-y-auto scrollbar-hide">
                                     <template x-for="item in suggestions" :key="item.slug">
-                                        <li @click="selectSuggestion(item.url)" class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 flex items-center">
-                                            <img :src="item.image" class="w-10 h-10 rounded object-cover mr-3" alt="">
-                                            <div>
-                                                <div class="text-sm font-bold text-gray-800" x-text="item.text"></div>
-                                                <div class="text-xs text-gray-500" x-text="item.subtext"></div>
+                                        <li @click="selectSuggestion(item.url)" class="px-4 py-3 hover:bg-red-50/50 cursor-pointer transition-colors duration-200 flex items-center group">
+                                            <div class="relative w-12 h-12 shrink-0 mr-4 rounded-lg overflow-hidden shadow-sm">
+                                                <img :src="item.image" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="">
+                                                <div class="absolute inset-0 bg-black/5"></div>
+                                            </div>
+                                            <div class="flex-grow min-w-0">
+                                                <div class="text-sm font-bold text-gray-900 truncate group-hover:text-red-600 transition-colors" x-text="item.text"></div>
+                                                <div class="text-[11px] text-gray-500 flex items-center mt-0.5">
+                                                    <svg class="w-3 h-3 mr-1 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                                    <span class="truncate" x-text="item.subtext"></span>
+                                                </div>
+                                            </div>
+                                            <div class="shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0">
+                                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                             </div>
                                         </li>
                                     </template>
+                                    <li x-show="suggestions.length === 0 && !loading" class="px-4 py-8 text-center">
+                                        <div class="text-gray-400 mb-2">
+                                            <svg class="w-8 h-8 mx-auto opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                        </div>
+                                        <p class="text-sm text-gray-500">No matching tours found</p>
+                                    </li>
                                 </ul>
                             </div>
 
@@ -170,25 +190,42 @@
                                 >
                             </div>
 
-                             <!-- Suggestions Dropdown -->
+                             <!-- Suggestions Dropdown (Visas) -->
                              <div 
                                 x-show="showSuggestions && activeTab === 'visas'" 
-                                x-transition.opacity 
-                                class="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 text-left overflow-hidden"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 translate-y-2"
+                                x-transition:enter-end="opacity-100 translate-y-0"
+                                class="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-2xl z-50 text-left overflow-hidden border border-gray-100"
                                 style="display: none;"
                             >
-                                <ul>
+                                <div class="p-3 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" x-text="query ? 'Search Results' : 'Latest Visas'"></span>
+                                    <div x-show="loading" class="animate-spin rounded-full h-3 w-3 border-b-2 border-red-600"></div>
+                                </div>
+                                <ul class="divide-y divide-gray-50 max-h-[400px] overflow-y-auto scrollbar-hide">
                                     <template x-for="item in suggestions" :key="item.slug">
-                                        <li @click="selectSuggestion(item.url)" class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 flex items-center">
-                                            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3 text-xl">
-                                                🌍
+                                        <li @click="selectSuggestion(item.url)" class="px-4 py-3 hover:bg-red-50/50 cursor-pointer transition-colors duration-200 flex items-center group">
+                                            <div class="relative w-12 h-12 shrink-0 mr-4 rounded-lg overflow-hidden bg-red-50 flex items-center justify-center">
+                                                <img x-show="item.image" :src="item.image" class="w-full h-full object-cover" alt="">
+                                                <span x-show="!item.image" class="text-xl">🌍</span>
+                                                <div class="absolute inset-0 bg-black/5"></div>
                                             </div>
-                                            <div>
-                                                <div class="text-sm font-bold text-gray-800" x-text="item.text"></div>
-                                                <div class="text-xs text-gray-500" x-text="item.subtext"></div>
+                                            <div class="flex-grow min-w-0">
+                                                <div class="text-sm font-bold text-gray-900 truncate group-hover:text-red-600 transition-colors" x-text="item.text"></div>
+                                                <div class="text-[11px] text-gray-500 mt-0.5" x-text="item.subtext"></div>
+                                            </div>
+                                            <div class="shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0">
+                                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                             </div>
                                         </li>
                                     </template>
+                                    <li x-show="suggestions.length === 0 && !loading" class="px-4 py-8 text-center">
+                                        <div class="text-gray-400 mb-2">
+                                            <svg class="w-8 h-8 mx-auto opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                        </div>
+                                        <p class="text-sm text-gray-500">No matching visas found</p>
+                                    </li>
                                 </ul>
                             </div>
 
