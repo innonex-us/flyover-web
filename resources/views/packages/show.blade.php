@@ -93,18 +93,11 @@
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-600 mb-8">
-                        <div x-data="{ activeTab: 'itinerary' }">
+                        <div x-data="{ activeTab: 'details' }">
                             
                             <!-- Tabs Navigation -->
                             <div class="border-b border-gray-200 mb-6">
                                 <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                                    <button 
-                                        @click="activeTab = 'itinerary'"
-                                        :class="activeTab === 'itinerary' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg transition-colors duration-200"
-                                    >
-                                        Itinerary
-                                    </button>
                                     <button 
                                         @click="activeTab = 'details'"
                                         :class="activeTab === 'details' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
@@ -129,39 +122,38 @@
                                 </nav>
                             </div>
 
-                            <!-- Itinerary Tab -->
-                            <div x-show="activeTab === 'itinerary'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
-                                <h2 class="text-2xl font-bold text-gray-900 mb-6">Day Wise Itinerary</h2>
-                                
-                                <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
-                                    @if(!empty($package->itinerary) && is_array($package->itinerary))
-                                        @foreach($package->itinerary as $index => $day)
-                                            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                                                <!-- Icon -->
-                                                <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-red-600 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-                                                    <span class="text-xs font-bold">{{ $day['day'] ?? ($index + 1) }}</span>
-                                                </div>
-                                                <!-- Content -->
-                                                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                                                    <div class="flex items-center justify-between mb-2">
-                                                        <div class="font-bold text-red-600">Day {{ $day['day'] ?? ($index + 1) }}</div>
-                                                    </div>
-                                                    <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $day['title'] ?? 'Overview' }}</h3>
-                                                    <p class="text-gray-600 text-sm leading-relaxed">{{ $day['description'] ?? '' }}</p>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <div class="bg-gray-50 rounded-lg p-6 text-center text-gray-500">
-                                            Itinerary details are currently being finalized.
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-
                             <!-- Details Tab -->
-                            <div x-show="activeTab === 'details'" style="display: none;" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+                            <div x-show="activeTab === 'details'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
                                 
+                                <div class="mb-12">
+                                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Day Wise Itinerary</h2>
+                                    
+                                    <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                                        @if(!empty($package->itinerary) && is_array($package->itinerary))
+                                            @foreach($package->itinerary as $index => $day)
+                                                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                                                    <!-- Icon -->
+                                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-red-600 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                                                        <span class="text-xs font-bold">{{ $day['day'] ?? ($index + 1) }}</span>
+                                                    </div>
+                                                    <!-- Content -->
+                                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition">
+                                                        <div class="flex items-center justify-between mb-2">
+                                                            <div class="font-bold text-red-600">Day {{ $day['day'] ?? ($index + 1) }}</div>
+                                                        </div>
+                                                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $day['title'] ?? 'Overview' }}</h3>
+                                                        <p class="text-gray-600 text-sm leading-relaxed">{{ $day['description'] ?? '' }}</p>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="bg-gray-50 rounded-lg p-6 text-center text-gray-500">
+                                                Itinerary details are currently being finalized.
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Overview</h2>
                                 <p class="leading-relaxed mb-8">{{ $package->description }}</p>
 
