@@ -33,9 +33,9 @@
         
         <div class="absolute inset-0 bg-black/40"></div> <!-- Overlay for contrast -->
 
-        <div class="relative z-10 text-center w-full max-w-4xl px-4">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-md">
-                Welcome to FLYOVER
+        <div class="relative z-10 text-left w-full max-w-2xl px-4">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-white mb-6 drop-shadow-md">
+                Welcome to FLYOVER!
             </h1>
             <!-- Search Widget -->
             <div class="w-full max-w-2xl mx-auto bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8" 
