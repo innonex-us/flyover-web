@@ -40,6 +40,9 @@ class BlogController extends Controller
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string|max:500',
             'is_published' => 'boolean',
+            'itinerary' => 'nullable|array',
+            'itinerary.*.title' => 'required|string',
+            'itinerary.*.description' => 'required|string',
         ]);
 
         $slug = Str::slug($validated['title']);
@@ -64,6 +67,7 @@ class BlogController extends Controller
             'seo_description' => $validated['seo_description'],
             'is_published' => $request->has('is_published'),
             'published_at' => $request->has('is_published') ? now() : null,
+            'itinerary' => $request->itinerary ? array_values($request->itinerary) : null,
         ]);
 
         return redirect()->route('admin.blog.index')->with('success', 'Post created successfully.');
@@ -98,6 +102,9 @@ class BlogController extends Controller
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string|max:500',
             'is_published' => 'boolean',
+            'itinerary' => 'nullable|array',
+            'itinerary.*.title' => 'required|string',
+            'itinerary.*.description' => 'required|string',
         ]);
 
         $slug = Str::slug($validated['title']);
@@ -121,6 +128,7 @@ class BlogController extends Controller
         $blog->content = $validated['content'];
         $blog->seo_title = $validated['seo_title'];
         $blog->seo_description = $validated['seo_description'];
+        $blog->itinerary = $request->itinerary ? array_values($request->itinerary) : null;
         $blog->is_published = $request->has('is_published');
         
         if ($blog->is_published && !$blog->published_at) {

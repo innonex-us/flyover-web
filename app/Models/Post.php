@@ -17,11 +17,13 @@ class Post extends Model
         'seo_title',
         'seo_description',
         'published_at',
+        'itinerary',
     ];
 
     protected $casts = [
         'is_published' => 'boolean',
         'published_at' => 'datetime',
+        'itinerary' => 'array',
     ];
 
     public function author()

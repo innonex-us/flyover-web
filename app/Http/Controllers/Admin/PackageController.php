@@ -46,6 +46,9 @@ class PackageController extends Controller
             'exclusions' => 'nullable|array',
             'requirements' => 'nullable|string',
             'policy' => 'nullable|string',
+            'itinerary' => 'nullable|array',
+            'itinerary.*.day' => 'nullable|integer',
+            'itinerary.*.activity' => 'nullable|string',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
@@ -65,6 +68,12 @@ class PackageController extends Controller
         // Clean up array inputs which might contain empty strings if dynamically added
         $validated['inclusions'] = array_filter($validated['inclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
         $validated['exclusions'] = array_filter($validated['exclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
+
+        // Sort itinerary by day
+        if (isset($validated['itinerary']) && is_array($validated['itinerary'])) {
+            $validated['itinerary'] = array_values($validated['itinerary']); // Reindex
+            usort($validated['itinerary'], fn($a, $b) => $a['day'] <=> $b['day']);
+        }
 
         Package::create($validated);
 
@@ -98,6 +107,9 @@ class PackageController extends Controller
             'exclusions' => 'nullable|array',
             'requirements' => 'nullable|string',
             'policy' => 'nullable|string',
+            'itinerary' => 'nullable|array',
+            'itinerary.*.day' => 'nullable|integer',
+            'itinerary.*.activity' => 'nullable|string',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
@@ -123,6 +135,12 @@ class PackageController extends Controller
         // Clean up array inputs
         $validated['inclusions'] = array_filter($validated['inclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
         $validated['exclusions'] = array_filter($validated['exclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
+
+        // Sort itinerary by day
+        if (isset($validated['itinerary']) && is_array($validated['itinerary'])) {
+            $validated['itinerary'] = array_values($validated['itinerary']); // Reindex
+            usort($validated['itinerary'], fn($a, $b) => $a['day'] <=> $b['day']);
+        }
         
         // Handle checkbox logic for is_active (if unchecked, it won't be in request)
         $validated['is_active'] = $request->boolean('is_active');

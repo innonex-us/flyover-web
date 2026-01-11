@@ -53,31 +53,51 @@
                     @endif
 
                     <div class="flex items-center justify-center w-full">
-                        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition relative overflow-hidden" id="drop-zone">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6" id="upload-placeholder">
+                        <label class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition relative overflow-hidden">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6 {{ $post->image ? 'hidden' : '' }}" id="image-placeholder">
                                 <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                                 </svg>
-                                <p class="text-xs text-gray-500">Upload to replace</p>
+                                <p class="text-xs text-center text-gray-500 mb-1">Click to upload new image</p>
+                                <p class="text-[10px] text-center text-gray-400">Recommended size: 1200x630px</p>
                             </div>
-                            <img id="image-preview" src="#" alt="Preview" class="absolute inset-0 w-full h-full object-cover hidden">
+                            <img id="image-preview" src="{{ $post->image ? Storage::url($post->image) : '#' }}" class="{{ $post->image ? '' : 'hidden' }} absolute inset-0 w-full h-full object-cover" />
                             <input type="file" name="image" class="hidden" accept="image/*" onchange="previewImage(this)" />
                         </label>
                     </div>
-                    <script>
-                        function previewImage(input) {
-                            if (input.files && input.files[0]) {
-                                var reader = new FileReader();
-                                reader.onload = function(e) {
-                                    document.getElementById('image-preview').src = e.target.result;
-                                    document.getElementById('image-preview').classList.remove('hidden');
-                                    document.getElementById('upload-placeholder').classList.add('hidden');
-                                }
-                                reader.readAsDataURL(input.files[0]);
-                            }
-                        }
-                    </script>
                      @error('image') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                </div>
+                
+                <!-- Itinerary Section -->
+                <div class="pt-6 border-t border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-gray-900 uppercase">Day Wise Itinerary</h3>
+                        <button type="button" onclick="addItineraryDay()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-1 px-3 rounded-lg transition">
+                            + Add Day
+                        </button>
+                    </div>
+                    
+                    <div id="itinerary-container" class="space-y-4">
+                        @if($post->itinerary && is_array($post->itinerary))
+                            @foreach($post->itinerary as $index => $day)
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative group" id="day-{{ $login_loop_index = $index + 1 }}">
+                                    <button type="button" onclick="removeDay({{ $login_loop_index }})" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-500 mb-1">Day Title</label>
+                                            <input type="text" name="itinerary[{{ $login_loop_index }}][title]" value="{{ $day['title'] ?? '' }}" class="w-full border-gray-300 rounded-md shadow-sm text-sm focus:border-red-500 focus:ring-red-200">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold text-gray-500 mb-1">Description</label>
+                                            <textarea name="itinerary[{{ $login_loop_index }}][description]" rows="2" class="w-full border-gray-300 rounded-md shadow-sm text-sm focus:border-red-500 focus:ring-red-200">{{ $day['description'] ?? '' }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
 
                 <!-- SEO Settings -->
@@ -105,7 +125,6 @@
         </div>
     </form>
 
-    @push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
@@ -114,6 +133,56 @@
             toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
             height: 500
         });
+
+        function previewImage(input) {
+            const preview = document.getElementById('image-preview');
+            const placeholder = document.getElementById('image-placeholder');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Initialize dayCount based on existing items
+        let dayCount = {{ $post->itinerary && is_array($post->itinerary) ? count($post->itinerary) : 0 }};
+
+        function addItineraryDay() {
+            dayCount++;
+            const container = document.getElementById('itinerary-container');
+            const dayHtml = `
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative group" id="day-${dayCount}">
+                    <button type="button" onclick="removeDay(${dayCount})" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">Day Title</label>
+                            <input type="text" name="itinerary[${dayCount}][title]" class="w-full border-gray-300 rounded-md shadow-sm text-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. Day ${dayCount}: Arrival in Dhaka">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">Description</label>
+                            <textarea name="itinerary[${dayCount}][description]" rows="2" class="w-full border-gray-300 rounded-md shadow-sm text-sm focus:border-red-500 focus:ring-red-200" placeholder="Brief description of the day's activities..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', dayHtml);
+        }
+
+        function removeDay(id) {
+            const element = document.getElementById(`day-${id}`);
+            if (element) {
+                element.remove();
+            }
+        }
     </script>
     @endpush
 </x-admin-layout>
