@@ -49,11 +49,11 @@
                     <!-- Image Gallery (Alpine.js) -->
                     @php
                         $defaultImage = 'https://via.placeholder.com/800x450?text=Tour+Package';
-                        $mainImage = $package->thumbnail ?? $defaultImage;
+                        $mainImage = $package->thumbnail ? Storage::url($package->thumbnail) : $defaultImage;
                         $galleryImages = [$mainImage];
                         if (!empty($package->images) && is_array($package->images)) {
                             foreach($package->images as $img) {
-                                $galleryImages[] = $img;
+                                $galleryImages[] = Storage::url($img);
                             }
                         }
                     @endphp

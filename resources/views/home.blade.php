@@ -219,10 +219,10 @@
                                 x-data="{
                                     activeSlide: 0,
                                     slides: [
-                                        '{{ $package->thumbnail ?? 'https://via.placeholder.com/640x360?text=Tour+Package' }}',
+                                        '{{ $package->thumbnail ? Storage::url($package->thumbnail) : 'https://via.placeholder.com/640x360?text=Tour+Package' }}',
                                         @if(!empty($package->images) && is_array($package->images))
                                             @foreach($package->images as $img)
-                                                '{{ $img }}',
+                                                '{{ Storage::url($img) }}',
                                             @endforeach
                                         @endif
                                     ],
@@ -247,7 +247,7 @@
                                     <!-- Static First Image (LCP) -->
                                     <div 
                                         class="absolute inset-0 bg-cover bg-center opacity-100 x-cloak-hidden"
-                                        style="background-image: url('{{ $package->thumbnail ?? 'https://via.placeholder.com/640x360?text=Tour+Package' }}'); z-index: 10;"
+                                        style="background-image: url('{{ $package->thumbnail ? Storage::url($package->thumbnail) : 'https://via.placeholder.com/640x360?text=Tour+Package' }}'); z-index: 10;"
                                         x-show="false"
                                     ></div>
                                 </a>

@@ -6,7 +6,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($packages as $package)
                      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                        <img src="{{ $package->thumbnail ?? 'https://via.placeholder.com/640x360?text=Tour+Package' }}" alt="{{ $package->title }}" class="w-full h-40 object-cover">
+                        <img src="{{ $package->thumbnail ? Storage::url($package->thumbnail) : 'https://via.placeholder.com/640x360?text=Tour+Package' }}" alt="{{ $package->title }}" class="w-full h-40 object-cover">
                         <div class="p-4">
                             <div class="flex justify-between items-start mb-2">
                                 <h3 class="text-lg font-bold text-gray-900 leading-tight">{{ $package->title }}</h3>
