@@ -79,15 +79,15 @@
                         </div>
                     </div>
 
-                    <h1 class="text-4xl font-extrabold text-gray-900 mb-4">{{ $package->title }}</h1>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4 tracking-tight">{{ $package->title }}</h1>
                     
                     <div class="flex flex-wrap items-center gap-6 text-gray-600 mb-8 pb-8 border-b border-gray-100">
-                        <span class="flex items-center px-4 py-2 bg-gray-50 rounded-full">
-                            <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="flex items-center px-3 py-1.5 bg-gray-50 rounded-full text-sm">
+                            <svg class="w-4 h-4 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             {{ $package->location }}
                         </span>
-                        <span class="flex items-center px-4 py-2 bg-gray-50 rounded-full">
-                            <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="flex items-center px-3 py-1.5 bg-gray-50 rounded-full text-sm">
+                            <svg class="w-4 h-4 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             {{ $package->duration_days }} Days / {{ $package->duration_days - 1 }} Nights
                         </span>
                     </div>
@@ -101,21 +101,21 @@
                                     <button 
                                         @click="activeTab = 'details'"
                                         :class="activeTab === 'details' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg transition-colors duration-200"
+                                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-base transition-colors duration-200"
                                     >
                                         Details
                                     </button>
                                     <button 
                                         @click="activeTab = 'options'"
                                         :class="activeTab === 'options' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg transition-colors duration-200"
+                                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-base transition-colors duration-200"
                                     >
                                         Options
                                     </button>
                                     <button 
                                         @click="activeTab = 'policy'"
                                         :class="activeTab === 'policy' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg transition-colors duration-200"
+                                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-base transition-colors duration-200"
                                     >
                                         Policy
                                     </button>
@@ -126,8 +126,8 @@
                             <div x-show="activeTab === 'details'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
                                 
                                 <div class="mb-12">
-                                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 flex items-center">
-                                        <span class="bg-red-600 w-2 h-8 rounded-full mr-4"></span>
+                                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                                        <span class="bg-red-600 w-1.5 h-6 rounded-full mr-3"></span>
                                         Day Wise Itinerary
                                     </h2>
                                     
@@ -156,8 +156,8 @@
                                                             </div>
 
                                                             <div>
-                                                                <span class="text-xs font-bold text-red-600 uppercase tracking-widest mb-1 block">Day {{ $day['day'] ?? ($index + 1) }}</span>
-                                                                <h3 class="text-xl font-bold text-gray-900 leading-tight">{{ $day['title'] ?? 'Overview' }}</h3>
+                                                                <span class="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-0.5 block">Day {{ $day['day'] ?? ($index + 1) }}</span>
+                                                                <h3 class="text-lg font-bold text-gray-900 leading-tight">{{ $day['title'] ?? 'Overview' }}</h3>
                                                             </div>
                                                         </div>
 
@@ -184,7 +184,7 @@
                                                                         <div class="bg-red-50 p-1.5 rounded-lg text-red-600 mt-0.5 group-hover/item:bg-red-600 group-hover/item:text-white transition-colors duration-200">
                                                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                                         </div>
-                                                                        <span class="text-gray-600 text-base leading-relaxed">
+                                                                        <span class="text-gray-600 text-sm leading-relaxed">
                                                                             {{ $activity }}
                                                                         </span>
                                                                     </li>
@@ -205,15 +205,15 @@
                                     </div>
                                 </div>
 
-                                <h2 class="text-2xl font-bold text-gray-900 mb-4">Overview</h2>
-                                <p class="leading-relaxed mb-8">{{ $package->description }}</p>
+                                <h2 class="text-xl font-bold text-gray-900 mb-4">Overview</h2>
+                                <p class="leading-relaxed mb-8 text-sm md:text-base">{{ $package->description }}</p>
 
                                 @if(!empty($package->inclusions) || !empty($package->exclusions))
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                                         @if(!empty($package->inclusions))
                                             <div class="bg-green-50 rounded-xl p-6 border border-green-100">
-                                                <h3 class="text-lg font-bold text-green-800 mb-4 flex items-center">
-                                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                <h3 class="text-base font-bold text-green-800 mb-3 flex items-center">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                                     Inclusions
                                                 </h3>
                                                 <ul class="space-y-2">
@@ -229,8 +229,8 @@
                                         
                                         @if(!empty($package->exclusions))
                                             <div class="bg-red-50 rounded-xl p-6 border border-red-100">
-                                                <h3 class="text-lg font-bold text-red-800 mb-4 flex items-center">
-                                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                <h3 class="text-base font-bold text-red-800 mb-3 flex items-center">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                                     Exclusions
                                                 </h3>
                                                 <ul class="space-y-2">
@@ -376,11 +376,11 @@
                 <!-- Right Column: Booking Card -->
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 sticky top-24 border border-gray-100 transform transition hover:scale-[1.01]">
-                        <div class="mb-6 pb-6 border-b border-gray-100">
-                            <p class="text-gray-500 text-sm uppercase tracking-wide font-semibold mb-1">Starting from</p>
+                        <div class="mb-5 pb-5 border-b border-gray-100">
+                            <p class="text-gray-400 text-[10px] uppercase tracking-widest font-bold mb-1">Starting from</p>
                             <div class="flex items-baseline">
-                                <span class="text-4xl font-extrabold text-red-600">৳{{ number_format($package->price) }}</span>
-                                <span class="text-gray-400 ml-2">/ person</span>
+                                <span class="text-3xl font-extrabold text-red-600">৳{{ number_format($package->price) }}</span>
+                                <span class="text-gray-400 text-xs ml-2">/ person</span>
                             </div>
                         </div>
                         
@@ -430,7 +430,7 @@
 
                             </div>
 
-                            <button type="submit" class="w-full bg-red-600 text-white text-lg font-bold py-4 px-6 rounded-xl hover:bg-red-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-4">
+                            <button type="submit" class="w-full bg-red-600 text-white text-base font-bold py-3.5 px-6 rounded-xl hover:bg-red-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-4">
                                 Book This Package
                             </button>
                         </form>

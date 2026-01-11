@@ -35,4 +35,27 @@ class Package extends Model
         'exclusions' => 'array',
         'itinerary' => 'array',
     ];
+
+    public function getItineraryAttribute($value)
+    {
+        if (empty($value)) return [];
+        
+        $itinerary = is_string($value) ? json_decode($value, true) : $value;
+        
+        if (!is_array($itinerary)) return [];
+
+        return array_map(function($day) {
+            // If it has 'activity' (old structure), convert to 'activities' (new structure)
+            if (isset($day['activity']) && !isset($day['activities'])) {
+                $day['activities'] = [$day['activity']];
+                unset($day['activity']);
+            }
+            
+            // Ensure properties exist
+            $day['title'] = $day['title'] ?? '';
+            $day['activities'] = $day['activities'] ?? [''];
+            
+            return $day;
+        }, $itinerary);
+    }
 }
