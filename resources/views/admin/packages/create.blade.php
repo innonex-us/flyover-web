@@ -80,22 +80,51 @@
                     </div>
 
                     <!-- Itinerary Builder -->
-                    <div x-data="{ days: [{ day: 1, activity: '' }] }">
+                    <div x-data="{ days: [{ day: 1, title: '', activities: [''] }] }">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Itinerary</label>
-                        <div class="space-y-4">
-                            <template x-for="(day, index) in days" :key="index">
-                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative">
-                                    <div class="flex justify-between mb-2">
-                                        <h4 class="font-bold text-gray-700" x-text="'Day ' + (index + 1)"></h4>
-                                        <button type="button" @click="days.splice(index, 1)" x-show="days.length > 1" class="text-red-500 hover:text-red-700 text-sm">Remove</button>
+                        <div class="space-y-6">
+                            <template x-for="(day, dIndex) in days" :key="dIndex">
+                                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 relative group">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h4 class="font-bold text-gray-800 flex items-center">
+                                            <span class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2" x-text="dIndex + 1"></span>
+                                            Day <span x-text="dIndex + 1" class="ml-1"></span>
+                                        </h4>
+                                        <button type="button" @click="days.splice(dIndex, 1)" x-show="days.length > 1" class="text-red-500 hover:text-red-700 p-1 rounded-lg hover:bg-red-50 transition">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
                                     </div>
-                                    <input type="hidden" :name="'itinerary[' + index + '][day]'" :value="index + 1">
-                                    <input type="text" :name="'itinerary[' + index + '][activity]'" x-model="day.activity" placeholder="Activity description..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm" required>
+
+                                    <div class="grid grid-cols-1 gap-4">
+                                        <input type="hidden" :name="'itinerary[' + dIndex + '][day]'" :value="dIndex + 1">
+                                        
+                                        <div>
+                                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Day Title</label>
+                                            <input type="text" :name="'itinerary[' + dIndex + '][title]'" x-model="day.title" placeholder="e.g. Arrival and City Tour" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm">
+                                        </div>
+
+                                        <div class="space-y-3">
+                                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">Activities</label>
+                                            <template x-for="(activity, aIndex) in day.activities" :key="aIndex">
+                                                <div class="flex gap-2">
+                                                    <input type="text" :name="'itinerary[' + dIndex + '][activities][' + aIndex + ']'" x-model="day.activities[aIndex]" placeholder="Describe activity..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm" required>
+                                                    <button type="button" @click="day.activities.splice(aIndex, 1)" x-show="day.activities.length > 1" class="text-gray-400 hover:text-red-500 p-1">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                    </button>
+                                                </div>
+                                            </template>
+                                            <button type="button" @click="day.activities.push('')" class="text-xs text-blue-600 font-bold hover:text-blue-700 flex items-center">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                                Add Activity
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </template>
                         </div>
-                        <button type="button" @click="days.push({ day: days.length + 1, activity: '' })" class="mt-2 text-sm text-blue-600 font-bold hover:underline">
-                            + Add Day
+                        <button type="button" @click="days.push({ day: days.length + 1, title: '', activities: [''] })" class="mt-4 bg-white border-2 border-dashed border-gray-300 rounded-xl p-4 w-full text-gray-500 font-bold hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            Add New Day
                         </button>
                     </div>
                 </div>

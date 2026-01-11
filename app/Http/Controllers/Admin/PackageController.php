@@ -48,7 +48,9 @@ class PackageController extends Controller
             'policy' => 'nullable|string',
             'itinerary' => 'nullable|array',
             'itinerary.*.day' => 'nullable|integer',
-            'itinerary.*.activity' => 'nullable|string',
+            'itinerary.*.title' => 'nullable|string',
+            'itinerary.*.activities' => 'nullable|array',
+            'itinerary.*.activities.*' => 'nullable|string',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
@@ -69,10 +71,14 @@ class PackageController extends Controller
         $validated['inclusions'] = array_filter($validated['inclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
         $validated['exclusions'] = array_filter($validated['exclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
 
-        // Sort itinerary by day
+        // Sort itinerary by day and filter activities
         if (isset($validated['itinerary']) && is_array($validated['itinerary'])) {
             $validated['itinerary'] = array_values($validated['itinerary']); // Reindex
-            usort($validated['itinerary'], fn($a, $b) => $a['day'] <=> $b['day']);
+            foreach ($validated['itinerary'] as &$day) {
+                $day['activities'] = array_filter($day['activities'] ?? [], fn($value) => !is_null($value) && $value !== '');
+                $day['activities'] = array_values($day['activities']); // Reindex
+            }
+            usort($validated['itinerary'], fn($a, $b) => ($a['day'] ?? 0) <=> ($b['day'] ?? 0));
         }
 
         Package::create($validated);
@@ -109,7 +115,9 @@ class PackageController extends Controller
             'policy' => 'nullable|string',
             'itinerary' => 'nullable|array',
             'itinerary.*.day' => 'nullable|integer',
-            'itinerary.*.activity' => 'nullable|string',
+            'itinerary.*.title' => 'nullable|string',
+            'itinerary.*.activities' => 'nullable|array',
+            'itinerary.*.activities.*' => 'nullable|string',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);

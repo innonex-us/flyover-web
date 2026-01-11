@@ -126,29 +126,80 @@
                             <div x-show="activeTab === 'details'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
                                 
                                 <div class="mb-12">
-                                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Day Wise Itinerary</h2>
+                                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 flex items-center">
+                                        <span class="bg-red-600 w-2 h-8 rounded-full mr-4"></span>
+                                        Day Wise Itinerary
+                                    </h2>
                                     
-                                    <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                                    <div class="space-y-4" x-data="{ activeDay: 0 }">
                                         @if(!empty($package->itinerary) && is_array($package->itinerary))
                                             @foreach($package->itinerary as $index => $day)
-                                                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                                                    <!-- Icon -->
-                                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-red-600 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-                                                        <span class="text-xs font-bold">{{ $day['day'] ?? ($index + 1) }}</span>
-                                                    </div>
-                                                    <!-- Content -->
-                                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                                                        <div class="flex items-center justify-between mb-2">
-                                                            <div class="font-bold text-red-600">Day {{ $day['day'] ?? ($index + 1) }}</div>
+                                                <div class="group border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-all duration-300">
+                                                    <!-- Accordion Header -->
+                                                    <button 
+                                                        @click="activeDay = (activeDay === {{ $index }} ? -1 : {{ $index }})"
+                                                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none"
+                                                        :class="activeDay === {{ $index }} ? 'bg-red-50/50' : 'bg-white'"
+                                                    >
+                                                        <div class="flex items-center space-x-6">
+                                                            <!-- Step Indicator -->
+                                                            <div class="relative shrink-0">
+                                                                <div 
+                                                                    class="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg transition-all duration-300"
+                                                                    :class="activeDay === {{ $index }} ? 'bg-red-600 text-white shadow-lg shadow-red-200 scale-110' : 'bg-gray-50 text-gray-500 group-hover:bg-red-100 group-hover:text-red-600'"
+                                                                >
+                                                                    {{ $day['day'] ?? ($index + 1) }}
+                                                                </div>
+                                                                @if(!$loop->last)
+                                                                    <div class="absolute top-12 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-gray-100"></div>
+                                                                @endif
+                                                            </div>
+
+                                                            <div>
+                                                                <span class="text-xs font-bold text-red-600 uppercase tracking-widest mb-1 block">Day {{ $day['day'] ?? ($index + 1) }}</span>
+                                                                <h3 class="text-xl font-bold text-gray-900 leading-tight">{{ $day['title'] ?? 'Overview' }}</h3>
+                                                            </div>
                                                         </div>
-                                                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $day['title'] ?? 'Overview' }}</h3>
-                                                        <p class="text-gray-600 text-sm leading-relaxed">{{ $day['description'] ?? '' }}</p>
+
+                                                        <!-- Toggle Icon -->
+                                                        <div 
+                                                            class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center transition-transform duration-300"
+                                                            :class="activeDay === {{ $index }} ? 'rotate-180 bg-red-600 border-red-600 text-white' : 'bg-white text-gray-400 group-hover:border-red-600 group-hover:text-red-600'"
+                                                        >
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                        </div>
+                                                    </button>
+
+                                                    <!-- Accordion Content -->
+                                                    <div 
+                                                        x-show="activeDay === {{ $index }}"
+                                                        x-collapse
+                                                        style="display: none;"
+                                                        class="px-5 pb-6 ml-[4.5rem]"
+                                                    >
+                                                        <div class="pt-2 border-t border-gray-100">
+                                                            <ul class="space-y-4 mt-4">
+                                                                @foreach($day['activities'] ?? [] as $activity)
+                                                                    <li class="flex items-start space-x-3 group/item">
+                                                                        <div class="bg-red-50 p-1.5 rounded-lg text-red-600 mt-0.5 group-hover/item:bg-red-600 group-hover/item:text-white transition-colors duration-200">
+                                                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                                        </div>
+                                                                        <span class="text-gray-600 text-base leading-relaxed">
+                                                                            {{ $activity }}
+                                                                        </span>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             @endforeach
                                         @else
-                                            <div class="bg-gray-50 rounded-lg p-6 text-center text-gray-500">
-                                                Itinerary details are currently being finalized.
+                                            <div class="bg-gray-50 rounded-2xl p-10 text-center border-2 border-dashed border-gray-200">
+                                                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-400 mb-4">
+                                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                </div>
+                                                <p class="text-gray-500 font-medium italic">Itinerary details are currently being finalized by our travel experts.</p>
                                             </div>
                                         @endif
                                     </div>
