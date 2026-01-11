@@ -362,9 +362,7 @@
                             <div x-show="activeTab === 'policy'" style="display: none;" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
                                 <div class="bg-gray-50 rounded-xl p-8 border border-gray-100">
                                     <div class="prose prose-sm max-w-none text-gray-600 whitespace-pre-line">
-                                        <!-- POLICY PLACEHOLDER -->
-                                        POLICY CONTENT HERE
-                                        <!-- END PLACEHOLDER -->
+                                        {{ $package->policy }}
                                     </div>
                                 </div>
                             </div>
