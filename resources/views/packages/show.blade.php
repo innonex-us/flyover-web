@@ -15,7 +15,33 @@
 
     <div class="bg-gray-50/50 min-h-screen pb-12" x-data="{ 
         openInquiryModal: false,
-        activeSection: 'itinerary'
+        activeSection: 'itinerary',
+        inquiryForm: {
+            destinations: [
+                { country: '', nights: '', cities: [{ name: '', nights: '' }] }
+            ],
+            adults: 1,
+            children: 0,
+            infants: 0,
+            hotel_type: '',
+            travel_date: '',
+            message: '',
+            name: '',
+            email: '',
+            phone: ''
+        },
+        addDestination() {
+            this.inquiryForm.destinations.push({ country: '', nights: '', cities: [{ name: '', nights: '' }] });
+        },
+        removeDestination(index) {
+            this.inquiryForm.destinations.splice(index, 1);
+        },
+        addCity(dIndex) {
+            this.inquiryForm.destinations[dIndex].cities.push({ name: '', nights: '' });
+        },
+        removeCity(dIndex, cIndex) {
+            this.inquiryForm.destinations[dIndex].cities.splice(cIndex, 1);
+        }
     }">
         <!-- Breadcrumbs -->
         <div class="bg-white border-b border-gray-100/80">
@@ -266,28 +292,132 @@
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div x-show="openInquiryModal" x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" @click="openInquiryModal = false"></div>
 
-                <div x-show="openInquiryModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden p-8">
+                <div x-show="openInquiryModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative bg-white rounded-2xl shadow-xl max-w-2xl w-full overflow-hidden p-6 md:p-10">
+                    <button @click="openInquiryModal = false" class="absolute top-4 right-4 p-2 text-gray-400 hover:text-red-500 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+
                     <div class="text-center mb-8">
-                        <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-100">
-                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900">Enquiry Form</h3>
-                        <p class="text-xs text-gray-500 mt-1">Let us know your requirements for <br><span class="font-bold text-red-600">{{ $package->title }}</span></p>
+                        <h3 class="text-xl font-bold text-gray-900 uppercase tracking-widest">Request Form</h3>
+                        <div class="w-12 h-1 bg-red-500 mx-auto mt-2 rounded-full"></div>
                     </div>
 
-                    <form action="{{ route('packages.customize', $package->id) }}" method="POST" class="space-y-4">
+                    <form action="{{ route('packages.customize', $package->id) }}" method="POST" class="space-y-6">
                         @csrf
-                        <div class="space-y-3">
-                            <input type="text" name="name" required class="w-full bg-gray-50 border-gray-100 rounded-xl py-3 px-4 text-sm focus:bg-white focus:ring-1 focus:ring-red-500 transition-all shadow-sm" placeholder="Full Name">
-                            <div class="grid grid-cols-2 gap-3">
-                                <input type="email" name="email" required class="w-full bg-gray-50 border-gray-100 rounded-xl py-3 px-4 text-sm focus:bg-white focus:ring-1 focus:ring-red-500 transition-all shadow-sm" placeholder="Email">
-                                <input type="text" name="phone" required class="w-full bg-gray-50 border-gray-100 rounded-xl py-3 px-4 text-sm focus:bg-white focus:ring-1 focus:ring-red-500 transition-all shadow-sm" placeholder="Phone">
-                            </div>
-                            <textarea name="message" rows="3" required class="w-full bg-gray-50 border-gray-100 rounded-xl py-3 px-4 text-sm focus:bg-white focus:ring-1 focus:ring-red-500 transition-all shadow-sm" placeholder="Message / Custom Requirements"></textarea>
+                        
+                        <!-- Destinations & Nights -->
+                        <div class="space-y-4">
+                            <template x-for="(dest, dIndex) in inquiryForm.destinations" :key="dIndex">
+                                <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-4 relative group">
+                                    <button type="button" @click="removeDestination(dIndex)" x-show="inquiryForm.destinations.length > 1" class="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="space-y-1">
+                                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Country</label>
+                                            <input type="text" :name="'destinations[' + dIndex + '][country]'" x-model="dest.country" required class="w-full bg-white border-gray-200 rounded-lg py-2 px-3 text-sm focus:ring-1 focus:ring-red-500 shadow-sm" placeholder="e.g. Thailand">
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Night</label>
+                                            <input type="number" :name="'destinations[' + dIndex + '][nights]'" x-model="dest.nights" required class="w-full bg-white border-gray-200 rounded-lg py-2 px-3 text-sm focus:ring-1 focus:ring-red-500 shadow-sm" placeholder="Nights">
+                                        </div>
+                                    </div>
+
+                                    <!-- Cities List -->
+                                    <div class="pl-4 border-l-2 border-red-200 space-y-3">
+                                        <template x-for="(city, cIndex) in dest.cities" :key="cIndex">
+                                            <div class="flex gap-3 items-end">
+                                                <div class="flex-1 space-y-1">
+                                                    <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider ml-1">City Name</label>
+                                                    <input type="text" :name="'destinations[' + dIndex + '][cities][' + cIndex + '][name]'" x-model="city.name" class="w-full bg-white border-gray-200 rounded-lg py-1.5 px-3 text-xs focus:ring-1 focus:ring-red-500 shadow-sm" placeholder="e.g. Bangkok">
+                                                </div>
+                                                <div class="w-20 space-y-1">
+                                                    <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider ml-1">Night</label>
+                                                    <input type="number" :name="'destinations[' + dIndex + '][cities][' + cIndex + '][nights]'" x-model="city.nights" class="w-full bg-white border-gray-200 rounded-lg py-1.5 px-3 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                                                </div>
+                                                <button type="button" @click="removeCity(dIndex, cIndex)" x-show="dest.cities.length > 1" class="mb-1 text-gray-400 hover:text-red-500">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                </button>
+                                            </div>
+                                        </template>
+                                        <button type="button" @click="addCity(dIndex)" class="text-[10px] font-bold text-red-500 hover:text-red-600 flex items-center transition">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                            > Add city <
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                            
+                            <button type="button" @click="addDestination()" class="w-full py-2 border-2 border-dashed border-gray-200 rounded-xl text-xs font-bold text-gray-400 hover:border-red-300 hover:text-red-500 transition flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                > Add destination <
+                            </button>
                         </div>
-                        <button type="submit" class="w-full py-4 bg-red-600 text-white rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition active:scale-95 mt-4">
-                            Submit Enquiry
-                        </button>
+
+                        <!-- PAX Count -->
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Number of Pax</label>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs text-gray-600">Adults</span>
+                                    <input type="number" name="adults" x-model="inquiryForm.adults" min="1" class="w-full bg-gray-50 border-gray-100 rounded-lg py-1.5 px-2 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs text-gray-600">Child</span>
+                                    <input type="number" name="children" x-model="inquiryForm.children" min="0" class="w-full bg-gray-50 border-gray-100 rounded-lg py-1.5 px-2 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs text-gray-600">Infant</span>
+                                    <input type="number" name="infants" x-model="inquiryForm.infants" min="0" class="w-full bg-gray-50 border-gray-100 rounded-lg py-1.5 px-2 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Hotel Type</label>
+                                <select name="hotel_type" x-model="inquiryForm.hotel_type" class="w-full bg-gray-50 border-gray-100 rounded-lg py-2 px-3 text-xs focus:ring-1 focus:ring-red-500 shadow-sm appearance-none">
+                                    <option value="">Select Hotel Category</option>
+                                    <option value="3-star">3 Star</option>
+                                    <option value="4-star">4 Star</option>
+                                    <option value="5-star">5 Star</option>
+                                    <option value="budget">Budget / Guest House</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Travel date</label>
+                                <input type="date" name="travel_date" x-model="inquiryForm.travel_date" class="w-full bg-gray-50 border-gray-100 rounded-lg py-2 px-3 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Short Itinerary / Your Requirement / Notes</label>
+                            <textarea name="message" x-model="inquiryForm.message" rows="3" class="w-full bg-gray-50 border-gray-100 rounded-lg py-3 px-4 text-xs focus:ring-1 focus:ring-red-500 shadow-sm" placeholder="Type your special requests here..."></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-gray-50 pt-6">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Name</label>
+                                <input type="text" name="name" x-model="inquiryForm.name" required class="w-full bg-gray-50 border-gray-200 rounded-lg py-2 px-3 text-xs focus:ring-1 focus:ring-red-500" placeholder="John Doe">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Mobile</label>
+                                <input type="text" name="phone" x-model="inquiryForm.phone" required class="w-full bg-gray-50 border-gray-200 rounded-lg py-2 px-3 text-xs focus:ring-1 focus:ring-red-500" placeholder="+8801...">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Email</label>
+                                <input type="email" name="email" x-model="inquiryForm.email" required class="w-full bg-gray-50 border-gray-200 rounded-lg py-2 px-3 text-xs focus:ring-1 focus:ring-red-500" placeholder="john@example.com">
+                            </div>
+                        </div>
+
+                        <div class="text-center pt-4">
+                            <button type="submit" class="inline-flex items-center justify-center px-12 py-3 bg-red-600 text-white rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition active:scale-95 space-x-2">
+                                <span>Send</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                            <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-3">Sync to CRM</p>
+                        </div>
                     </form>
                 </div>
             </div>

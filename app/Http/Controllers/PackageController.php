@@ -56,7 +56,13 @@ class PackageController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
-            'message' => 'required|string|max:1000',
+            'message' => 'nullable|string|max:2000',
+            'adults' => 'nullable|integer|min:1',
+            'children' => 'nullable|integer|min:0',
+            'infants' => 'nullable|integer|min:0',
+            'hotel_type' => 'nullable|string',
+            'travel_date' => 'nullable|date',
+            'destinations' => 'nullable|array',
         ]);
 
         \App\Models\CustomizationRequest::create([
@@ -64,7 +70,15 @@ class PackageController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'message' => $request->message,
+            'message' => $request->message ?? 'Customized Package Request',
+            'details' => [
+                'adults' => $request->adults,
+                'children' => $request->children,
+                'infants' => $request->infants,
+                'hotel_type' => $request->hotel_type,
+                'travel_date' => $request->travel_date,
+                'destinations' => $request->destinations,
+            ],
         ]);
 
         return back()->with('success', 'Your customization request has been sent! We will contact you shortly.');

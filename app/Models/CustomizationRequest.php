@@ -12,7 +12,12 @@ class CustomizationRequest extends Model
         'email',
         'phone',
         'message',
+        'details',
         'status',
+    ];
+
+    protected $casts = [
+        'details' => 'array',
     ];
 
     public function package()
