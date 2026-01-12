@@ -14,6 +14,12 @@ class CustomizationController extends Controller
         return view('admin.customizations.index', compact('requests'));
     }
 
+    public function show(CustomizationRequest $customization)
+    {
+        $customization->load('package');
+        return view('admin.customizations.show', compact('customization'));
+    }
+
     public function update(Request $request, CustomizationRequest $customization)
     {
         $customization->update([

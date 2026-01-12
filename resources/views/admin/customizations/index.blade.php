@@ -59,7 +59,10 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-center text-sm font-medium">
+                        <td class="px-6 py-4 text-center text-sm font-medium space-x-2">
+                            <a href="{{ route('admin.customizations.show', $req) }}" class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded transition inline-block">
+                                View Details
+                            </a>
                             @if($req->status == 'pending')
                                 <form action="{{ route('admin.customizations.update', $req) }}" method="POST" class="inline">
                                     @csrf
@@ -69,8 +72,6 @@
                                         Mark Contacted
                                     </button>
                                 </form>
-                            @else
-                                <span class="text-gray-400">No Actions</span>
                             @endif
                         </td>
                     </tr>
