@@ -362,7 +362,7 @@
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div x-show="openInquiryModal" x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" @click="openInquiryModal = false"></div>
 
-                <div x-show="openInquiryModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative bg-white rounded-2xl shadow-xl max-w-2xl w-full overflow-hidden p-6 md:p-10">
+                <div x-show="openInquiryModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative bg-white rounded-2xl shadow-xl max-w-2xl w-full overflow-hidden p-4 sm:p-8 md:p-10">
                     <button @click="openInquiryModal = false" class="absolute top-4 right-4 p-2 text-gray-400 hover:text-red-500 transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
@@ -397,18 +397,20 @@
                                     <!-- Cities List -->
                                     <div class="pl-4 border-l-2 border-red-200 space-y-3">
                                         <template x-for="(city, cIndex) in dest.cities" :key="cIndex">
-                                            <div class="flex gap-3 items-end">
+                                            <div class="flex flex-col sm:flex-row gap-3 sm:items-end bg-white sm:bg-transparent p-3 sm:p-0 rounded-lg sm:rounded-none border sm:border-0 border-gray-100">
                                                 <div class="flex-1 space-y-1">
                                                     <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider ml-1">City Name</label>
-                                                    <input type="text" :name="'destinations[' + dIndex + '][cities][' + cIndex + '][name]'" x-model="city.name" class="w-full bg-white border-gray-200 rounded-lg py-1.5 px-3 text-xs focus:ring-1 focus:ring-red-500 shadow-sm" placeholder="e.g. Bangkok">
+                                                    <input type="text" :name="'destinations[' + dIndex + '][cities][' + cIndex + '][name]'" x-model="city.name" class="w-full bg-white sm:bg-white border-gray-200 rounded-lg py-1.5 px-3 text-xs focus:ring-1 focus:ring-red-500 shadow-sm" placeholder="e.g. Bangkok">
                                                 </div>
-                                                <div class="w-20 space-y-1">
-                                                    <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider ml-1">Night</label>
-                                                    <input type="number" :name="'destinations[' + dIndex + '][cities][' + cIndex + '][nights]'" x-model="city.nights" class="w-full bg-white border-gray-200 rounded-lg py-1.5 px-3 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                                                <div class="flex items-end gap-3">
+                                                    <div class="flex-1 sm:w-20 space-y-1">
+                                                        <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider ml-1">Night</label>
+                                                        <input type="number" :name="'destinations[' + dIndex + '][cities][' + cIndex + '][nights]'" x-model="city.nights" class="w-full bg-white border-gray-200 rounded-lg py-1.5 px-3 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                                                    </div>
+                                                    <button type="button" @click="removeCity(dIndex, cIndex)" x-show="dest.cities.length > 1" class="mb-1.5 text-gray-400 hover:text-red-500">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                    </button>
                                                 </div>
-                                                <button type="button" @click="removeCity(dIndex, cIndex)" x-show="dest.cities.length > 1" class="mb-1 text-gray-400 hover:text-red-500">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                </button>
                                             </div>
                                         </template>
                                         <button type="button" @click="addCity(dIndex)" class="text-[10px] font-bold text-red-500 hover:text-red-600 flex items-center transition">
@@ -428,18 +430,18 @@
                         <!-- PAX Count -->
                         <div class="space-y-3">
                             <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Number of Pax</label>
-                            <div class="grid grid-cols-3 gap-4">
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-xs text-gray-600">Adults</span>
-                                    <input type="number" name="adults" x-model="inquiryForm.adults" min="1" class="w-full bg-gray-50 border-gray-100 rounded-lg py-1.5 px-2 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                                <div class="flex items-center space-x-2 bg-gray-50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
+                                    <span class="text-xs text-gray-600 w-12 sm:w-auto">Adults</span>
+                                    <input type="number" name="adults" x-model="inquiryForm.adults" min="1" class="w-full bg-white sm:bg-gray-50 border-gray-100 rounded-lg py-1.5 px-2 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
                                 </div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-xs text-gray-600">Child</span>
-                                    <input type="number" name="children" x-model="inquiryForm.children" min="0" class="w-full bg-gray-50 border-gray-100 rounded-lg py-1.5 px-2 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                                <div class="flex items-center space-x-2 bg-gray-50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
+                                    <span class="text-xs text-gray-600 w-12 sm:w-auto">Child</span>
+                                    <input type="number" name="children" x-model="inquiryForm.children" min="0" class="w-full bg-white sm:bg-gray-50 border-gray-100 rounded-lg py-1.5 px-2 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
                                 </div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-xs text-gray-600">Infant</span>
-                                    <input type="number" name="infants" x-model="inquiryForm.infants" min="0" class="w-full bg-gray-50 border-gray-100 rounded-lg py-1.5 px-2 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
+                                <div class="flex items-center space-x-2 bg-gray-50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
+                                    <span class="text-xs text-gray-600 w-12 sm:w-auto">Infant</span>
+                                    <input type="number" name="infants" x-model="inquiryForm.infants" min="0" class="w-full bg-white sm:bg-gray-50 border-gray-100 rounded-lg py-1.5 px-2 text-xs focus:ring-1 focus:ring-red-500 shadow-sm">
                                 </div>
                             </div>
                         </div>
@@ -483,10 +485,9 @@
 
                         <div class="text-center pt-4">
                             <button type="submit" class="inline-flex items-center justify-center px-12 py-3 bg-red-600 text-white rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition active:scale-95 space-x-2">
-                                <span>Send</span>
+                                <span>Submit</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </button>
-                            <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-3">Sync to CRM</p>
                         </div>
                     </form>
                 </div>
