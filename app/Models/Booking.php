@@ -22,10 +22,12 @@ class Booking extends Model
         'total_amount',
         'booking_date',
         'notes',
+        'details',
     ];
 
     protected $casts = [
         'booking_date' => 'date',
+        'details' => 'array',
     ];
 
     public function user()

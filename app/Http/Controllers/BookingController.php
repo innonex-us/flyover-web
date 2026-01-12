@@ -19,16 +19,20 @@ class BookingController extends Controller
             'payable_type' => 'required|in:package,visa',
             'payable_id' => 'required|integer',
             'booking_date' => 'required|date|after_or_equal:today',
-            'guest_name' => 'nullable|required_without:user_id|string|max:255',
-            'guest_email' => 'nullable|required_without:user_id|email|max:255',
-            'guest_phone' => 'nullable|required_without:user_id|string|max:20',
+            'guest_name' => Auth::check() ? 'nullable|string|max:255' : 'required|string|max:255',
+            'guest_email' => Auth::check() ? 'nullable|email|max:255' : 'required|email|max:255',
+            'guest_phone' => Auth::check() ? 'nullable|string|max:20' : 'required|string|max:20',
             'quantity' => 'required|integer|min:1',
+            'notes' => 'nullable|string|max:1000',
+            'details' => 'nullable|array',
         ]);
 
         $bookingData = [
             'payable_id' => $validated['payable_id'],
             'booking_date' => $validated['booking_date'],
             'quantity' => $validated['quantity'],
+            'notes' => $validated['notes'] ?? null,
+            'details' => $validated['details'] ?? null,
             'status' => 'pending',
             'payment_status' => 'unpaid',
         ];

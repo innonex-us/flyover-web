@@ -194,29 +194,99 @@
                 <!-- Right Column: Sidebar -->
                 <div class="lg:col-span-1">
                     <div class="sticky top-20 space-y-6">
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8" x-data="{ 
+                            adults: 1,
+                            children: 0,
+                            infants: 0,
+                            bookingDate: '',
+                            price: {{ $package->price }},
+                            get quantity() { return parseInt(this.adults) + parseInt(this.children) + parseInt(this.infants) },
+                            get total() { return this.quantity * this.price }
+                        }">
                             <div class="text-center mb-8 border-b border-gray-50 pb-6">
-                                <h3 class="text-xl font-bold text-gray-900 mb-1">Plan Your Holiday</h3>
-                                <p class="text-xs text-gray-500 mb-4">Customize your travel experience</p>
+                                <h3 class="text-xl font-bold text-gray-900 mb-1">Book Your Holiday</h3>
+                                <p class="text-xs text-gray-500 mb-4">Secure your spot today</p>
                                 <div class="flex items-center justify-center space-x-2">
                                     <span class="text-2xl font-black text-red-600">৳{{ number_format($package->price) }}</span>
                                     <span class="text-[10px] font-bold text-gray-400 uppercase">Per person</span>
                                 </div>
                             </div>
 
-                            <div class="space-y-4">
-                                <button @click="openInquiryModal = true" class="w-full flex items-center justify-center py-3.5 px-6 bg-red-600 text-white rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-all duration-200 active:scale-95">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                    Request Quotation
+                            <form action="{{ route('bookings.store') }}" method="POST" class="space-y-4">
+                                @csrf
+                                <input type="hidden" name="payable_type" value="package">
+                                <input type="hidden" name="payable_id" value="{{ $package->id }}">
+                                <input type="hidden" name="quantity" :value="quantity">
+                                
+                                @if($errors->any())
+                                    <div class="p-4 mb-4 bg-red-50 border border-red-100 rounded-xl">
+                                        <ul class="list-disc list-inside text-[10px] text-red-600 font-bold uppercase tracking-wider">
+                                            @foreach($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
+                                <div class="space-y-4">
+                                    <!-- Date Selection -->
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Travel Date</label>
+                                        <input type="date" name="booking_date" x-model="bookingDate" required min="{{ date('Y-m-d') }}" class="w-full bg-gray-50 @error('booking_date') border-red-500 @else border-gray-100 @enderror rounded-lg py-2.5 px-4 text-sm focus:bg-white focus:ring-1 focus:ring-red-500 transition-all shadow-sm">
+                                    </div>
+
+                                    <!-- PAX Breakdown -->
+                                    <div class="space-y-2">
+                                        <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Number of Persons</label>
+                                        <div class="grid grid-cols-3 gap-2">
+                                            <div class="space-y-1">
+                                                <span class="text-[9px] font-bold text-gray-400 uppercase ml-1">Adults</span>
+                                                <input type="number" name="details[adults]" x-model="adults" min="1" class="w-full bg-gray-50 border-gray-100 rounded-lg py-2 px-2 text-xs text-center focus:bg-white">
+                                            </div>
+                                            <div class="space-y-1">
+                                                <span class="text-[9px] font-bold text-gray-400 uppercase ml-1">Child</span>
+                                                <input type="number" name="details[children]" x-model="children" min="0" class="w-full bg-gray-50 border-gray-100 rounded-lg py-2 px-2 text-xs text-center focus:bg-white">
+                                            </div>
+                                            <div class="space-y-1">
+                                                <span class="text-[9px] font-bold text-gray-400 uppercase ml-1">Infant</span>
+                                                <input type="number" name="details[infants]" x-model="infants" min="0" class="w-full bg-gray-50 border-gray-100 rounded-lg py-2 px-2 text-xs text-center focus:bg-white">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @guest
+                                        <div class="pt-2 space-y-3">
+                                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center">Guest Info</p>
+                                            <input type="text" name="guest_name" required value="{{ old('guest_name') }}" class="w-full bg-gray-50 @error('guest_name') border-red-500 @else border-gray-100 @enderror rounded-lg py-2 px-3 text-xs focus:bg-white" placeholder="Full Name">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                <input type="email" name="guest_email" required value="{{ old('guest_email') }}" class="w-full bg-gray-50 @error('guest_email') border-red-500 @else border-gray-100 @enderror rounded-lg py-2 px-3 text-xs focus:bg-white" placeholder="Email">
+                                                <input type="text" name="guest_phone" required value="{{ old('guest_phone') }}" class="w-full bg-gray-50 @error('guest_phone') border-red-500 @else border-gray-100 @enderror rounded-lg py-2 px-3 text-xs focus:bg-white" placeholder="Phone">
+                                            </div>
+                                        </div>
+                                    @endguest
+
+                                    <!-- Notes -->
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Special Requirements</label>
+                                        <textarea name="notes" rows="2" class="w-full bg-gray-50 border-gray-100 rounded-lg py-2 px-3 text-xs focus:bg-white" placeholder="Any requests?"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Total Display -->
+                                <div class="bg-red-50 p-4 rounded-xl border border-red-100/50 flex justify-between items-center mt-6">
+                                    <div class="flex flex-col">
+                                        <span class="text-[9px] font-bold text-red-800 uppercase tracking-wider line-through opacity-50" x-show="quantity > 1" x-text="'৳' + (price).toLocaleString() + ' x ' + quantity"></span>
+                                        <span class="text-xs font-bold text-red-800 uppercase tracking-wider">Total</span>
+                                    </div>
+                                    <span class="text-lg font-black text-red-600" x-text="'৳' + total.toLocaleString()"></span>
+                                </div>
+
+                                <button type="submit" class="w-full py-4 bg-red-600 text-white rounded-xl font-bold text-base shadow-lg hover:bg-red-700 transition-all duration-200 active:scale-95 mt-4">
+                                    Confirm Booking
                                 </button>
                                 
-                                <p class="text-[10px] font-bold text-gray-400 text-center uppercase tracking-widest">Get a response within 24h</p>
-
-                                <a href="tel:+880123456789" class="w-full flex items-center justify-center py-3.5 px-6 bg-white border border-gray-200 text-gray-700 rounded-xl font-bold text-sm hover:border-red-600 hover:text-red-600 transition-all duration-200 active:scale-95 group">
-                                    <svg class="w-5 h-5 mr-2 group-hover:rotate-6 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                    Speak to Experts
-                                </a>
-                            </div>
+                                <p class="text-[9px] font-bold text-gray-400 text-center uppercase tracking-widest">Instant confirmation via email</p>
+                            </form>
 
                             <div class="mt-8 pt-6 border-t border-gray-50 flex justify-around">
                                 <div class="text-center group">

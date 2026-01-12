@@ -80,6 +80,39 @@
                 </div>
             </div>
 
+            <!-- Booking Details (PAX & Notes) -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-4">Pax Breakdown & Requirements</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    @if($booking->details)
+                    <div class="space-y-4">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Group Composition</p>
+                        <div class="flex gap-4">
+                            <div class="bg-gray-50 px-4 py-2 rounded-lg text-center">
+                                <p class="text-[10px] text-gray-500 uppercase">Adults</p>
+                                <p class="font-bold text-gray-800">{{ $booking->details['adults'] ?? 0 }}</p>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-2 rounded-lg text-center">
+                                <p class="text-[10px] text-gray-500 uppercase">Child</p>
+                                <p class="font-bold text-gray-800">{{ $booking->details['children'] ?? 0 }}</p>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-2 rounded-lg text-center">
+                                <p class="text-[10px] text-gray-500 uppercase">Infant</p>
+                                <p class="font-bold text-gray-800">{{ $booking->details['infants'] ?? 0 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    
+                    <div class="space-y-2">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Special Requirements</p>
+                        <div class="bg-red-50/50 p-4 rounded-xl border border-red-100 text-sm italic text-gray-700">
+                            {{ $booking->notes ?: 'No special requirements listed.' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- Actions Column -->
