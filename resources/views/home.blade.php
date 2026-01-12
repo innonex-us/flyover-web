@@ -250,57 +250,7 @@
             @if($packages->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     @foreach($packages as $package)
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                            <!-- Image Slider -->
-                            <div class="relative h-48 overflow-hidden group"
-                                x-data="{
-                                    activeSlide: 0,
-                                    slides: [
-                                        '{{ $package->thumbnail ? Storage::url($package->thumbnail) : 'https://via.placeholder.com/640x360?text=Tour+Package' }}',
-                                        @if(!empty($package->images) && is_array($package->images))
-                                            @foreach($package->images as $img)
-                                                '{{ Storage::url($img) }}',
-                                            @endforeach
-                                        @endif
-                                    ],
-                                    init() {
-                                        if (this.slides.length > 1) {
-                                            setInterval(() => {
-                                                this.activeSlide = (this.activeSlide + 1) % this.slides.length;
-                                            }, 3000 + (Math.random() * 2000)); // Random offset to prevent synchronized sliding
-                                        }
-                                    }
-                                }"
-                            >
-                                <a href="{{ route('packages.show', $package->slug) }}" class="block w-full h-full">
-                                    <template x-for="(slide, index) in slides" :key="index">
-                                        <div 
-                                            class="absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-in-out"
-                                            :style="`background-image: url('${slide}')`"
-                                            :class="activeSlide === index ? 'opacity-100' : 'opacity-0'"
-                                        ></div>
-                                    </template>
-                                    
-                                    <!-- Static First Image (LCP) -->
-                                    <div 
-                                        class="absolute inset-0 bg-cover bg-center opacity-100 x-cloak-hidden"
-                                        style="background-image: url('{{ $package->thumbnail ? Storage::url($package->thumbnail) : 'https://via.placeholder.com/640x360?text=Tour+Package' }}'); z-index: 10;"
-                                        x-show="false"
-                                    ></div>
-                                </a>
-                            </div>
-                            <div class="p-6">
-                                <div class="flex justify-between items-start mb-2">
-                                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $package->title }}</h3>
-                                    <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded">{{ $package->duration_days }} Days</span>
-                                </div>
-                                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $package->description }}</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-2xl font-bold text-red-600">৳{{ number_format($package->price) }}</span>
-                                    <a href="{{ route('packages.show', $package->slug) }}" class="text-red-600 font-semibold hover:text-red-700">View Details &rarr;</a>
-                                </div>
-                            </div>
-                        </div>
+                        <x-package-card :package="$package" />
                     @endforeach
                 </div>
                 <div class="mt-12 text-center">
@@ -324,31 +274,7 @@
             @if(isset($visas) && $visas->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     @foreach($visas as $visa)
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition flex flex-col h-full border border-gray-100">
-                             <a href="{{ route('visas.show', $visa->slug) }}" class="block relative h-48 overflow-hidden group">
-                                <div 
-                                    class="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
-                                    style="background-image: url('{{ Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : Storage::url($visa->thumbnail) }}');"
-                                ></div>
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                <div class="absolute bottom-4 left-4 right-4">
-                                     <h3 class="text-xl font-bold text-white shadow-sm">{{ $visa->country }}</h3>
-                                </div>
-                            </a>
-                            <div class="p-6 flex-grow flex flex-col">
-                                <div class="flex items-center space-x-2 mb-3">
-                                    <span class="px-2 py-1 text-xs font-semibold rounded bg-blue-100 text-blue-800">{{ $visa->visa_type }}</span>
-                                    <span class="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">{{ $visa->processing_time }}</span>
-                                </div>
-                                <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
-                                    <div>
-                                        <p class="text-xs text-gray-500 uppercase">Starting from</p>
-                                        <span class="text-xl font-bold text-red-600">৳{{ number_format($visa->price) }}</span>
-                                    </div>
-                                    <a href="{{ route('visas.show', $visa->slug) }}" class="text-red-600 font-semibold hover:text-red-700 text-sm">Details &rarr;</a>
-                                </div>
-                            </div>
-                        </div>
+                        <x-visa-card :visa="$visa" />
                     @endforeach
                 </div>
                 <div class="mt-12 text-center">
