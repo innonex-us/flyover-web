@@ -31,7 +31,23 @@ class PackageController extends Controller
             ? (\Illuminate\Support\Str::startsWith($package->thumbnail, 'http') ? $package->thumbnail : \Illuminate\Support\Facades\Storage::url($package->thumbnail))
             : asset('logo.png');
 
-        return view('packages.show', compact('package', 'title', 'meta_description', 'meta_image'));
+        $relatedPackages = Package::where('is_active', true)
+            ->where('id', '!=', $package->id)
+            ->where('location', 'like', '%' . $package->location . '%')
+            ->limit(4)
+            ->get();
+
+        // If not enough related packages from same location, get some others
+        if ($relatedPackages->count() < 4) {
+            $extraPackages = Package::where('is_active', true)
+                ->where('id', '!=', $package->id)
+                ->whereNotIn('id', $relatedPackages->pluck('id'))
+                ->limit(4 - $relatedPackages->count())
+                ->get();
+            $relatedPackages = $relatedPackages->concat($extraPackages);
+        }
+
+        return view('packages.show', compact('package', 'title', 'meta_description', 'meta_image', 'relatedPackages'));
     }
 
     public function customize(Request $request, Package $package)

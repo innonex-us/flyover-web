@@ -78,6 +78,22 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements</label>
                         <textarea name="requirements" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements', $package->requirements) }}</textarea>
                     </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Hotel Details</label>
+                        <textarea name="hotel_details" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('hotel_details', $package->hotel_details) }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Additional Information</label>
+                        <textarea name="additional_info" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('additional_info', $package->additional_info) }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Travel Tips</label>
+                        <textarea name="travel_tips" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('travel_tips', $package->travel_tips) }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Pickup Note</label>
+                        <textarea name="pickup_note" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('pickup_note', $package->pickup_note) }}</textarea>
+                    </div>
 
                     <!-- Itinerary Builder -->
                     <div x-data="{ 

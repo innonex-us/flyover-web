@@ -25,6 +25,10 @@ class Package extends Model
         'requirements',
         'itinerary',
         'policy',
+        'hotel_details',
+        'additional_info',
+        'travel_tips',
+        'pickup_note',
     ];
 
     protected $casts = [

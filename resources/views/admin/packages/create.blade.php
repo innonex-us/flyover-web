@@ -1,62 +1,73 @@
 <x-admin-layout>
     <div class="mb-8">
-        <a href="{{ route('admin.packages.index') }}" class="text-gray-500 hover:text-gray-700 flex items-center mb-4 transition">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        <a href="{{ route('admin.packages.index') }}"
+            class="text-gray-500 hover:text-gray-700 flex items-center mb-4 transition">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                </path>
+            </svg>
             Back to Packages
         </a>
         <h2 class="text-3xl font-bold text-gray-800">Create New Package</h2>
     </div>
 
-    <form action="{{ route('admin.packages.store') }}" method="POST" enctype="multipart/form-data" class="max-w-4xl relative" x-data="formUploader" @submit.prevent="submitForm">
+    <form action="{{ route('admin.packages.store') }}" method="POST" enctype="multipart/form-data"
+        class="max-w-4xl relative" x-data="formUploader" @submit.prevent="submitForm">
         @csrf
-        
+
         <!-- Upload Overlay -->
-        <div x-show="uploading" 
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
+        <div x-show="uploading" x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
             class="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center rounded-xl"
             style="display: none;">
             <div class="w-64 bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
-                <div class="bg-red-600 h-4 rounded-full transition-all duration-300" :style="`width: ${progress}%`"></div>
+                <div class="bg-red-600 h-4 rounded-full transition-all duration-300" :style="`width: ${progress}%`">
+                </div>
             </div>
             <div class="text-gray-800 font-bold text-lg">Uploading... <span x-text="progress + '%'"></span></div>
             <div class="text-gray-500 text-sm mt-2">Please wait while we process your files.</div>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 space-y-8">
-            
+
             <!-- Basic Info -->
             <div>
                 <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-6">Basic Information</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Package Title</label>
-                        <input type="text" name="title" value="{{ old('title') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. Magnificent Cox's Bazar Tour">
+                        <input type="text" name="title" value="{{ old('title') }}" required
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
+                            placeholder="e.g. Magnificent Cox's Bazar Tour">
                         @error('title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Price (BDT)</label>
-                        <input type="number" name="price" value="{{ old('price') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="0.00">
+                        <input type="number" name="price" value="{{ old('price') }}" required
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
+                            placeholder="0.00">
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Duration (Days)</label>
-                        <input type="number" name="duration_days" value="{{ old('duration_days') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                        <input type="number" name="duration_days" value="{{ old('duration_days') }}" required
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
-                        <input type="text" name="location" value="{{ old('location') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. Cox's Bazar">
+                        <input type="text" name="location" value="{{ old('location') }}" required
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
+                            placeholder="e.g. Cox's Bazar">
                     </div>
 
                     <div>
-                         <label class="block text-sm font-semibold text-gray-700 mb-2">Start Date (Optional)</label>
-                        <input type="date" name="start_date" value="{{ old('start_date') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Start Date (Optional)</label>
+                        <input type="date" name="start_date" value="{{ old('start_date') }}"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
                     </div>
                 </div>
             </div>
@@ -67,16 +78,39 @@
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                        <textarea name="description" rows="4" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('description') }}</textarea>
+                        <textarea name="description" rows="4" required
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('description') }}</textarea>
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Policy</label>
-                        <textarea name="policy" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('policy') }}</textarea>
+                        <textarea name="policy" rows="3"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('policy') }}</textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements</label>
-                        <textarea name="requirements" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements') }}</textarea>
+                        <textarea name="requirements" rows="3"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Hotel Details</label>
+                        <textarea name="hotel_details" rows="3"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('hotel_details') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Additional Information</label>
+                        <textarea name="additional_info" rows="3"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('additional_info') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Travel Tips</label>
+                        <textarea name="travel_tips" rows="3"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('travel_tips') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Pickup Note</label>
+                        <textarea name="pickup_note" rows="3"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('pickup_note') }}</textarea>
                     </div>
 
                     <!-- Itinerary Builder -->
@@ -87,34 +121,64 @@
                                 <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 relative group">
                                     <div class="flex justify-between items-center mb-4">
                                         <h4 class="font-bold text-gray-800 flex items-center">
-                                            <span class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2" x-text="dIndex + 1"></span>
+                                            <span
+                                                class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2"
+                                                x-text="dIndex + 1"></span>
                                             Day <span x-text="dIndex + 1" class="ml-1"></span>
                                         </h4>
-                                        <button type="button" @click="days.splice(dIndex, 1)" x-show="days.length > 1" class="text-red-500 hover:text-red-700 p-1 rounded-lg hover:bg-red-50 transition">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        <button type="button" @click="days.splice(dIndex, 1)" x-show="days.length > 1"
+                                            class="text-red-500 hover:text-red-700 p-1 rounded-lg hover:bg-red-50 transition">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
                                         </button>
                                     </div>
 
                                     <div class="grid grid-cols-1 gap-4">
-                                        <input type="hidden" :name="'itinerary[' + dIndex + '][day]'" :value="dIndex + 1">
-                                        
+                                        <input type="hidden" :name="'itinerary[' + dIndex + '][day]'"
+                                            :value="dIndex + 1">
+
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Day Title</label>
-                                            <input type="text" :name="'itinerary[' + dIndex + '][title]'" x-model="day.title" placeholder="e.g. Arrival and City Tour" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm">
+                                            <label
+                                                class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Day
+                                                Title</label>
+                                            <input type="text" :name="'itinerary[' + dIndex + '][title]'"
+                                                x-model="day.title" placeholder="e.g. Arrival and City Tour"
+                                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm">
                                         </div>
 
                                         <div class="space-y-3">
-                                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">Activities</label>
+                                            <label
+                                                class="block text-xs font-bold text-gray-500 uppercase tracking-wider">Activities</label>
                                             <template x-for="(activity, aIndex) in day.activities" :key="aIndex">
                                                 <div class="flex gap-2">
-                                                    <input type="text" :name="'itinerary[' + dIndex + '][activities][' + aIndex + ']'" x-model="day.activities[aIndex]" placeholder="Describe activity..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm" required>
-                                                    <button type="button" @click="day.activities.splice(aIndex, 1)" x-show="day.activities.length > 1" class="text-gray-400 hover:text-red-500 p-1">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                    <input type="text"
+                                                        :name="'itinerary[' + dIndex + '][activities][' + aIndex + ']'"
+                                                        x-model="day.activities[aIndex]"
+                                                        placeholder="Describe activity..."
+                                                        class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm"
+                                                        required>
+                                                    <button type="button" @click="day.activities.splice(aIndex, 1)"
+                                                        x-show="day.activities.length > 1"
+                                                        class="text-gray-400 hover:text-red-500 p-1">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                        </svg>
                                                     </button>
                                                 </div>
                                             </template>
-                                            <button type="button" @click="(day.activities = day.activities || []).push('')" class="text-xs text-blue-600 font-bold hover:text-blue-700 flex items-center">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                            <button type="button"
+                                                @click="(day.activities = day.activities || []).push('')"
+                                                class="text-xs text-blue-600 font-bold hover:text-blue-700 flex items-center">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
                                                 Add Activity
                                             </button>
                                         </div>
@@ -122,8 +186,12 @@
                                 </div>
                             </template>
                         </div>
-                        <button type="button" @click="days.push({ day: days.length + 1, title: '', activities: [''] })" class="mt-4 bg-white border-2 border-dashed border-gray-300 rounded-xl p-4 w-full text-gray-500 font-bold hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        <button type="button" @click="days.push({ day: days.length + 1, title: '', activities: [''] })"
+                            class="mt-4 bg-white border-2 border-dashed border-gray-300 rounded-xl p-4 w-full text-gray-500 font-bold hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
                             Add New Day
                         </button>
                     </div>
@@ -131,31 +199,45 @@
             </div>
 
             <!-- Inclusions/Exclusions -->
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div x-data="{ items: [''] }">
                     <h3 class="text-lg font-bold text-green-700 border-b pb-2 mb-4">Inclusions</h3>
                     <template x-for="(item, index) in items" :key="index">
                         <div class="flex gap-2 mb-2">
-                            <input type="text" name="inclusions[]" x-model="items[index]" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-200 text-sm" placeholder="Add inclusion">
-                            <button type="button" @click="items.splice(index, 1)" x-show="items.length > 1" class="text-red-500 hover:text-red-700">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            <input type="text" name="inclusions[]" x-model="items[index]"
+                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-200 text-sm"
+                                placeholder="Add inclusion">
+                            <button type="button" @click="items.splice(index, 1)" x-show="items.length > 1"
+                                class="text-red-500 hover:text-red-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
                             </button>
                         </div>
                     </template>
-                    <button type="button" @click="items.push('')" class="text-sm text-green-600 font-semibold hover:underline">+ Add Inclusion</button>
+                    <button type="button" @click="items.push('')"
+                        class="text-sm text-green-600 font-semibold hover:underline">+ Add Inclusion</button>
                 </div>
 
                 <div x-data="{ items: [''] }">
                     <h3 class="text-lg font-bold text-red-700 border-b pb-2 mb-4">Exclusions</h3>
-                     <template x-for="(item, index) in items" :key="index">
+                    <template x-for="(item, index) in items" :key="index">
                         <div class="flex gap-2 mb-2">
-                            <input type="text" name="exclusions[]" x-model="items[index]" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 text-sm" placeholder="Add exclusion">
-                            <button type="button" @click="items.splice(index, 1)" x-show="items.length > 1" class="text-red-500 hover:text-red-700">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            <input type="text" name="exclusions[]" x-model="items[index]"
+                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 text-sm"
+                                placeholder="Add exclusion">
+                            <button type="button" @click="items.splice(index, 1)" x-show="items.length > 1"
+                                class="text-red-500 hover:text-red-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
                             </button>
                         </div>
                     </template>
-                    <button type="button" @click="items.push('')" class="text-sm text-red-600 font-semibold hover:underline">+ Add Exclusion</button>
+                    <button type="button" @click="items.push('')"
+                        class="text-sm text-red-600 font-semibold hover:underline">+ Add Exclusion</button>
                 </div>
             </div>
 
@@ -165,15 +247,17 @@
                 <div class="space-y-6">
                     <div x-data="fileUploader">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Thumbnail Image (Required)</label>
-                        <input type="file" name="thumbnail" @change="handleFileChange" required accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                        <input type="file" name="thumbnail" @change="handleFileChange" required accept="image/*"
+                            class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
                         <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display: none;">
                             Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
                         </div>
                     </div>
-                    
+
                     <div x-data="fileUploader">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Gallery Images</label>
-                        <input type="file" name="images[]" @change="handleFileChange" multiple accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
+                        <input type="file" name="images[]" @change="handleFileChange" multiple accept="image/*"
+                            class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
                         <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display: none;">
                             Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
                             <!-- Note: native file input only shows first file name for 'multiple', 
@@ -184,13 +268,15 @@
                 </div>
             </div>
 
-             <div class="flex items-center">
-                <input type="checkbox" name="is_active" value="1" checked class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50">
+            <div class="flex items-center">
+                <input type="checkbox" name="is_active" value="1" checked
+                    class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50">
                 <span class="ml-2 text-sm text-gray-600">Active (Visible to users)</span>
             </div>
 
             <div class="pt-4 border-t border-gray-100 flex justify-end">
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
+                <button type="submit"
+                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
                     Create Package
                 </button>
             </div>
