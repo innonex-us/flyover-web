@@ -39,7 +39,7 @@
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Package Title</label>
                         <input type="text" name="title" value="{{ old('title') }}" required
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
                             placeholder="e.g. Magnificent Cox's Bazar Tour">
                         @error('title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
@@ -47,27 +47,27 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Price (BDT)</label>
                         <input type="number" name="price" value="{{ old('price') }}" required
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
                             placeholder="0.00">
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Duration (Days)</label>
                         <input type="number" name="duration_days" value="{{ old('duration_days') }}" required
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
                         <input type="text" name="location" value="{{ old('location') }}" required
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
                             placeholder="e.g. Cox's Bazar">
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Start Date (Optional)</label>
                         <input type="date" name="start_date" value="{{ old('start_date') }}"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
                     </div>
                 </div>
             </div>
@@ -78,39 +78,39 @@
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                        <textarea name="description" rows="4" required
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('description') }}</textarea>
+                        <textarea name="description" rows="6" required
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('description') }}</textarea>
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Policy</label>
-                        <textarea name="policy" rows="3"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('policy') }}</textarea>
+                        <textarea name="policy" rows="5"
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('policy') }}</textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements</label>
-                        <textarea name="requirements" rows="3"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements') }}</textarea>
+                        <textarea name="requirements" rows="5"
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements') }}</textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Hotel Details</label>
-                        <textarea name="hotel_details" rows="3"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('hotel_details') }}</textarea>
+                        <textarea name="hotel_details" rows="5"
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('hotel_details') }}</textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Additional Information</label>
-                        <textarea name="additional_info" rows="3"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('additional_info') }}</textarea>
+                        <textarea name="additional_info" rows="5"
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('additional_info') }}</textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Travel Tips</label>
-                        <textarea name="travel_tips" rows="3"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('travel_tips') }}</textarea>
+                        <textarea name="travel_tips" rows="5"
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('travel_tips') }}</textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Pickup Note</label>
-                        <textarea name="pickup_note" rows="3"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('pickup_note') }}</textarea>
+                        <textarea name="pickup_note" rows="5"
+                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('pickup_note') }}</textarea>
                     </div>
 
                     <!-- Itinerary Builder -->
@@ -146,7 +146,7 @@
                                                 Title</label>
                                             <input type="text" :name="'itinerary[' + dIndex + '][title]'"
                                                 x-model="day.title" placeholder="e.g. Arrival and City Tour"
-                                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm">
+                                                class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm">
                                         </div>
 
                                         <div class="space-y-3">
@@ -158,7 +158,7 @@
                                                         :name="'itinerary[' + dIndex + '][activities][' + aIndex + ']'"
                                                         x-model="day.activities[aIndex]"
                                                         placeholder="Describe activity..."
-                                                        class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm"
+                                                        class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-200 text-sm"
                                                         required>
                                                     <button type="button" @click="day.activities.splice(aIndex, 1)"
                                                         x-show="day.activities.length > 1"
@@ -205,7 +205,7 @@
                     <template x-for="(item, index) in items" :key="index">
                         <div class="flex gap-2 mb-2">
                             <input type="text" name="inclusions[]" x-model="items[index]"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-200 text-sm"
+                                class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-200 text-sm"
                                 placeholder="Add inclusion">
                             <button type="button" @click="items.splice(index, 1)" x-show="items.length > 1"
                                 class="text-red-500 hover:text-red-700">
@@ -225,7 +225,7 @@
                     <template x-for="(item, index) in items" :key="index">
                         <div class="flex gap-2 mb-2">
                             <input type="text" name="exclusions[]" x-model="items[index]"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 text-sm"
+                                class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 text-sm"
                                 placeholder="Add exclusion">
                             <button type="button" @click="items.splice(index, 1)" x-show="items.length > 1"
                                 class="text-red-500 hover:text-red-700">

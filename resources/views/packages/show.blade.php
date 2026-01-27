@@ -159,7 +159,7 @@
 
                         @foreach($sections as $sec)
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                            <button @click="activeSection = (activeSection === '{{ $sec['id'] }}' ? '' : '{{ $sec['id'] }}')" class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                            <button @click="activeSection = (activeSection === '{{ $sec['id'] }}' ? '' : '{{ $sec['id'] }}')" class="w-full flex items-center justify-between px-5 py-4 text-left focus:outline-none group">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 bg-{{ $sec['color'] }}-50 text-{{ $sec['color'] }}-600 rounded-lg flex items-center justify-center mr-4 group-hover:bg-{{ $sec['color'] }}-500 group-hover:text-white transition-all duration-200">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $sec['icon'] }}"></path></svg>
@@ -168,8 +168,8 @@
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400 transition-transform duration-300" :class="activeSection === '{{ $sec['id'] }}' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="px-5 pb-5 pt-0 ml-14">
-                                <div class="pt-2 border-t border-gray-50">
+                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="px-5 pb-4 pt-0 ml-14">
+                                <div class="pt-1 border-t border-gray-50">
                                     @if(isset($sec['is_list']) && is_array($sec['content']))
                                         <ul class="list-none space-y-0.5">
                                             @forelse($sec['content'] as $item)
