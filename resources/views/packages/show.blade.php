@@ -168,17 +168,16 @@
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400 transition-transform duration-300" :class="activeSection === '{{ $sec['id'] }}' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="p-5 pt-0 ml-14">
-                                <div class="pt-4 border-t border-gray-50 text-xs md:text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="px-5 pb-5 pt-0 ml-14">
+                                <div class="pt-2 border-t border-gray-50">
                                     @if(isset($sec['is_list']) && is_array($sec['content']))
-                                        <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <ul class="list-none space-y-0.5">
                                             @forelse($sec['content'] as $item)
-                                                <li class="flex items-start text-xs text-gray-700 bg-{{ $sec['color'] }}-50/30 p-2 rounded-lg border border-{{ $sec['color'] }}-100/50">
-                                                    <svg class="w-3.5 h-3.5 mr-2 mt-0.5 text-{{ $sec['color'] }}-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                <li class="text-sm text-gray-700">
                                                     {{ $item }}
                                                 </li>
                                             @empty
-                                                <li class="col-span-2 italic text-gray-400">Not specified.</li>
+                                                <li class="italic text-gray-400">Not specified.</li>
                                             @endforelse
                                         </ul>
                                     @else
