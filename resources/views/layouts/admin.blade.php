@@ -121,6 +121,10 @@
                 uploading: false,
                 submitForm(event) {
                     const form = event.target;
+                    // Sync TinyMCE (and other rich editors) content into form fields before submit
+                    if (typeof tinymce !== 'undefined') {
+                        tinymce.triggerSave();
+                    }
                     const formData = new FormData(form);
                     const xhr = new XMLHttpRequest();
 

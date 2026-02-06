@@ -76,8 +76,16 @@
                         </div>
                     @endif
 
-                    <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 prose prose-lg prose-red max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-img:rounded-xl">
-                        {!! nl2br(e($post->content)) !!}
+                    <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 prose prose-lg prose-red max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-img:rounded-xl prose-a:text-red-600 prose-a:no-underline hover:prose-a:underline">
+                        @php
+                            $content = $post->content ?? '';
+                            $hasHtml = $content !== strip_tags($content);
+                        @endphp
+                        @if($hasHtml)
+                            {!! $content !!}
+                        @else
+                            {!! nl2br(e($content)) !!}
+                        @endif
                     </div>
 
                     <!-- Share Buttons -->
