@@ -267,6 +267,20 @@
                         </div>
                         @endforeach
                     </div>
+
+                    <!-- Customized Tour Banner (same width as Overview) -->
+                    <div class="mt-12 bg-white rounded-2xl p-8 border border-gray-100 flex flex-col md:flex-row items-center justify-between shadow-sm relative overflow-hidden group">
+                        <div class="absolute -right-20 -top-20 w-60 h-60 bg-red-50 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
+                        <div class="relative z-10 text-center md:text-left mb-6 md:mb-0">
+                            <h2 class="text-xl font-bold text-gray-900 mb-2">Need a Personalized Plan?</h2>
+                            <p class="text-sm text-gray-500 max-w-md">Our experts can craft a custom itinerary tailored to your specific needs and budget.</p>
+                        </div>
+                        <div class="relative z-10 flex gap-3">
+                            <button @click="openInquiryModal = true" class="px-6 py-3 bg-red-600 text-white font-bold text-sm rounded-xl shadow-sm hover:bg-red-700 transition">
+                                Get Custom Plan
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right Column: Sidebar -->
@@ -388,20 +402,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Customized Tour Banner -->
-            <div class="mt-12 bg-white rounded-2xl p-8 border border-gray-100 flex flex-col md:flex-row items-center justify-between shadow-sm relative overflow-hidden group">
-                <div class="absolute -right-20 -top-20 w-60 h-60 bg-red-50 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
-                <div class="relative z-10 text-center md:text-left mb-6 md:mb-0">
-                    <h2 class="text-xl font-bold text-gray-900 mb-2">Need a Personalized Plan?</h2>
-                    <p class="text-sm text-gray-500 max-w-md">Our experts can craft a custom itinerary tailored to your specific needs and budget.</p>
-                </div>
-                <div class="relative z-10 flex gap-3">
-                    <button @click="openInquiryModal = true" class="px-6 py-3 bg-red-600 text-white font-bold text-sm rounded-xl shadow-sm hover:bg-red-700 transition">
-                        Get Custom Plan
-                    </button>
                 </div>
             </div>
 
