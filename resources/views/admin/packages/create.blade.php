@@ -113,6 +113,38 @@
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('pickup_note') }}</textarea>
                     </div>
 
+                    <!-- Key Information (Optional) - multipurpose: Anytime, Flexible, Fix Date, Fix Person, etc. -->
+                    <div x-data="{ items: [{ label: '', content: '' }] }">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Key Information (Optional)</label>
+                        <p class="text-xs text-gray-500 mb-3">Add any key–value info shown on the tour page. Examples: <strong>Anytime</strong>, <strong>Flexible</strong>, <strong>Fix Date</strong>, <strong>Fix Person</strong>, Flight, Visa, Transport, Group size, etc.</p>
+                        <div class="space-y-4">
+                            <template x-for="(item, index) in items" :key="index">
+                                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 relative group">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <span class="text-xs font-bold text-gray-500 uppercase">Item <span x-text="index + 1"></span></span>
+                                        <button type="button" @click="items.splice(index, 1)" x-show="items.length > 1"
+                                            class="text-red-500 hover:text-red-700 p-1 rounded-lg hover:bg-red-50 transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        </button>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <input type="text" :name="'travel_data[' + index + '][label]'" x-model="item.label"
+                                            class="w-full py-2 border-gray-300 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-200 text-sm"
+                                            placeholder="e.g. Anytime, Flexible, Fix Date, Fix Person, Flight, Visa">
+                                        <textarea :name="'travel_data[' + index + '][content]'" x-model="item.content" rows="2"
+                                            class="w-full py-2 border-gray-300 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-200 text-sm"
+                                            placeholder="Value or short description..."></textarea>
+                                    </div>
+                                </div>
+                            </template>
+                            <button type="button" @click="items.push({ label: '', content: '' })"
+                                class="w-full py-2 border-2 border-dashed border-gray-300 rounded-xl text-sm font-semibold text-gray-500 hover:border-teal-500 hover:text-teal-600 transition flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                Add Key Information
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Itinerary Builder -->
                     <div x-data="{ days: [{ day: 1, title: '', activities: [''] }] }">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Itinerary</label>

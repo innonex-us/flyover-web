@@ -29,10 +29,12 @@ class Package extends Model
         'additional_info',
         'travel_tips',
         'pickup_note',
+        'travel_data',
     ];
 
     protected $casts = [
         'images' => 'array',
+        'travel_data' => 'array',
         'start_date' => 'date',
         'is_active' => 'boolean',
         'inclusions' => 'array',

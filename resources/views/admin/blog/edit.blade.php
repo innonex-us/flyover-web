@@ -145,6 +145,7 @@
         </div>
     </form>
 
+    @push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({

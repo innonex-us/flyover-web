@@ -50,6 +50,9 @@ class PackageController extends Controller
             'additional_info' => 'nullable|string',
             'travel_tips' => 'nullable|string',
             'pickup_note' => 'nullable|string',
+            'travel_data' => 'nullable|array',
+            'travel_data.*.label' => 'nullable|string|max:255',
+            'travel_data.*.content' => 'nullable|string',
             'itinerary' => 'nullable|array',
             'itinerary.*.day' => 'nullable|integer',
             'itinerary.*.title' => 'nullable|string',
@@ -65,8 +68,12 @@ class PackageController extends Controller
 
         $images = [];
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $images[] = $image->store('packages/gallery', 'public');
+            $files = $request->file('images');
+            $files = is_array($files) ? $files : [$files];
+            foreach ($files as $image) {
+                if ($image && $image->isValid()) {
+                    $images[] = $image->store('packages/gallery', 'public');
+                }
             }
         }
         $validated['images'] = $images;
@@ -74,6 +81,11 @@ class PackageController extends Controller
         // Clean up array inputs which might contain empty strings if dynamically added
         $validated['inclusions'] = array_filter($validated['inclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
         $validated['exclusions'] = array_filter($validated['exclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
+
+        // Filter travel_data: keep only items with at least label or content
+        if (isset($validated['travel_data']) && is_array($validated['travel_data'])) {
+            $validated['travel_data'] = array_values(array_filter($validated['travel_data'], fn($item) => !empty($item['label']) || !empty(($item['content'] ?? ''))));
+        }
 
         // Sort itinerary by day and filter activities
         if (isset($validated['itinerary']) && is_array($validated['itinerary'])) {
@@ -121,6 +133,9 @@ class PackageController extends Controller
             'additional_info' => 'nullable|string',
             'travel_tips' => 'nullable|string',
             'pickup_note' => 'nullable|string',
+            'travel_data' => 'nullable|array',
+            'travel_data.*.label' => 'nullable|string|max:255',
+            'travel_data.*.content' => 'nullable|string',
             'itinerary' => 'nullable|array',
             'itinerary.*.day' => 'nullable|integer',
             'itinerary.*.title' => 'nullable|string',
@@ -151,6 +166,11 @@ class PackageController extends Controller
         // Clean up array inputs
         $validated['inclusions'] = array_filter($validated['inclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
         $validated['exclusions'] = array_filter($validated['exclusions'] ?? [], fn($value) => !is_null($value) && $value !== '');
+
+        // Filter travel_data: keep only items with at least label or content
+        if (isset($validated['travel_data']) && is_array($validated['travel_data'])) {
+            $validated['travel_data'] = array_values(array_filter($validated['travel_data'], fn($item) => !empty($item['label']) || !empty(($item['content'] ?? ''))));
+        }
 
         // Sort itinerary by day
         if (isset($validated['itinerary']) && is_array($validated['itinerary'])) {

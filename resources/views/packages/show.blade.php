@@ -12,6 +12,9 @@
             }
         }
     @endphp
+    @push('meta')
+    <link rel="preload" href="{{ $mainImage }}" as="image">
+    @endpush
 
     <div class="bg-gray-50/50 min-h-screen pb-12" x-data="{ 
         openInquiryModal: false,
@@ -71,9 +74,38 @@
                 <!-- Left Column: Primary Content -->
                 <div class="lg:col-span-2 space-y-6">
                     
-                    <!-- Main Thumbnail -->
-                    <div class="relative rounded-2xl overflow-hidden shadow-md aspect-video bg-gray-100 border border-gray-200/50">
-                        <img src="{{ $mainImage }}" alt="{{ $package->title }}" class="w-full h-full object-cover">
+                    <!-- Main Thumbnail + Gallery (click gallery to show in main) -->
+                    <div id="tour-gallery-wrap">
+                        <div class="relative rounded-2xl overflow-hidden shadow-md aspect-video bg-gray-100 border border-gray-200/50">
+                            <img id="main-tour-image" src="{{ $mainImage }}" alt="{{ $package->title }}" class="w-full h-full object-cover" fetchpriority="high" decoding="async">
+                        </div>
+                        @if(count($galleryImages) > 1)
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mt-4">
+                            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Photo Gallery</h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                @foreach($galleryImages as $index => $gImg)
+                                    <button type="button" data-tour-image="{{ e($gImg) }}" class="tour-gallery-thumb block aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 border-2 {{ $index === 0 ? 'border-red-500 ring-2 ring-red-500' : 'border-gray-100' }} hover:border-red-300 transition text-left focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" aria-label="View image {{ $index + 1 }}">
+                                        <img src="{{ $gImg }}" alt="{{ $package->title }}" class="w-full h-full object-cover pointer-events-none" loading="lazy" decoding="async">
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                        <script>
+                            (function() {
+                                var mainImg = document.getElementById('main-tour-image');
+                                var thumbs = document.querySelectorAll('.tour-gallery-thumb');
+                                if (!mainImg || !thumbs.length) return;
+                                thumbs.forEach(function(btn, i) {
+                                    btn.addEventListener('click', function() {
+                                        var url = this.getAttribute('data-tour-image');
+                                        if (url) mainImg.src = url;
+                                        thumbs.forEach(function(b) { b.classList.remove('border-red-500', 'ring-2', 'ring-red-500'); b.classList.add('border-gray-100'); });
+                                        this.classList.add('border-red-500', 'ring-2', 'ring-red-500'); this.classList.remove('border-gray-100');
+                                    });
+                                });
+                            })();
+                        </script>
+                        @endif
                     </div>
 
                     <!-- Title & Basic Info -->
@@ -89,7 +121,32 @@
                                 <svg class="w-4 h-4 mr-1.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 {{ $package->duration_days }} Days / {{ $package->duration_days - 1 }} Nights
                             </div>
+                            @if(!empty($package->travel_data) && is_array($package->travel_data))
+                            @php $firstKeyInfo = collect($package->travel_data)->first(fn($i) => !empty($i['label']) || !empty($i['content'] ?? '')); @endphp
+                            @if($firstKeyInfo)
+                            <div class="flex items-center px-3 py-1.5 bg-teal-50 border border-teal-100 rounded-lg text-xs font-semibold text-teal-800">
+                                <svg class="w-4 h-4 mr-1.5 text-teal-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                {{ $firstKeyInfo['content'] ?? $firstKeyInfo['label'] ?? '—' }}
+                            </div>
+                            @endif
+                            @endif
                         </div>
+
+                        @if(!empty($package->travel_data) && is_array($package->travel_data) && count($package->travel_data) > 1)
+                        <!-- Key Features (remaining items after the first badge) -->
+                        <div class="flex flex-wrap gap-x-6 gap-y-3 pt-4 border-t border-gray-100 mt-4">
+                            @foreach($package->travel_data as $index => $item)
+                                @if($index > 0 && (!empty($item['label']) || !empty($item['content'])))
+                                    <div class="flex flex-col">
+                                        @if(!empty($item['label']))
+                                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{{ $item['label'] }}</span>
+                                        @endif
+                                        <span class="text-sm font-semibold text-gray-800">{{ $item['content'] ?? '—' }}</span>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                        @endif
                     </div>
 
                     <!-- Overview Section -->
@@ -148,8 +205,8 @@
                         @php
                             $sections = [
                                 ['id' => 'hotel', 'title' => 'Hotel Details', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4', 'color' => 'blue', 'content' => $package->hotel_details ?: 'Details shared upon booking.'],
-                                ['id' => 'included', 'title' => 'Included', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'green', 'is_list' => true, 'content' => $package->inclusions ?: []],
-                                ['id' => 'excluded', 'title' => 'Excluded', 'icon' => 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'orange', 'is_list' => true, 'content' => $package->exclusions ?: []],
+                                ['id' => 'included', 'title' => 'Included', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'green', 'is_list' => true, 'list_style' => 'included', 'content' => $package->inclusions ?: []],
+                                ['id' => 'excluded', 'title' => 'Excluded', 'icon' => 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'orange', 'is_list' => true, 'list_style' => 'excluded', 'content' => $package->exclusions ?: []],
                                 ['id' => 'additional', 'title' => 'Additional Information', 'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'purple', 'content' => $package->additional_info],
                                 ['id' => 'policy', 'title' => 'Policy & Condition', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'color' => 'indigo', 'content' => $package->policy],
                                 ['id' => 'tips', 'title' => 'Travel Tips', 'icon' => 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z', 'color' => 'yellow', 'content' => $package->travel_tips],
@@ -158,8 +215,8 @@
                         @endphp
 
                         @foreach($sections as $sec)
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                            <button @click="activeSection = (activeSection === '{{ $sec['id'] }}' ? '' : '{{ $sec['id'] }}')" class="w-full flex items-center justify-between px-5 py-4 text-left focus:outline-none group">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden {{ isset($sec['list_style']) && $sec['list_style'] === 'included' ? 'ring-1 ring-green-200/60' : '' }} {{ isset($sec['list_style']) && $sec['list_style'] === 'excluded' ? 'ring-1 ring-orange-200/60' : '' }}">
+                            <button @click="activeSection = (activeSection === '{{ $sec['id'] }}' ? '' : '{{ $sec['id'] }}')" class="w-full flex items-center justify-between px-5 py-4 text-left focus:outline-none group {{ $sec['id'] === 'included' ? 'hover:bg-green-50/50' : '' }} {{ $sec['id'] === 'excluded' ? 'hover:bg-orange-50/50' : '' }}">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 bg-{{ $sec['color'] }}-50 text-{{ $sec['color'] }}-600 rounded-lg flex items-center justify-center mr-4 group-hover:bg-{{ $sec['color'] }}-500 group-hover:text-white transition-all duration-200">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $sec['icon'] }}"></path></svg>
@@ -168,18 +225,40 @@
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400 transition-transform duration-300" :class="activeSection === '{{ $sec['id'] }}' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="px-5 pb-4 pt-0 ml-14">
-                                <div class="pt-1 border-t border-gray-50">
+                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="px-5 pb-5 pt-0 {{ $sec['id'] === 'included' ? 'ml-14' : 'ml-14' }}">
+                                <div class="pt-4 border-t border-gray-100 rounded-b-xl {{ $sec['id'] === 'included' ? 'bg-green-50/40' : '' }} {{ $sec['id'] === 'excluded' ? 'bg-orange-50/40' : '' }} {{ in_array($sec['id'], ['included', 'excluded']) ? 'px-4 py-3 -mx-1' : 'pt-1' }}">
                                     @if(isset($sec['is_list']) && is_array($sec['content']))
+                                        @if(isset($sec['list_style']) && $sec['list_style'] === 'included')
+                                        <ul class="list-none space-y-2">
+                                            @forelse($sec['content'] as $item)
+                                                <li class="flex items-start gap-3 text-sm text-gray-800 bg-white/80 rounded-lg px-4 py-2.5 shadow-sm border border-green-100/80">
+                                                    <span class="flex-shrink-0 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mt-0.5"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg></span>
+                                                    <span>{{ $item }}</span>
+                                                </li>
+                                            @empty
+                                                <li class="italic text-gray-400 text-sm py-2">Not specified.</li>
+                                            @endforelse
+                                        </ul>
+                                        @elseif(isset($sec['list_style']) && $sec['list_style'] === 'excluded')
+                                        <ul class="list-none space-y-2">
+                                            @forelse($sec['content'] as $item)
+                                                <li class="flex items-start gap-3 text-sm text-gray-800 bg-white/80 rounded-lg px-4 py-2.5 shadow-sm border border-orange-100/80">
+                                                    <span class="flex-shrink-0 w-5 h-5 rounded-full bg-orange-400 flex items-center justify-center mt-0.5"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg></span>
+                                                    <span>{{ $item }}</span>
+                                                </li>
+                                            @empty
+                                                <li class="italic text-gray-400 text-sm py-2">Not specified.</li>
+                                            @endforelse
+                                        </ul>
+                                        @else
                                         <ul class="list-none space-y-0.5">
                                             @forelse($sec['content'] as $item)
-                                                <li class="text-sm text-gray-700">
-                                                    {{ $item }}
-                                                </li>
+                                                <li class="text-sm text-gray-700">{{ $item }}</li>
                                             @empty
                                                 <li class="italic text-gray-400">Not specified.</li>
                                             @endforelse
                                         </ul>
+                                        @endif
                                     @else
                                         {{ $sec['content'] ?: 'No information provided.' }}
                                     @endif
