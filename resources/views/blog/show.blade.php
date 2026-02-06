@@ -77,7 +77,7 @@
                     @endif
 
                     <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 prose prose-lg prose-red max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-img:rounded-xl">
-                        {!! $post->content !!}
+                        {!! nl2br(e($post->content)) !!}
                     </div>
 
                     <!-- Share Buttons -->
