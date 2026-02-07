@@ -35,4 +35,12 @@ class Post extends Model
     {
         return $query->where('is_published', true);
     }
+
+    /**
+     * Use slug for route model binding (admin and public URLs).
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }
