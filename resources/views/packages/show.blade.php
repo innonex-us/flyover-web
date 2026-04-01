@@ -171,6 +171,16 @@
                                 <svg class="w-4 h-4 mr-1.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 {{ $package->duration_days }} Days / {{ $package->duration_days - 1 }} Nights
                             </div>
+                            <div class="inline-flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0 rounded-lg border-2 border-red-500 bg-white px-3 py-2 shadow-sm">
+                                <span class="text-[10px] font-bold text-red-600 uppercase tracking-[0.15em] shrink-0">Travel date</span>
+                                <span class="text-xs font-semibold text-gray-900">
+                                    @if($package->start_date)
+                                        {{ $package->start_date->format('F j, Y') }}
+                                    @else
+                                        <span class="text-gray-400 font-medium normal-case tracking-normal">To be announced</span>
+                                    @endif
+                                </span>
+                            </div>
                             @if(!empty($package->travel_data) && is_array($package->travel_data))
                             @php $firstKeyInfo = collect($package->travel_data)->first(fn($i) => !empty($i['label']) || !empty($i['content'] ?? '')); @endphp
                             @if($firstKeyInfo)
