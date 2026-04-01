@@ -4,12 +4,23 @@
         $mainImage = $package->thumbnail 
             ? (\Illuminate\Support\Str::startsWith($package->thumbnail, 'http') ? $package->thumbnail : Storage::url($package->thumbnail))
             : $defaultImage;
-        
-        $galleryImages = [$mainImage];
-        if (!empty($package->images) && is_array($package->images)) {
-            foreach($package->images as $img) {
-                $galleryImages[] = \Illuminate\Support\Str::startsWith($img, 'http') ? $img : Storage::url($img);
+
+        $galleryImages = [];
+        $pushGallery = function (string $url) use (&$galleryImages) {
+            if ($url !== '' && !in_array($url, $galleryImages, true)) {
+                $galleryImages[] = $url;
             }
+        };
+        $pushGallery($mainImage);
+        if (!empty($package->images) && is_array($package->images)) {
+            foreach ($package->images as $img) {
+                $resolved = \Illuminate\Support\Str::startsWith($img, 'http') ? $img : Storage::url($img);
+                $pushGallery($resolved);
+            }
+        }
+        if ($galleryImages === []) {
+            $galleryImages = [$defaultImage];
+            $mainImage = $defaultImage;
         }
     @endphp
     @push('meta')
@@ -74,33 +85,72 @@
                 <!-- Left Column: Primary Content -->
                 <div class="lg:col-span-2 space-y-6">
                     
-                    <!-- Main Thumbnail + Gallery (click gallery to show in main) -->
-                    <div id="tour-gallery-wrap">
-                        <div class="relative rounded-2xl overflow-hidden shadow-md aspect-video bg-gray-100 border border-gray-200/50">
-                            <img id="main-tour-image" src="{{ $mainImage }}" alt="{{ $package->title }}" class="w-full h-full object-cover" fetchpriority="high" decoding="async">
-                        </div>
-                        @if(count($galleryImages) > 1)
-                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mt-4">
-                            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Photo Gallery</h3>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                @foreach($galleryImages as $index => $gImg)
-                                    <button type="button" data-tour-image="{{ e($gImg) }}" class="tour-gallery-thumb block aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 border-2 {{ $index === 0 ? 'border-red-500 ring-2 ring-red-500' : 'border-gray-100' }} hover:border-red-300 transition text-left focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" aria-label="View image {{ $index + 1 }}">
-                                        <img src="{{ $gImg }}" alt="{{ $package->title }}" class="w-full h-full object-cover pointer-events-none" loading="lazy" decoding="async">
+                    <!-- Main hero + photo gallery: main image on the left, thumbs on the right (when multiple images) -->
+                    @php $showPhotoGallery = count($galleryImages) > 1; @endphp
+                    <div id="tour-gallery-wrap" class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                        @if($showPhotoGallery)
+                        <div class="flex flex-row gap-3 sm:gap-4 p-3 sm:p-4 items-start">
+                            <figure class="relative m-0 min-w-0 flex-1 aspect-video bg-gray-100 rounded-xl overflow-hidden">
+                                <img
+                                    id="main-tour-image"
+                                    src="{{ $mainImage }}"
+                                    alt="{{ $package->title }}"
+                                    class="w-full h-full object-cover"
+                                    fetchpriority="high"
+                                    decoding="async"
+                                    sizes="(min-width: 1024px) 720px, calc(100vw - 8rem)"
+                                >
+                            </figure>
+                            <aside class="flex w-[5.25rem] sm:w-24 md:w-28 shrink-0 flex-col gap-3" aria-labelledby="tour-photo-gallery-heading">
+                                <h3 id="tour-photo-gallery-heading" class="text-[10px] sm:text-xs font-bold text-gray-900 uppercase tracking-[0.12em] leading-snug">Photo gallery</h3>
+                                <div class="flex flex-col gap-2 overflow-y-auto max-h-[min(28rem,60vh)] pl-0.5 [scrollbar-width:thin]" role="list">
+                                    @foreach($galleryImages as $index => $gImg)
+                                    <button
+                                        type="button"
+                                        role="listitem"
+                                        data-tour-image="{{ e($gImg) }}"
+                                        class="tour-gallery-thumb group block w-full aspect-[4/3] shrink-0 rounded-lg overflow-hidden bg-gray-100 border-2 {{ $index === 0 ? 'border-red-500 ring-2 ring-red-500 ring-offset-1 ring-offset-white' : 'border-gray-200' }} hover:border-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1 transition-colors text-left"
+                                        aria-label="Show image {{ $index + 1 }} in main view"
+                                        aria-pressed="{{ $index === 0 ? 'true' : 'false' }}"
+                                    >
+                                        <img src="{{ $gImg }}" alt="" class="w-full h-full object-cover pointer-events-none group-hover:opacity-95 transition-opacity" loading="lazy" decoding="async">
                                     </button>
-                                @endforeach
-                            </div>
+                                    @endforeach
+                                </div>
+                            </aside>
                         </div>
+                        @else
+                        <figure class="relative m-0 aspect-video bg-gray-100">
+                            <img
+                                id="main-tour-image"
+                                src="{{ $mainImage }}"
+                                alt="{{ $package->title }}"
+                                class="w-full h-full object-cover"
+                                fetchpriority="high"
+                                decoding="async"
+                                sizes="(min-width: 1024px) 896px, 100vw"
+                            >
+                        </figure>
+                        @endif
+                        @if($showPhotoGallery)
                         <script>
                             (function() {
+                                var wrap = document.getElementById('tour-gallery-wrap');
                                 var mainImg = document.getElementById('main-tour-image');
-                                var thumbs = document.querySelectorAll('.tour-gallery-thumb');
+                                var thumbs = wrap ? wrap.querySelectorAll('.tour-gallery-thumb') : [];
                                 if (!mainImg || !thumbs.length) return;
-                                thumbs.forEach(function(btn, i) {
+                                thumbs.forEach(function(btn) {
                                     btn.addEventListener('click', function() {
                                         var url = this.getAttribute('data-tour-image');
                                         if (url) mainImg.src = url;
-                                        thumbs.forEach(function(b) { b.classList.remove('border-red-500', 'ring-2', 'ring-red-500'); b.classList.add('border-gray-100'); });
-                                        this.classList.add('border-red-500', 'ring-2', 'ring-red-500'); this.classList.remove('border-gray-100');
+                                        thumbs.forEach(function(b) {
+                                            b.classList.remove('border-red-500', 'ring-2', 'ring-red-500', 'ring-offset-1', 'ring-offset-white');
+                                            b.classList.add('border-gray-200');
+                                            b.setAttribute('aria-pressed', 'false');
+                                        });
+                                        this.classList.add('border-red-500', 'ring-2', 'ring-red-500', 'ring-offset-1', 'ring-offset-white');
+                                        this.classList.remove('border-gray-200');
+                                        this.setAttribute('aria-pressed', 'true');
                                     });
                                 });
                             })();
@@ -208,7 +258,7 @@
                                 ['id' => 'included', 'title' => 'Included', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'green', 'is_list' => true, 'list_style' => 'included', 'content' => $package->inclusions ?: []],
                                 ['id' => 'excluded', 'title' => 'Excluded', 'icon' => 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'orange', 'is_list' => true, 'list_style' => 'excluded', 'content' => $package->exclusions ?: []],
                                 ['id' => 'additional', 'title' => 'Additional Information', 'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'purple', 'content' => $package->additional_info],
-                                ['id' => 'policy', 'title' => 'Policy & Condition', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'color' => 'indigo', 'content' => $package->policy],
+                                ['id' => 'policy', 'title' => 'Policy & Conditions', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'color' => 'indigo', 'content' => $package->policy, 'preformatted' => true],
                                 ['id' => 'tips', 'title' => 'Travel Tips', 'icon' => 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z', 'color' => 'yellow', 'content' => $package->travel_tips],
                                 ['id' => 'pickup', 'title' => 'Pickup Note', 'icon' => 'M12 21l9-9-9-9-9 9 9 9z', 'color' => 'cyan', 'content' => $package->pickup_note],
                             ];
@@ -260,7 +310,19 @@
                                         </ul>
                                         @endif
                                     @else
-                                        {{ $sec['content'] ?: 'No information provided.' }}
+                                        @php
+                                            $plainContent = $sec['content'];
+                                            $isEmptyPlain = $plainContent === null || $plainContent === '';
+                                        @endphp
+                                        @if(!empty($sec['preformatted']))
+                                            <div class="max-h-72 overflow-y-auto rounded-xl border border-red-200/90 bg-gray-50 p-4 text-sm text-gray-800 leading-relaxed whitespace-pre-line">
+                                                {{ $isEmptyPlain ? 'No information provided.' : $plainContent }}
+                                            </div>
+                                        @else
+                                            <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                                                {{ $isEmptyPlain ? 'No information provided.' : $plainContent }}
+                                            </div>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
