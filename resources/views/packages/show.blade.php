@@ -212,9 +212,9 @@
                     <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                         <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
                             <span class="w-1 h-5 bg-red-500 rounded-full mr-3"></span>
-                            Overview
+                            Description
                         </h2>
-                        <div class="text-gray-600 text-sm md:text-base leading-relaxed">
+                        <div class="text-gray-600 text-sm md:text-base leading-relaxed whitespace-pre-line">
                             {{ $package->description }}
                         </div>
                     </div>
@@ -264,6 +264,7 @@
                         @php
                             $sections = [
                                 ['id' => 'hotel', 'title' => 'Hotel Details', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4', 'color' => 'blue', 'content' => $package->hotel_details ?: 'Details shared upon booking.'],
+                                ['id' => 'requirements', 'title' => 'Requirements', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01', 'color' => 'amber', 'content' => $package->requirements],
                                 ['id' => 'included', 'title' => 'Included', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'green', 'is_list' => true, 'list_style' => 'included', 'content' => $package->inclusions ?: []],
                                 ['id' => 'excluded', 'title' => 'Excluded', 'icon' => 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'orange', 'is_list' => true, 'list_style' => 'excluded', 'content' => $package->exclusions ?: []],
                                 ['id' => 'additional', 'title' => 'Additional Information', 'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'purple', 'content' => $package->additional_info],
