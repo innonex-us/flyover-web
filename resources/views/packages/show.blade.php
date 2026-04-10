@@ -325,7 +325,7 @@
                                             $isEmptyPlain = $plainContent === null || $plainContent === '';
                                         @endphp
                                         @if(!empty($sec['preformatted']))
-                                            <div class="max-h-72 overflow-y-auto rounded-xl border border-red-200/90 bg-gray-50 p-4 text-sm text-gray-800 leading-relaxed whitespace-pre-line">
+                                            <div class="rounded-xl border border-red-200/90 bg-gray-50 p-4 text-sm text-gray-800 leading-relaxed whitespace-pre-line">
                                                 {{ $isEmptyPlain ? 'No information provided.' : $plainContent }}
                                             </div>
                                         @else
