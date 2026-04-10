@@ -14,6 +14,14 @@ Route::get('/tours/{slug}', [PackageController::class, 'show'])->name('packages.
 Route::post('/customize', [PackageController::class, 'customize'])->name('packages.customize.general');
 Route::post('/tours/{package}/customize', [PackageController::class, 'customize'])->name('packages.customize');
 
+// Data Export API
+Route::prefix('api/export/v1')->middleware('api.token')->group(function () {
+    Route::get('/', [App\Http\Controllers\Api\DataExportController::class, 'index']);
+    Route::get('/contacts', [App\Http\Controllers\Api\DataExportController::class, 'contacts']);
+    Route::get('/inquiries', [App\Http\Controllers\Api\DataExportController::class, 'inquiries']);
+    Route::get('/bookings', [App\Http\Controllers\Api\DataExportController::class, 'bookings']);
+});
+
 Route::get('/visas', [VisaController::class, 'index'])->name('visas.index');
 Route::get('/visas/{slug}', [VisaController::class, 'show'])->name('visas.show');
 
