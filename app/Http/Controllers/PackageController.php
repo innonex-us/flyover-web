@@ -50,7 +50,16 @@ class PackageController extends Controller
         return view('packages.show', compact('package', 'title', 'meta_description', 'meta_image', 'relatedPackages'));
     }
 
-    public function customize(Request $request, Package $package)
+    public function showCustomPlanForm()
+    {
+        $title = 'Plan My Trip - Get a Custom Tour Plan | FlyoverBD';
+        $meta_description = 'Tell us your travel dreams and our experts will craft a personalized itinerary just for you. Get a custom tour plan today.';
+        $meta_image = asset('logo.png');
+
+        return view('packages.custom-plan', compact('title', 'meta_description', 'meta_image'));
+    }
+
+    public function customize(Request $request, Package $package = null)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -66,11 +75,11 @@ class PackageController extends Controller
         ]);
 
         \App\Models\CustomizationRequest::create([
-            'package_id' => $package->id,
+            'package_id' => $package?->id,
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'message' => $request->message ?? 'Customized Package Request',
+            'message' => $request->message ?? ($package ? 'Customized Package Request' : 'General Custom Plan Request'),
             'details' => [
                 'adults' => $request->adults,
                 'children' => $request->children,

@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/tours', [PackageController::class, 'index'])->name('packages.index');
+Route::get('/plan-my-trip', [PackageController::class, 'showCustomPlanForm'])->name('customize.index');
 Route::get('/tours/{slug}', [PackageController::class, 'show'])->name('packages.show');
+Route::post('/customize', [PackageController::class, 'customize'])->name('packages.customize.general');
 Route::post('/tours/{package}/customize', [PackageController::class, 'customize'])->name('packages.customize');
 
 Route::get('/visas', [VisaController::class, 'index'])->name('visas.index');
