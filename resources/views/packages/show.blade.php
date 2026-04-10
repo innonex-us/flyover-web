@@ -102,7 +102,6 @@
                                 >
                             </figure>
                             <aside class="flex w-[5.25rem] sm:w-24 md:w-28 shrink-0 flex-col gap-3" aria-labelledby="tour-photo-gallery-heading">
-                                <h3 id="tour-photo-gallery-heading" class="text-[10px] sm:text-xs font-bold text-gray-900 uppercase tracking-[0.12em] leading-snug">Photo gallery</h3>
                                 <div class="flex flex-col gap-2 overflow-y-auto max-h-[min(28rem,60vh)] pl-0.5 [scrollbar-width:thin]" role="list">
                                     @foreach($galleryImages as $index => $gImg)
                                     <button
