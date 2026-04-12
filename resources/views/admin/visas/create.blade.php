@@ -103,18 +103,42 @@
                 <!-- JSON Documents Handling Placeholder: For now simple textareas for structured text if JSON logic is too complex for basic CRUD -->
                 <!-- We will rely on simple fields or text areas for now as user didn't ask for full JSON builder UI yet -->
                 <div x-show="tabs === 'required_documents'"> 
-                    <div x-data="{ docs: [''] }">
+                    <div x-data="{ 
+                        sections: [
+                            { 
+                                section: 'Job Holders', 
+                                documents: [''] 
+                            }
+                        ] 
+                    }">
                         <label class="block text-sm font-semibold text-gray-700 mb-4">Required Documents List</label>
-                        <template x-for="(doc, index) in docs" :key="index">
-                            <div class="flex gap-2 mb-3">
-                                <input type="text" name="required_documents[]" x-model="docs[index]" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. Original Passport">
-                                <button type="button" @click="docs.splice(index, 1)" x-show="docs.length > 1" class="text-red-500 hover:text-red-700 p-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
+                        <template x-for="(section, sIndex) in sections" :key="sIndex">
+                            <div class="mb-6 p-5 border border-gray-200 rounded-xl bg-gray-50/50">
+                                <div class="flex justify-between items-center mb-4">
+                                    <input type="text" :name="'required_documents[' + sIndex + '][section]'" x-model="sections[sIndex].section" class="font-bold text-gray-800 bg-white border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 w-full max-w-md" placeholder="Section Title (e.g. Job Holders)" required>
+                                    <button type="button" @click="sections.splice(sIndex, 1)" class="text-red-500 hover:text-red-700 p-2 ml-4 bg-white rounded-lg border border-red-100 shadow-sm" title="Remove Section">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </div>
+                                
+                                <div class="space-y-3 pl-4 sm:pl-6 border-l-2 border-red-200">
+                                    <template x-for="(doc, dIndex) in sections[sIndex].documents" :key="dIndex">
+                                        <div class="flex gap-2 items-start">
+                                            <input type="text" :name="'required_documents[' + sIndex + '][documents][]'" x-model="sections[sIndex].documents[dIndex]" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 text-sm" placeholder="e.g. A passport valid for at least seven (7) months..." required>
+                                            <button type="button" @click="sections[sIndex].documents.splice(dIndex, 1)" x-show="sections[sIndex].documents.length > 1" class="text-gray-400 hover:text-red-600 p-2 mt-1">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            </button>
+                                        </div>
+                                    </template>
+                                    <button type="button" @click="sections[sIndex].documents.push('')" class="text-xs text-red-600 font-bold hover:underline py-1.5 px-3 bg-white rounded border border-red-100 flex items-center mt-2 shadow-sm transition-shadow hover:shadow">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> Add Document
+                                    </button>
+                                </div>
                             </div>
                         </template>
-                        <button type="button" @click="docs.push('')" class="mt-2 text-sm text-red-600 font-bold hover:underline py-2 px-3 bg-red-50 rounded-lg border border-red-100">
-                            + Add Another Document
+                        
+                        <button type="button" @click="sections.push({ section: '', documents: [''] })" class="inline-flex items-center mt-2 text-sm text-white font-bold hover:bg-red-700 py-2.5 px-4 bg-red-600 rounded-xl shadow-sm hover:shadow transition-all">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> Add New Section
                         </button>
                     </div>
                 </div>

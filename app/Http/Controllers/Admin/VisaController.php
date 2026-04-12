@@ -55,8 +55,22 @@ class VisaController extends Controller
             $validated['thumbnail'] = $request->file('thumbnail')->store('visas/thumbnails', 'public');
         }
 
-        // Filter empty documents
-        $validated['required_documents'] = array_filter($validated['required_documents'] ?? [], fn($value) => !is_null($value) && $value !== '');
+        // Filter empty sections and documents
+        $docs = [];
+        if (!empty($validated['required_documents']) && is_array($validated['required_documents'])) {
+            foreach ($validated['required_documents'] as $section) {
+                if (!empty($section['section']) && !empty($section['documents']) && is_array($section['documents'])) {
+                    $cleanedDocs = array_values(array_filter($section['documents'], fn($v) => !is_null($v) && trim($v) !== ''));
+                    if (!empty($cleanedDocs)) {
+                        $docs[] = [
+                            'section' => trim($section['section']),
+                            'documents' => $cleanedDocs
+                        ];
+                    }
+                }
+            }
+        }
+        $validated['required_documents'] = $docs;
 
         $validated['is_active'] = $request->has('is_active');
 
@@ -104,8 +118,22 @@ class VisaController extends Controller
             $validated['thumbnail'] = $request->file('thumbnail')->store('visas/thumbnails', 'public');
         }
 
-        // Filter empty documents
-        $validated['required_documents'] = array_filter($validated['required_documents'] ?? [], fn($value) => !is_null($value) && $value !== '');
+        // Filter empty sections and documents
+        $docs = [];
+        if (!empty($validated['required_documents']) && is_array($validated['required_documents'])) {
+            foreach ($validated['required_documents'] as $section) {
+                if (!empty($section['section']) && !empty($section['documents']) && is_array($section['documents'])) {
+                    $cleanedDocs = array_values(array_filter($section['documents'], fn($v) => !is_null($v) && trim($v) !== ''));
+                    if (!empty($cleanedDocs)) {
+                        $docs[] = [
+                            'section' => trim($section['section']),
+                            'documents' => $cleanedDocs
+                        ];
+                    }
+                }
+            }
+        }
+        $validated['required_documents'] = $docs;
 
         $validated['is_active'] = $request->has('is_active');
 

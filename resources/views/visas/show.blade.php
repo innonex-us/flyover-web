@@ -133,29 +133,65 @@
                             
                             @if(!empty($visa->required_documents) && is_array($visa->required_documents))
                                 <div class="space-y-6">
-                                    @foreach($visa->required_documents as $category => $docs)
+                                    @php
+                                        // Normalize required documents for display
+                                        $normalizedDocs = [];
+                                        $rawDocs = $visa->required_documents;
+                                        if (is_array($rawDocs) && count($rawDocs) > 0) {
+                                            $firstElem = reset($rawDocs);
+                                            if (is_array($firstElem) && isset($firstElem['section'])) {
+                                                // New format
+                                                foreach ($rawDocs as $sec) {
+                                                    $normalizedDocs[] = [
+                                                        'title' => $sec['section'] ?? '',
+                                                        'items' => $sec['documents'] ?? []
+                                                    ];
+                                                }
+                                            } else {
+                                                $hasStringKeys = count(array_filter(array_keys($rawDocs), 'is_string')) > 0;
+                                                if ($hasStringKeys) {
+                                                    // Old associative format
+                                                    foreach ($rawDocs as $cat => $val) {
+                                                        $normalizedDocs[] = [
+                                                            'title' => $cat,
+                                                            'items' => is_array($val) ? $val : [$val]
+                                                        ];
+                                                    }
+                                                } else {
+                                                    // Old plain list format
+                                                    $normalizedDocs[] = [
+                                                        'title' => 'General Requirements',
+                                                        'items' => $rawDocs
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    @endphp
+
+                                    @foreach($normalizedDocs as $sectionData)
+                                        @if(!empty($sectionData['title']) || !empty($sectionData['items']))
                                         <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                            @if(!empty($sectionData['title']))
                                             <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                                                <h3 class="font-bold text-gray-900">{{ $category }}</h3>
+                                                <h3 class="font-bold text-gray-900">{{ $sectionData['title'] }}</h3>
                                             </div>
+                                            @endif
+                                            @if(!empty($sectionData['items']))
                                             <div class="p-6">
                                                 <ul class="space-y-3">
-                                                    @if(is_array($docs))
-                                                        @foreach($docs as $doc)
-                                                            <li class="flex items-start">
-                                                                <svg class="w-5 h-5 mr-3 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                                                <span class="text-gray-600 text-sm">{{ $doc }}</span>
-                                                            </li>
-                                                        @endforeach
-                                                    @else
+                                                    @foreach($sectionData['items'] as $docItem)
+                                                        @if(!empty(trim($docItem)))
                                                         <li class="flex items-start">
                                                             <svg class="w-5 h-5 mr-3 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                                            <span class="text-gray-600 text-sm">{{ $docs }}</span>
+                                                            <span class="text-gray-600 text-sm">{{ $docItem }}</span>
                                                         </li>
-                                                    @endif
+                                                        @endif
+                                                    @endforeach
                                                 </ul>
                                             </div>
+                                            @endif
                                         </div>
+                                        @endif
                                     @endforeach
                                 </div>
                                 <div class="mt-6 p-4 bg-yellow-50 text-yellow-800 text-sm rounded-lg border border-yellow-200">
