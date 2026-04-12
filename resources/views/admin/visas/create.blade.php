@@ -95,7 +95,7 @@
             <div x-data="{ tabs: 'required_documents' }">
                 <div class="border-b border-gray-200 mb-4">
                     <nav class="-mb-px flex space-x-6">
-                        <a href="#" @click.prevent="tabs = 'required_documents'" :class="tabs === 'required_documents' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium">Required Documents (JSON)</a>
+                        <a href="#" @click.prevent="tabs = 'required_documents'" :class="tabs === 'required_documents' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium">Required Documents</a>
                         <a href="#" @click.prevent="tabs = 'fees'" :class="tabs === 'fees' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium">Fees & Terms</a>
                     </nav>
                 </div>
