@@ -35,41 +35,45 @@
                 <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-6">Basic Information</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-
-
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Country</label>
                         <input type="text" name="country" value="{{ old('country', $visa->country) }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                        @error('country') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Visa Type</label>
                          <select name="type" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
-                            <option value="Tourist Visa" {{ $visa->type == 'Tourist Visa' ? 'selected' : '' }}>Tourist Visa</option>
-                            <option value="Business Visa" {{ $visa->type == 'Business Visa' ? 'selected' : '' }}>Business Visa</option>
-                            <option value="Student Visa" {{ $visa->type == 'Student Visa' ? 'selected' : '' }}>Student Visa</option>
-                            <option value="Work Visa" {{ $visa->type == 'Work Visa' ? 'selected' : '' }}>Work Visa</option>
-                            <option value="E-Visa" {{ $visa->type == 'E-Visa' ? 'selected' : '' }}>E-Visa</option>
+                            <option value="Tourist Visa" {{ old('type', $visa->type) == 'Tourist Visa' ? 'selected' : '' }}>Tourist Visa</option>
+                            <option value="Business Visa" {{ old('type', $visa->type) == 'Business Visa' ? 'selected' : '' }}>Business Visa</option>
+                            <option value="Student Visa" {{ old('type', $visa->type) == 'Student Visa' ? 'selected' : '' }}>Student Visa</option>
+                            <option value="Work Visa" {{ old('type', $visa->type) == 'Work Visa' ? 'selected' : '' }}>Work Visa</option>
+                            <option value="E-Visa" {{ old('type', $visa->type) == 'E-Visa' ? 'selected' : '' }}>E-Visa</option>
                         </select>
+                        @error('type') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Price (BDT)</label>
                         <input type="number" name="price" value="{{ old('price', $visa->price) }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                        @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                          <label class="block text-sm font-semibold text-gray-700 mb-2">Processing Time</label>
                         <input type="text" name="processing_time" value="{{ old('processing_time', $visa->processing_time) }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                        @error('processing_time') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                      <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Entry Type</label>
                          <input type="text" name="entry_type" value="{{ old('entry_type', $visa->entry_type) }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                         @error('entry_type') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                      <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Validity Info</label>
                          <input type="text" name="validity_info" value="{{ old('validity_info', $visa->validity_info) }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                         @error('validity_info') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>
@@ -81,6 +85,13 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Description / Overview</label>
                         <textarea name="description" rows="4" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('description', $visa->description) }}</textarea>
+                        @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements (Additional Details)</label>
+                        <textarea name="requirements" rows="4" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements', $visa->requirements) }}</textarea>
+                        @error('requirements') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div x-data="fileUploader">
@@ -89,6 +100,7 @@
                             <img src="{{ Storage::url($visa->thumbnail) }}" alt="Current Thumbnail" class="h-32 w-48 object-cover rounded-lg mb-2">
                         @endif
                         <input type="file" name="thumbnail" @change="handleFileChange" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                        @error('thumbnail') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display: none;">
                             Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
                         </div>
@@ -161,14 +173,17 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Fees Info</label>
                             <textarea name="fees" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('fees', $visa->fees) }}</textarea>
+                            @error('fees') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Terms & Conditions</label>
                             <textarea name="terms" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('terms', $visa->terms) }}</textarea>
+                            @error('terms') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Important Notes</label>
                             <textarea name="important_notes" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('important_notes', $visa->important_notes) }}</textarea>
+                            @error('important_notes') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
@@ -183,6 +198,7 @@
                             <span class="text-xs text-gray-500 block">Show on website</span>
                         </div>
                     </label>
+                    @error('is_active') <p class="text-red-500 text-xs mt-1 ml-3">{{ $message }}</p> @enderror
                 </div>
                 <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
                     Update Visa Service

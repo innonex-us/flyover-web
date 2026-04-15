@@ -42,32 +42,37 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Visa Type</label>
                         <select name="type" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
-                            <option value="Tourist Visa">Tourist Visa</option>
-                            <option value="Business Visa">Business Visa</option>
-                            <option value="Student Visa">Student Visa</option>
-                            <option value="Work Visa">Work Visa</option>
-                            <option value="E-Visa">E-Visa</option>
+                            <option value="Tourist Visa" {{ old('type') == 'Tourist Visa' ? 'selected' : '' }}>Tourist Visa</option>
+                            <option value="Business Visa" {{ old('type') == 'Business Visa' ? 'selected' : '' }}>Business Visa</option>
+                            <option value="Student Visa" {{ old('type') == 'Student Visa' ? 'selected' : '' }}>Student Visa</option>
+                            <option value="Work Visa" {{ old('type') == 'Work Visa' ? 'selected' : '' }}>Work Visa</option>
+                            <option value="E-Visa" {{ old('type') == 'E-Visa' ? 'selected' : '' }}>E-Visa</option>
                         </select>
+                        @error('type') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Price (BDT)</label>
                         <input type="number" name="price" value="{{ old('price') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="0.00">
+                        @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                          <label class="block text-sm font-semibold text-gray-700 mb-2">Processing Time</label>
                         <input type="text" name="processing_time" value="{{ old('processing_time') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. 5-7 Working Days">
+                        @error('processing_time') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                      <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Entry Type</label>
                          <input type="text" name="entry_type" value="{{ old('entry_type') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. Single Entry">
+                         @error('entry_type') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                      <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Validity Info</label>
                          <input type="text" name="validity_info" value="{{ old('validity_info') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. 3 Months Validity / 30 Days Stay">
+                         @error('validity_info') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>
@@ -79,11 +84,19 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Description / Overview</label>
                         <textarea name="description" rows="4" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('description') }}</textarea>
+                        @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements (Additional Details)</label>
+                        <textarea name="requirements" rows="4" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements') }}</textarea>
+                        @error('requirements') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div x-data="fileUploader">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Thumbnail Image (Required)</label>
                         <input type="file" name="thumbnail" @change="handleFileChange" required accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                        @error('thumbnail') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display: none;">
                             Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
                         </div>
@@ -148,20 +161,33 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Fees Info</label>
                             <textarea name="fees" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('fees') }}</textarea>
+                            @error('fees') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Terms & Conditions</label>
                             <textarea name="terms" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('terms') }}</textarea>
+                            @error('terms') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Important Notes</label>
                             <textarea name="important_notes" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('important_notes') }}</textarea>
+                            @error('important_notes') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-gray-100 flex justify-end">
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                <div class="flex items-center">
+                    <label class="flex items-center space-x-3 cursor-pointer bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50 h-5 w-5">
+                        <div>
+                            <span class="text-sm font-bold text-gray-900 block">Active Status</span>
+                            <span class="text-xs text-gray-500 block">Show on website</span>
+                        </div>
+                    </label>
+                    @error('is_active') <p class="text-red-500 text-xs mt-1 ml-3">{{ $message }}</p> @enderror
+                </div>
                 <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
                     Create Visa Service
                 </button>

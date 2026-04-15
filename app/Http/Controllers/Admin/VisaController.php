@@ -49,7 +49,15 @@ class VisaController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $validated['slug'] = Str::slug($validated['country'] . '-' . $validated['type']);
+        $baseSlug = Str::slug($validated['country'] . '-' . $validated['type']);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (Visa::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        $validated['slug'] = $slug;
 
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')->store('visas/thumbnails', 'public');
@@ -109,7 +117,15 @@ class VisaController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $validated['slug'] = Str::slug($validated['country'] . '-' . $validated['type']);
+        $baseSlug = Str::slug($validated['country'] . '-' . $validated['type']);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (Visa::where('slug', $slug)->where('id', '!=', $visa->id)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        $validated['slug'] = $slug;
 
         if ($request->hasFile('thumbnail')) {
             if ($visa->thumbnail) {
