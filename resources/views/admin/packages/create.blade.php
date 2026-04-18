@@ -49,12 +49,14 @@
                         <input type="number" name="price" value="{{ old('price') }}" required
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
                             placeholder="0.00">
+                        @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Duration (Days)</label>
                         <input type="number" name="duration_days" value="{{ old('duration_days') }}" required
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                        @error('duration_days') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
@@ -62,12 +64,14 @@
                         <input type="text" name="location" value="{{ old('location') }}" required
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
                             placeholder="e.g. Cox's Bazar">
+                        @error('location') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Start Date (Optional)</label>
                         <input type="date" name="start_date" value="{{ old('start_date') }}"
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                        @error('start_date') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>
@@ -80,41 +84,48 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                         <textarea name="description" rows="6" required
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('description') }}</textarea>
+                        @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Policy</label>
                         <textarea name="policy" rows="5"
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('policy') }}</textarea>
+                        @error('policy') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements</label>
                         <textarea name="requirements" rows="5"
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements') }}</textarea>
+                        @error('requirements') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Hotel Details</label>
                         <textarea name="hotel_details" rows="5"
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('hotel_details') }}</textarea>
+                        @error('hotel_details') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Additional Information</label>
                         <textarea name="additional_info" rows="5"
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('additional_info') }}</textarea>
+                        @error('additional_info') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Travel Tips</label>
                         <textarea name="travel_tips" rows="5"
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('travel_tips') }}</textarea>
+                        @error('travel_tips') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Pickup Note</label>
                         <textarea name="pickup_note" rows="5"
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('pickup_note') }}</textarea>
+                        @error('pickup_note') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Key Information (Optional) - multipurpose: Anytime, Flexible, Fix Date, Fix Person, etc. -->
-                    <div x-data="{ items: [{ label: '', content: '' }] }">
+                    <div x-data="{ items: {{ json_encode(old('travel_data', [['label' => '', 'content' => '']])) }} }">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Key Information (Optional)</label>
                         <p class="text-xs text-gray-500 mb-3">Add any key–value info shown on the tour page. Examples: <strong>Anytime</strong>, <strong>Flexible</strong>, <strong>Fix Date</strong>, <strong>Fix Person</strong>, Flight, Visa, Transport, Group size, etc.</p>
                         <div class="space-y-4">
@@ -146,7 +157,7 @@
                     </div>
 
                     <!-- Itinerary Builder -->
-                    <div x-data="{ days: [{ day: 1, title: '', activities: [''] }] }">
+                    <div x-data="{ days: {{ json_encode(old('itinerary', [['day' => 1, 'title' => '', 'activities' => ['']]])) }} }">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Itinerary</label>
                         <div class="space-y-6">
                             <template x-for="(day, dIndex) in days" :key="dIndex">
@@ -232,7 +243,7 @@
 
             <!-- Inclusions/Exclusions -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div x-data="{ items: [''] }">
+                <div x-data="{ items: {{ json_encode(old('inclusions', [''])) }} }">
                     <h3 class="text-lg font-bold text-green-700 border-b pb-2 mb-4">Inclusions</h3>
                     <template x-for="(item, index) in items" :key="index">
                         <div class="flex gap-2 mb-2">
@@ -252,7 +263,7 @@
                         class="text-sm text-green-600 font-semibold hover:underline">+ Add Inclusion</button>
                 </div>
 
-                <div x-data="{ items: [''] }">
+                <div x-data="{ items: {{ json_encode(old('exclusions', [''])) }} }">
                     <h3 class="text-lg font-bold text-red-700 border-b pb-2 mb-4">Exclusions</h3>
                     <template x-for="(item, index) in items" :key="index">
                         <div class="flex gap-2 mb-2">
@@ -284,6 +295,7 @@
                         <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display: none;">
                             Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
                         </div>
+                        @error('thumbnail') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div x-data="fileUploader">
@@ -296,6 +308,8 @@
                                  our simple scaler handles that. For multiple files, showing total size/count 
                                  would be better but this is a good start. -->
                         </div>
+                        @error('images') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        @error('images.*') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>
