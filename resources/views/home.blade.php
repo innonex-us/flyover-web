@@ -33,15 +33,18 @@
         
         <div class="absolute inset-0 bg-black/40"></div> <!-- Overlay for contrast -->
 
-        <div class="relative z-10 text-left w-full max-w-2xl px-4">
-            <h1 class="text-2xl md:text-3xl font-serif font-bold text-white mb-6 drop-shadow-md">
+        <div class="relative z-10 text-left w-full max-w-4xl px-4">
+            <h1 class="text-2xl md:text-4xl font-serif font-bold text-white mb-6 [text-shadow:0_2px_12px_rgba(0,0,0,0.55)]">
                 Welcome to FLYOVER!
             </h1>
             <!-- Search Widget -->
-            <div class="w-full max-w-2xl mx-auto bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8" 
+            <div class="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl ring-1 ring-gray-900/10 p-5 md:p-8 text-gray-900" 
                 x-data="{ 
                     activeTab: 'tours',
                     query: '',
+                    flightFrom: 'DAC',
+                    flightTo: '',
+                    hotelCity: '',
                     suggestions: [],
                     showSuggestions: false,
                     loading: false,
@@ -71,31 +74,84 @@
                         this.query = '';
                         this.suggestions = [];
                         this.showSuggestions = false;
+                    },
+                    swapFlightEnds() {
+                        const a = this.flightFrom;
+                        this.flightFrom = this.flightTo;
+                        this.flightTo = a;
+                    },
+                    searchFlight() {
+                        const from = (this.flightFrom || '').trim().toUpperCase();
+                        const to = (this.flightTo || '').trim().toUpperCase();
+                        const iataRule = /^[A-Z]{3}$/;
+
+                        if (!iataRule.test(from) || !iataRule.test(to)) {
+                            alert('Use valid 3-letter airport codes. Example: DAC to DXB.');
+                            return;
+                        }
+
+                        if (from === to) {
+                            alert('Origin and destination must be different.');
+                            return;
+                        }
+
+                        this.flightFrom = from;
+                        this.flightTo = to;
+
+                        const q = encodeURIComponent(`Flights to ${to} from ${from}`);
+                        window.location.href = `https://www.google.com/travel/flights?q=${q}&hl=en&gl=BD&curr=USD`;
+                    },
+                    searchHotel() {
+                        const city = (this.hotelCity || '').trim();
+                        if (!city) {
+                            alert('Enter a city, area, or hotel name to search.');
+                            return;
+                        }
+                        this.hotelCity = city;
+                        const q = encodeURIComponent(`Hotels in ${city}`);
+                        window.location.href = `https://www.google.com/travel/hotels?q=${q}&hl=en&gl=BD`;
                     }
                 }"
                 @click.away="showSuggestions = false"
             >
                 
                 <!-- Tabs -->
-                <div class="flex space-x-8 border-b border-gray-200 pb-4 mb-6 justify-center">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-2 bg-gray-100 rounded-xl p-1.5 mb-6">
                     <button 
+                        type="button"
                         @click="switchTab('tours')" 
-                        :class="activeTab === 'tours' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-red-600'"
-                        class="flex items-center pb-2 font-bold transition duration-300 text-lg"
+                        :class="activeTab === 'tours' ? 'bg-white text-red-700 shadow-sm ring-1 ring-gray-300' : 'text-gray-800 hover:text-red-700 hover:bg-white/80'"
+                        class="flex items-center justify-center gap-2 rounded-lg py-2.5 px-2 sm:px-3 font-semibold transition text-sm md:text-base"
                     >
-                        <!-- Flight/Plane Icon -->
-                         <img src="data:image/png;base64,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" alt="around-the-globe"  alt="Tour" class="w-6 h-6 mr-2">
-                        Tour Packages
+                        <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span class="truncate">Tours</span>
                     </button>
-                    
                     <button 
+                        type="button"
                         @click="switchTab('visas')" 
-                        :class="activeTab === 'visas' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-red-600'"
-                        class="flex items-center pb-2 font-bold transition duration-300 text-lg"
+                        :class="activeTab === 'visas' ? 'bg-white text-red-700 shadow-sm ring-1 ring-gray-300' : 'text-gray-800 hover:text-red-700 hover:bg-white/80'"
+                        class="flex items-center justify-center gap-2 rounded-lg py-2.5 px-2 sm:px-3 font-semibold transition text-sm md:text-base"
                     >
-                        <!-- Passport/Document Icon -->
-                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACWUlEQVR4nO2avW7UQBDHf6K4JDSYAgTp8gKhgAroQEI08Aa5VGmiVERECTUEXgB4CEiegAgIygctke6OD4lEuRR8BKGjXxTpb2kVGZ+9vvWai0cayTPeWc3P3t0ZS4YTIA3gCXAAmMDaBZaVU255XAEAc0wfuYB0FXyV8HLNejO5JX4KVRHjmk8N4klMDcIJB4mAaWAVaAN/pG35mhpTVj7kDRwFFoBfGerBIXBfMb7ycQocB7YTEn5lXa8l3N8CLlYFZBzY1divwEtdfwLGrHnG5DMaE8fsZoQxPkFGrTexqbX/UfadhHnu6roDnD0WOxISZEFjPgPngCvWUz6VMM+Rb0/2ZeA88EX2fCiQyNrYt+R7IPtpyjzPZS/Jvm0dAFEIkGndf2354v0xkzLPjOwXlm9dvmaBfJwDV3V/1vLtyHcjZZ6bsj9YvjnrECgdJN7Uk5bvp3wTKfNMyP5u+S7J1y6Qj3NgL0Phy6u9YQH5HQKkk7C0fuRYWt8SllarQD7OgSvDstmbuv9mAMfvO/mmCuTjHBipiNkFcUn2swwFcTGhIJ4JAYJa8UG1KPcGkE+hpnFL47bVCHZyNI3vZW+EbhpRC2635P9q40/rzcWbes9q/S/QX4xvkBhmM6EurPX5sNrICFEaCFoa89YBkKaH2hMjHvMpHBjpaF5RgetJW1pSU31Op8qA+BJTg1CDeBFTg1CDVB+koe9q41nXywBplQDy1jdISDE1CDWIFzE1CEMC0lXg0e8ToeW6ctl3CV4uoV7k1YcuIA3BxG8mpO4Lwuk3p/9K/gI5HHNwyRPgDAAAAABJRU5ErkJggg==" alt="passport" class="h-6 w-6 mr-2">
-                        Visa Service
+                        <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+                        <span class="truncate">Visas</span>
+                    </button>
+                    <button 
+                        type="button"
+                        @click="switchTab('flights')" 
+                        :class="activeTab === 'flights' ? 'bg-white text-red-700 shadow-sm ring-1 ring-gray-300' : 'text-gray-800 hover:text-red-700 hover:bg-white/80'"
+                        class="flex items-center justify-center gap-2 rounded-lg py-2.5 px-2 sm:px-3 font-semibold transition text-sm md:text-base"
+                    >
+                        <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                        <span class="truncate">Flights</span>
+                    </button>
+                    <button 
+                        type="button"
+                        @click="switchTab('hotels')" 
+                        :class="activeTab === 'hotels' ? 'bg-white text-red-700 shadow-sm ring-1 ring-gray-300' : 'text-gray-800 hover:text-red-700 hover:bg-white/80'"
+                        class="flex items-center justify-center gap-2 rounded-lg py-2.5 px-2 sm:px-3 font-semibold transition text-sm md:text-base"
+                    >
+                        <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M5 10V8a2 2 0 012-2h10a2 2 0 012 2v2M5 10v10a1 1 0 001 1h2a1 1 0 001-1v-4h6v4a1 1 0 001 1h2a1 1 0 001-1V10M9 6h6v4H9V6z"/></svg>
+                        <span class="truncate">Hotels</span>
                     </button>
                 </div>
 
@@ -103,10 +159,10 @@
                 <div x-show="activeTab === 'tours'" class="animate-fade-in-up relative">
                     <form action="{{ route('packages.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                         <div class="flex-grow">
-                            <label class="block text-left text-xs font-bold text-gray-500 uppercase mb-1">Destination</label>
+                            <label class="block text-left text-sm font-bold text-gray-800 uppercase tracking-wide mb-1.5">Destination</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                 </div>
                                 <input 
                                     type="text" 
@@ -115,7 +171,7 @@
                                     @input="fetchSuggestions()"
                                     @focus="fetchSuggestions()"
                                     placeholder="Where do you want to go?" 
-                                    class="pl-10 w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 py-3"
+                                    class="pl-10 w-full border border-gray-300 rounded-xl bg-white shadow-sm focus:border-red-600 focus:ring-2 focus:ring-red-100 py-3 text-base text-gray-900 placeholder:text-gray-600"
                                     autocomplete="off"
                                 >
                             </div>
@@ -128,8 +184,8 @@
                                 class="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-2xl z-50 text-left overflow-hidden border border-gray-100"
                                 style="display: none;"
                             >
-                                <div class="p-3 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" x-text="query ? 'Search Results' : 'Latest Packages'"></span>
+                                <div class="p-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                    <span class="text-xs font-bold text-gray-700 uppercase tracking-wide" x-text="query ? 'Search Results' : 'Latest Packages'"></span>
                                     <div x-show="loading" class="animate-spin rounded-full h-3 w-3 border-b-2 border-red-600"></div>
                                 </div>
                                 <ul class="divide-y divide-gray-50 max-h-[400px] overflow-y-auto scrollbar-hide">
@@ -141,8 +197,8 @@
                                             </div>
                                             <div class="flex-grow min-w-0">
                                                 <div class="text-sm font-bold text-gray-900 truncate group-hover:text-red-600 transition-colors" x-text="item.text"></div>
-                                                <div class="text-[11px] text-gray-500 flex items-center mt-0.5">
-                                                    <svg class="w-3 h-3 mr-1 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                                <div class="text-xs text-gray-700 flex items-center mt-0.5">
+                                                    <svg class="w-3.5 h-3.5 mr-1 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                                     <span class="truncate" x-text="item.subtext"></span>
                                                 </div>
                                             </div>
@@ -152,17 +208,18 @@
                                         </li>
                                     </template>
                                     <li x-show="suggestions.length === 0 && !loading" class="px-4 py-8 text-center">
-                                        <div class="text-gray-400 mb-2">
-                                            <svg class="w-8 h-8 mx-auto opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                        <div class="text-gray-500 mb-2">
+                                            <svg class="w-9 h-9 mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                         </div>
-                                        <p class="text-sm text-gray-500">No matching tours found</p>
+                                        <p class="text-sm font-medium text-gray-700">No matching tours found</p>
                                     </li>
                                 </ul>
                             </div>
 
                         </div>
                         <div class="w-full md:w-auto flex items-end">
-                            <button type="submit" class="w-full md:w-auto bg-red-600 text-white font-bold py-3 px-10 rounded-lg hover:bg-red-700 transition shadow-lg transform hover:-translate-y-0.5">
+                            <button type="submit" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-red-600 text-white font-bold text-base py-3 px-8 md:px-10 rounded-xl hover:bg-red-700 transition shadow-md hover:shadow-lg">
+                                <svg class="h-5 w-5 shrink-0 text-white" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 Search Tours
                             </button>
                         </div>
@@ -173,10 +230,10 @@
                 <div x-show="activeTab === 'visas'" class="animate-fade-in-up relative" style="display: none;">
                     <form action="{{ route('visas.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                          <div class="flex-grow">
-                            <label class="block text-left text-xs font-bold text-gray-500 uppercase mb-1">Country</label>
+                            <label class="block text-left text-sm font-bold text-gray-800 uppercase tracking-wide mb-1.5">Country</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 </div>
                                 <input 
                                     type="text" 
@@ -185,7 +242,7 @@
                                     @input="fetchSuggestions()"
                                     @focus="fetchSuggestions()"
                                     placeholder="Which country visa do you need?" 
-                                    class="pl-10 w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 py-3"
+                                    class="pl-10 w-full border border-gray-300 rounded-xl bg-white shadow-sm focus:border-red-600 focus:ring-2 focus:ring-red-100 py-3 text-base text-gray-900 placeholder:text-gray-600"
                                     autocomplete="off"
                                 >
                             </div>
@@ -199,8 +256,8 @@
                                 class="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-2xl z-50 text-left overflow-hidden border border-gray-100"
                                 style="display: none;"
                             >
-                                <div class="p-3 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" x-text="query ? 'Search Results' : 'Latest Visas'"></span>
+                                <div class="p-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                    <span class="text-xs font-bold text-gray-700 uppercase tracking-wide" x-text="query ? 'Search Results' : 'Latest Visas'"></span>
                                     <div x-show="loading" class="animate-spin rounded-full h-3 w-3 border-b-2 border-red-600"></div>
                                 </div>
                                 <ul class="divide-y divide-gray-50 max-h-[400px] overflow-y-auto scrollbar-hide">
@@ -213,7 +270,7 @@
                                             </div>
                                             <div class="flex-grow min-w-0">
                                                 <div class="text-sm font-bold text-gray-900 truncate group-hover:text-red-600 transition-colors" x-text="item.text"></div>
-                                                <div class="text-[11px] text-gray-500 mt-0.5" x-text="item.subtext"></div>
+                                                <div class="text-xs text-gray-700 mt-0.5" x-text="item.subtext"></div>
                                             </div>
                                             <div class="shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0">
                                                 <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -221,21 +278,111 @@
                                         </li>
                                     </template>
                                     <li x-show="suggestions.length === 0 && !loading" class="px-4 py-8 text-center">
-                                        <div class="text-gray-400 mb-2">
-                                            <svg class="w-8 h-8 mx-auto opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                        <div class="text-gray-500 mb-2">
+                                            <svg class="w-9 h-9 mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                         </div>
-                                        <p class="text-sm text-gray-500">No matching visas found</p>
+                                        <p class="text-sm font-medium text-gray-700">No matching visas found</p>
                                     </li>
                                 </ul>
                             </div>
 
                         </div>
                          <div class="w-full md:w-auto flex items-end">
-                            <button type="submit" class="w-full md:w-auto bg-red-600 text-white font-bold py-3 px-10 rounded-lg hover:bg-red-700 transition shadow-lg transform hover:-translate-y-0.5">
+                            <button type="submit" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-red-600 text-white font-bold text-base py-3 px-8 md:px-10 rounded-xl hover:bg-red-700 transition shadow-md hover:shadow-lg">
+                                <svg class="h-5 w-5 shrink-0 text-white" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 Search Visa
                             </button>
                         </div>
                     </form>
+                </div>
+
+                <!-- Flight Search Form -->
+                <div x-show="activeTab === 'flights'" class="animate-fade-in-up relative" style="display: none;">
+                    <form @submit.prevent="searchFlight()" class="flex flex-col gap-4">
+                        <div class="flex flex-col md:flex-row md:items-end gap-3 md:gap-4">
+                            <div class="flex-1 min-w-0">
+                                <label class="block text-left text-sm font-bold text-gray-800 uppercase tracking-wide mb-1.5">From</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-600" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        x-model="flightFrom"
+                                        placeholder="DAC"
+                                        inputmode="text"
+                                        autocomplete="off"
+                                        aria-label="Departure airport IATA code"
+                                        class="pl-10 w-full border border-gray-300 rounded-xl bg-white shadow-sm focus:border-red-600 focus:ring-2 focus:ring-red-100 py-3 text-base uppercase tracking-widest font-semibold text-gray-900 placeholder:font-normal placeholder:tracking-normal placeholder:text-gray-600"
+                                        maxlength="3"
+                                        @input="flightFrom = flightFrom.replace(/[^a-zA-Z]/g, '').toUpperCase()"
+                                    >
+                                </div>
+                                <p class="mt-1.5 text-xs font-medium text-gray-700">3-letter airport code (IATA)</p>
+                            </div>
+                            <div class="flex justify-center md:pb-2 shrink-0">
+                                <button type="button" @click="swapFlightEnds()" class="rounded-full border border-gray-300 bg-white p-2.5 text-gray-700 shadow-sm hover:border-red-300 hover:text-red-700 hover:bg-red-50 transition" title="Swap origin and destination" aria-label="Swap origin and destination">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                                </button>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <label class="block text-left text-sm font-bold text-gray-800 uppercase tracking-wide mb-1.5">To</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-600" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        x-model="flightTo"
+                                        placeholder="DXB"
+                                        inputmode="text"
+                                        autocomplete="off"
+                                        aria-label="Arrival airport IATA code"
+                                        class="pl-10 w-full border border-gray-300 rounded-xl bg-white shadow-sm focus:border-red-600 focus:ring-2 focus:ring-red-100 py-3 text-base uppercase tracking-widest font-semibold text-gray-900 placeholder:font-normal placeholder:tracking-normal placeholder:text-gray-600"
+                                        maxlength="3"
+                                        @input="flightTo = flightTo.replace(/[^a-zA-Z]/g, '').toUpperCase()"
+                                    >
+                                </div>
+                                <p class="mt-1.5 text-xs font-medium text-gray-700">3-letter airport code (IATA)</p>
+                            </div>
+                            <div class="w-full md:w-auto md:shrink-0 flex items-end">
+                                <button type="submit" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-red-600 text-white font-bold text-base py-3 px-8 md:px-10 rounded-xl hover:bg-red-700 transition shadow-md hover:shadow-lg">
+                                    <svg class="h-5 w-5 shrink-0 text-white" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                    Search Flights
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-700 leading-relaxed">Opens Google Flights for your route (Bangladesh locale, USD).</p>
+                    </form>
+                </div>
+
+                <!-- Hotel Search Form -->
+                <div x-show="activeTab === 'hotels'" class="animate-fade-in-up relative" style="display: none;">
+                    <form @submit.prevent="searchHotel()" class="flex flex-col md:flex-row gap-4 md:items-end">
+                        <div class="flex-grow min-w-0">
+                            <label class="block text-left text-sm font-bold text-gray-800 uppercase tracking-wide mb-1.5">Destination</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-600" aria-hidden="true">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M5 10V8a2 2 0 012-2h10a2 2 0 012 2v2M5 10v10a1 1 0 001 1h2a1 1 0 001-1v-4h6v4a1 1 0 001 1h2a1 1 0 001-1V10M9 6h6v4H9V6z"/></svg>
+                                </span>
+                                <input 
+                                    type="text" 
+                                    x-model="hotelCity"
+                                    placeholder="e.g. Dubai, Cox's Bazar, Bangkok"
+                                    autocomplete="off"
+                                    aria-label="City or hotel search"
+                                    class="pl-10 w-full border border-gray-300 rounded-xl bg-white shadow-sm focus:border-red-600 focus:ring-2 focus:ring-red-100 py-3 text-base text-gray-900 placeholder:text-gray-600"
+                                >
+                            </div>
+                        </div>
+                        <div class="w-full md:w-auto shrink-0 flex items-end">
+                            <button type="submit" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-red-600 text-white font-bold text-base py-3 px-8 md:px-10 rounded-xl hover:bg-red-700 transition shadow-md hover:shadow-lg">
+                                <svg class="h-5 w-5 shrink-0 text-white" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M5 10V8a2 2 0 012-2h10a2 2 0 012 2v2M5 10v10a1 1 0 001 1h2a1 1 0 001-1v-4h6v4a1 1 0 001 1h2a1 1 0 001-1V10M9 6h6v4H9V6z"/></svg>
+                                Search Hotels
+                            </button>
+                        </div>
+                    </form>
+                    <p class="mt-3 text-sm text-gray-700 leading-relaxed">Opens Google Hotels for your search (Bangladesh locale).</p>
                 </div>
 
             </div>
