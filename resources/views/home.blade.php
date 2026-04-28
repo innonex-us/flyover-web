@@ -42,7 +42,7 @@
                 x-data="{ 
                     activeTab: 'tours',
                     query: '',
-                    flightFrom: 'DAC',
+                    flightFrom: 'LHR',
                     flightTo: '',
                     hotelCity: '',
                     suggestions: [],
@@ -86,7 +86,7 @@
                         const iataRule = /^[A-Z]{3}$/;
 
                         if (!iataRule.test(from) || !iataRule.test(to)) {
-                            alert('Use valid 3-letter airport codes. Example: DAC to DXB.');
+                            alert('Use valid 3-letter airport codes. Example: LHR to JFK.');
                             return;
                         }
 
@@ -309,7 +309,7 @@
                                     <input 
                                         type="text" 
                                         x-model="flightFrom"
-                                        placeholder="DAC"
+                                        placeholder="LHR"
                                         inputmode="text"
                                         autocomplete="off"
                                         aria-label="Departure airport IATA code"
@@ -334,7 +334,7 @@
                                     <input 
                                         type="text" 
                                         x-model="flightTo"
-                                        placeholder="DXB"
+                                        placeholder="JFK"
                                         inputmode="text"
                                         autocomplete="off"
                                         aria-label="Arrival airport IATA code"
@@ -352,7 +352,6 @@
                                 </button>
                             </div>
                         </div>
-                        <p class="text-sm text-gray-700 leading-relaxed">Opens Google Flights for your route (United Kingdom locale, GBP).</p>
                     </form>
                 </div>
 
@@ -368,7 +367,7 @@
                                 <input 
                                     type="text" 
                                     x-model="hotelCity"
-                                    placeholder="e.g. Dubai, Cox's Bazar, Bangkok"
+                                    placeholder="e.g. London, Dubai, New York"
                                     autocomplete="off"
                                     aria-label="City or hotel search"
                                     class="pl-10 w-full border border-gray-300 rounded-xl bg-white shadow-sm focus:border-red-600 focus:ring-2 focus:ring-red-100 py-3 text-base text-gray-900 placeholder:text-gray-600"
@@ -382,7 +381,6 @@
                             </button>
                         </div>
                     </form>
-                    <p class="mt-3 text-sm text-gray-700 leading-relaxed">Opens Google Hotels for your search (United Kingdom locale).</p>
                 </div>
 
             </div>

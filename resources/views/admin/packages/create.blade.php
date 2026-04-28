@@ -37,34 +37,33 @@
                 <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-6">Basic Information</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Package Title</label>
-                        <input type="text" name="title" value="{{ old('title') }}" required
-                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
-                            placeholder="e.g. Magnificent Cox's Bazar Tour">
-                        @error('title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Package Title</label>
+                    <input type="text" name="title" value="{{ old('title') }}" required
+                        class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
+                        placeholder="e.g. London City Highlights Tour">
+                    @error('title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Price (GBP)</label>
-                        <input type="number" name="price" value="{{ old('price') }}" required
-                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
-                            placeholder="0.00">
-                        @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Price (GBP)</label>
+                    <input type="number" name="price" value="{{ old('price') }}" required
+                        class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
+                        placeholder="0.00">
+                    @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Duration (Days)</label>
-                        <input type="number" name="duration_days" value="{{ old('duration_days') }}" required
-                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
-                        @error('duration_days') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Duration (Days)</label>
+                    <input type="number" name="duration_days" value="{{ old('duration_days') }}" required
+                        class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
+                    @error('duration_days') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
-                        <input type="text" name="location" value="{{ old('location') }}" required
-                            class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
-                            placeholder="e.g. Cox's Bazar">
-                        @error('location') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
+                    <input type="text" name="location" value="{{ old('location') }}" required
+                        class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
+                        placeholder="e.g. London">                        @error('location') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
