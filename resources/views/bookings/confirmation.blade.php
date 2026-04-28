@@ -57,7 +57,7 @@
                     <div class="bg-gray-50 rounded-xl p-6 mb-8 print:bg-white print:border print:border-gray-100">
                         <div class="flex justify-between items-center text-lg font-bold text-gray-900">
                             <span>Total Amount</span>
-                            <span>৳{{ number_format($booking->total_amount ?? $booking->payable->price ?? 0) }}</span>
+                            <span>£{{ number_format($booking->total_amount ?? $booking->payable->price ?? 0) }}</span>
                         </div>
                         <p class="text-xs text-center text-gray-400 mt-2 uppercase tracking-widest">Payment Status: {{ $booking->payment_status }}</p>
                     </div>
@@ -75,7 +75,7 @@
 
                      <!-- Print Footer -->
                     <div class="hidden print:block text-center text-xs text-gray-400 mt-12 pt-8 border-t border-gray-100">
-                        <p>FlyoverBD - Your trusted travel partner</p>
+                        <p>AamarTrip Limited - Your trusted travel partner</p>
                         <p>{{ url('/') }}</p>
                     </div>
 

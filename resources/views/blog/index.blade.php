@@ -3,14 +3,14 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-16">
                 <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight mb-4">Latest Travel Insights</h1>
-                <p class="text-xl text-gray-500">Discover tips, guides, and news about traveling to and from Bangladesh.</p>
+                <p class="text-xl text-gray-500">Discover tips, guides, and updates for smarter global travel planning.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 @forelse($posts as $post)
                     <article class="flex flex-col bg-white rounded-2xl shadow-lg hover:shadow-xl transition overflow-hidden border border-gray-100 group">
                         <a href="{{ route('blog.show', $post->slug) }}" class="overflow-hidden h-56 relative">
-                            <img src="{{ $post->image ? Storage::url($post->image) : 'https://via.placeholder.com/800x600?text=FlyoverBD+Blog' }}" 
+                            <img src="{{ $post->image ? Storage::url($post->image) : 'https://via.placeholder.com/800x600?text=AamarTrip+Blog' }}" 
                                  alt="{{ $post->title }}" 
                                  class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 ease-in-out">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>

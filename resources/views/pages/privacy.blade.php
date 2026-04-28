@@ -8,7 +8,7 @@
                 </div>
 
                 <div class="prose prose-lg prose-red max-w-none text-gray-600">
-                    <p class="lead">At FlyoverBD, we respect your privacy and are committed to protecting the personal information you share with us. This policy outlines how we collect, use, and safeguard your data.</p>
+                    <p class="lead">At AamarTrip Limited, we respect your privacy and are committed to protecting the personal information you share with us. This policy outlines how we collect, use, and safeguard your data.</p>
 
                     <h3 class="text-gray-900 font-bold mt-8">1. Information We Collect</h3>
                     <p>We collect information that you provide to us directly when you use our services. This includes:</p>
@@ -38,7 +38,7 @@
                     <p>We implement industry-standard security measures, including encryption and secure servers, to protect your personal data from unauthorized access, alteration, or disclosure.</p>
 
                     <h3 class="text-gray-900 font-bold mt-8">5. Your Rights</h3>
-                    <p>You have the right to access, correct, or request the deletion of your personal data. Please contact us at support@flyoverbd.com to exercise these rights.</p>
+                    <p>You have the right to access, correct, or request the deletion of your personal data. Please contact us by phone or through our official Facebook page to exercise these rights.</p>
 
                     <h3 class="text-gray-900 font-bold mt-8">6. Contact Us</h3>
                     <p>If you have any questions about this Privacy Policy, please contact us:</p>
@@ -46,15 +46,15 @@
                         <ul class="space-y-2 text-gray-600">
                             <li class="flex items-start">
                                 <span class="font-bold w-20">Email:</span>
-                                <span>support@flyoverbd.com</span>
+                                <span>facebook.com/aamartrip</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="font-bold w-20">Phone:</span>
-                                <span>+880 1335 111370</span>
+                                <span>+44 7424 233719</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="font-bold w-20">Address:</span>
-                                <span>Banani, Dhaka, Bangladesh</span>
+                                <span>New Road Business Centre, 109-110 New Road, 2nd Floor, Suite S2, London, E1 1HJ, United Kingdom</span>
                             </li>
                         </ul>
                     </div>

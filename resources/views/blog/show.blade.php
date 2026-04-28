@@ -9,7 +9,7 @@
       "image": "{{ $meta_image ?? '' }}",
       "author": {
         "@type": "Person",
-        "name": "{{ $post->custom_author ?? $post->author->name ?? 'FlyoverBD' }}"
+        "name": "{{ $post->custom_author ?? $post->author->name ?? 'AamarTrip Limited' }}"
       },
       "datePublished": "{{ $post->published_at ? $post->published_at->toIso8601String() : '' }}",
       "dateModified": "{{ $post->updated_at->toIso8601String() }}"
@@ -18,10 +18,10 @@
     @endpush
     <x-slot name="header">
         <meta name="description" content="{{ $post->seo_description ?? Str::limit(strip_tags($post->content), 160) }}">
-        <meta property="og:title" content="{{ $post->seo_title ?? $post->title }} - FlyoverBD">
+        <meta property="og:title" content="{{ $post->seo_title ?? $post->title }} - AamarTrip">
         <meta property="og:description" content="{{ $post->seo_description ?? Str::limit(strip_tags($post->content), 160) }}">
         <meta property="og:image" content="{{ $post->image ? Storage::url($post->image) : '' }}">
-        <title>{{ $post->seo_title ?? $post->title }} - FlyoverBD</title>
+        <title>{{ $post->seo_title ?? $post->title }} - AamarTrip</title>
     </x-slot> --}}
 
     <div class="bg-gray-50 min-h-screen pb-12">
@@ -123,7 +123,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-bold text-gray-900 mb-2">Written by {{ $post->custom_author ?? $post->author->name }}</h3>
-                            <p class="text-gray-600">Travel expert at FlyoverBD. Passionate about helping you explore the beauty of Bangladesh and beyond.</p>
+                            <p class="text-gray-600">Travel expert at AamarTrip Limited, helping you plan flights, holidays, visa journeys, and hotel stays with confidence.</p>
                         </div>
                     </div>
                 </article>

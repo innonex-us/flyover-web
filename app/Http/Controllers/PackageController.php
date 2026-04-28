@@ -25,7 +25,7 @@ class PackageController extends Controller
         $package = Package::where('slug', $slug)->where('is_active', true)->firstOrFail();
 
         // SEO Data
-        $title = $package->title . ' - Tour Package | FlyoverBD';
+        $title = $package->title . ' - Tour Package | AamarTrip';
         $meta_description = \Illuminate\Support\Str::limit(strip_tags($package->description), 155);
         $meta_image = $package->thumbnail 
             ? (\Illuminate\Support\Str::startsWith($package->thumbnail, 'http') ? $package->thumbnail : \Illuminate\Support\Facades\Storage::url($package->thumbnail))
@@ -52,7 +52,7 @@ class PackageController extends Controller
 
     public function showCustomPlanForm()
     {
-        $title = 'Plan My Trip - Get a Custom Tour Plan | FlyoverBD';
+        $title = 'Plan My Trip - Get a Custom Tour Plan | AamarTrip';
         $meta_description = 'Tell us your travel dreams and our experts will craft a personalized itinerary just for you. Get a custom tour plan today.';
         $meta_image = asset('logo.png');
 

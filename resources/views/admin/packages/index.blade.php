@@ -43,7 +43,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            ৳{{ number_format($package->price) }}
+                            £{{ number_format($package->price) }}
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">
                             {{ $package->duration_days }} Days

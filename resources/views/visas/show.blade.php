@@ -9,7 +9,7 @@
       "image": "{{ $meta_image ?? '' }}",
       "offers": {
         "@type": "Offer",
-        "priceCurrency": "BDT",
+        "priceCurrency": "GBP",
         "price": "{{ $visa->price }}",
         "availability": "https://schema.org/InStock",
         "url": "{{ url()->current() }}"
@@ -98,7 +98,7 @@
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-500 mb-1">Visa Fee</p>
-                                        <p class="font-semibold text-gray-900">{{ $visa->fees ?? '৳'.number_format($visa->price) }}</p>
+                                        <p class="font-semibold text-gray-900">{{ $visa->fees ?? '£'.number_format($visa->price) }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -106,20 +106,20 @@
                             <div class="bg-blue-50 rounded-xl p-6 border border-blue-100">
                                 <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
                                     <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                    Visit Our Experience Center
+                                    Visit Our UK Office
                                 </h3>
                                 <p class="text-blue-800 mb-4">
-                                    You can visit our Experience Center for a free Visa consultation with our travel experts and get started on your application.
+                                    Visit our UK office for visa consultation with our travel experts and get started on your application.
                                 </p>
                                 <div class="bg-white p-4 rounded-lg border border-blue-200 mb-4">
-                                    <p class="font-semibold text-gray-900">House 45, Road 13, Block D, Banani, Dhaka</p>
+                                    <p class="font-semibold text-gray-900">New Road Business Centre, 109-110 New Road, 2nd Floor, Suite S2, London, E1 1HJ, United Kingdom</p>
                                 </div>
                                 <div class="flex flex-col sm:flex-row gap-4">
-                                    <a href="#" class="flex items-center text-blue-700 font-semibold hover:underline">
+                                    <a href="tel:+447424233719" class="flex items-center text-blue-700 font-semibold hover:underline">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                        +88 09678 332211
+                                        +44 7424 233719
                                     </a>
-                                    <a href="#" class="flex items-center text-blue-700 font-semibold hover:underline">
+                                    <a href="https://www.google.com/maps?q=109-110+New+Road+London+E1+1HJ" target="_blank" rel="noopener noreferrer" class="flex items-center text-blue-700 font-semibold hover:underline">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                                         View location in Google Maps
                                     </a>
@@ -234,7 +234,7 @@
                         <div class="mb-6 pb-6 border-b border-gray-100">
                             <p class="text-gray-500 text-sm uppercase tracking-wide font-semibold mb-1">Visa Fee</p>
                             <div class="flex items-baseline">
-                                <span class="text-4xl font-extrabold text-red-600">৳{{ number_format($visa->price) }}</span>
+                                <span class="text-4xl font-extrabold text-red-600">£{{ number_format($visa->price) }}</span>
                                 <span class="text-gray-400 ml-2">/ person</span>
                             </div>
                         </div>
@@ -283,7 +283,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
-                                        <input type="text" name="guest_phone" required placeholder="+8801..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
+                                        <input type="text" name="guest_phone" required placeholder="+44 7424 233719" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
                                     </div>
                                 @endauth
                             </div>
@@ -302,7 +302,7 @@
                                     </div>
                                     <div>
                                         <p class="text-xs text-gray-500 uppercase font-semibold">Call Us 24/7</p>
-                                        <p class="font-bold text-gray-900">+88 09678 332211</p>
+                                        <p class="font-bold text-gray-900">+44 7424 233719</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -310,8 +310,8 @@
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                     </div>
                                     <div>
-                                        <p class="text-xs text-gray-500 uppercase font-semibold">Email Us</p>
-                                        <p class="font-bold text-gray-900">visa@flyoverbd.com</p>
+                                        <p class="text-xs text-gray-500 uppercase font-semibold">Facebook</p>
+                                        <p class="font-bold text-gray-900">facebook.com/aamartrip</p>
                                     </div>
                                 </div>
                             </div>

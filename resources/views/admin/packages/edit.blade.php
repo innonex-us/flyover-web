@@ -41,7 +41,7 @@
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Price (BDT)</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Price (GBP)</label>
                         <input type="number" name="price" value="{{ old('price', $package->price) }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
                         @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>

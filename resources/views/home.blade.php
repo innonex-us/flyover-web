@@ -35,7 +35,7 @@
 
         <div class="relative z-10 text-left w-full max-w-4xl px-4">
             <h1 class="text-2xl md:text-4xl font-serif font-bold text-white mb-6 [text-shadow:0_2px_12px_rgba(0,0,0,0.55)]">
-                Welcome to FLYOVER!
+                Welcome to AamarTrip!
             </h1>
             <!-- Search Widget -->
             <div class="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl ring-1 ring-gray-900/10 p-5 md:p-8 text-gray-900" 
@@ -99,7 +99,7 @@
                         this.flightTo = to;
 
                         const q = encodeURIComponent(`Flights to ${to} from ${from}`);
-                        window.location.href = `https://www.google.com/travel/flights?q=${q}&hl=en&gl=BD&curr=USD`;
+                        window.location.href = `https://www.google.com/travel/flights?q=${q}&hl=en&gl=GB&curr=GBP`;
                     },
                     searchHotel() {
                         const city = (this.hotelCity || '').trim();
@@ -109,7 +109,7 @@
                         }
                         this.hotelCity = city;
                         const q = encodeURIComponent(`Hotels in ${city}`);
-                        window.location.href = `https://www.google.com/travel/hotels?q=${q}&hl=en&gl=BD`;
+                        window.location.href = `https://www.google.com/travel/hotels?q=${q}&hl=en&gl=GB`;
                     }
                 }"
                 @click.away="showSuggestions = false"
@@ -352,7 +352,7 @@
                                 </button>
                             </div>
                         </div>
-                        <p class="text-sm text-gray-700 leading-relaxed">Opens Google Flights for your route (Bangladesh locale, USD).</p>
+                        <p class="text-sm text-gray-700 leading-relaxed">Opens Google Flights for your route (United Kingdom locale, GBP).</p>
                     </form>
                 </div>
 
@@ -382,7 +382,7 @@
                             </button>
                         </div>
                     </form>
-                    <p class="mt-3 text-sm text-gray-700 leading-relaxed">Opens Google Hotels for your search (Bangladesh locale).</p>
+                    <p class="mt-3 text-sm text-gray-700 leading-relaxed">Opens Google Hotels for your search (United Kingdom locale).</p>
                 </div>
 
             </div>
@@ -447,7 +447,7 @@
                     @foreach($recentPosts as $post)
                         <article class="flex flex-col bg-white rounded-2xl shadow-lg hover:shadow-xl transition overflow-hidden border border-gray-100 group">
                             <a href="{{ route('blog.show', $post->slug) }}" class="overflow-hidden h-56 relative">
-                                <img src="{{ $post->image ? Storage::url($post->image) : 'https://via.placeholder.com/800x600?text=FlyoverBD+Blog' }}" 
+                                <img src="{{ $post->image ? Storage::url($post->image) : 'https://via.placeholder.com/800x600?text=AamarTrip+Blog' }}" 
                                      alt="{{ $post->title }}" 
                                      class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 ease-in-out">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>

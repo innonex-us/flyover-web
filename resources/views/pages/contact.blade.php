@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="mx-auto max-w-2xl lg:mx-0 mb-16">
                 <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Contact Us</h2>
-                <p class="mt-2 text-lg leading-8 text-gray-600">Have questions about your next trip or visa application? We're here to help.</p>
+                <p class="mt-2 text-lg leading-8 text-gray-600">Need help with flights, holiday packages, visa support, or hotels? We are here to help.</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -18,8 +18,8 @@
                                 Visit Our Office
                             </h3>
                             <p class="text-gray-600 ml-12">
-                                House 45, Road 13, Block D<br>
-                                Banani, Dhaka, Bangladesh
+                                New Road Business Centre, 109-110 New Road,<br>
+                                2nd Floor, Suite S2, London, E1 1HJ, United Kingdom
                             </p>
                         </div>
                         
@@ -31,7 +31,7 @@
                                 Call Us
                             </h3>
                             <p class="text-gray-600 ml-12">
-                                +880 1335 111370<br>
+                                +44 7424 233719<br>
                             </p>
                         </div>
 
@@ -40,18 +40,19 @@
                                 <span class="bg-red-100 p-2 rounded-lg text-red-600 mr-3">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                 </span>
-                                Email Us
+                                Facebook
                             </h3>
                             <p class="text-gray-600 ml-12">
-                                support@flyoverbd.com<br>
-                                visa@flyoverbd.com
+                                <a href="https://facebook.com/aamartrip" target="_blank" rel="noopener noreferrer" class="text-red-600 hover:text-red-700 hover:underline">
+                                    facebook.com/aamartrip
+                                </a>
                             </p>
                         </div>
                     </div>
 
                     <!-- Map Placeholder -->
                     <div class="mt-8 bg-gray-200 rounded-2xl h-64 w-full overflow-hidden shadow-sm border border-gray-300 flex items-center justify-center relative">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.318322300062!2d90.40393457597148!3d23.79242968659107!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c70c0c609053%3A0xc48641477727382b!2sBanani%2C%20Dhaka!5e0!3m2!1sen!2sbd!4v1705574400000!5m2!1sen!2sbd" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <iframe src="https://www.google.com/maps?q=109-110+New+Road+London+E1+1HJ&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
 

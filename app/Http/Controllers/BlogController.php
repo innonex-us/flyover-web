@@ -40,7 +40,7 @@ class BlogController extends Controller
             ->get();
 
         // SEO Data
-        $title = $post->title . ' | FlyoverBD Blog';
+        $title = $post->title . ' | AamarTrip Blog';
         $meta_description = $post->seo_description ?? \Illuminate\Support\Str::limit(strip_tags($post->content), 155);
         $meta_image = $post->image 
             ? (\Illuminate\Support\Str::startsWith($post->image, 'http') ? $post->image : \Illuminate\Support\Facades\Storage::url($post->image))

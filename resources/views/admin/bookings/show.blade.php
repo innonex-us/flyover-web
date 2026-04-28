@@ -41,8 +41,8 @@
                             <div class="text-gray-600 space-y-1 text-sm">
                                 <p><span class="font-semibold">Booking Date:</span> {{ $booking->booking_date->format('F d, Y') }}</p>
                                 <p><span class="font-semibold">Persons:</span> {{ $booking->quantity }}</p>
-                                <p><span class="font-semibold">Price per Unit:</span> ৳{{ number_format($booking->payable->price) }}</p>
-                                <p><span class="font-semibold">Total Amount:</span> ৳{{ number_format($booking->total_amount) }}</p>
+                                <p><span class="font-semibold">Price per Unit:</span> £{{ number_format($booking->payable->price) }}</p>
+                                <p><span class="font-semibold">Total Amount:</span> £{{ number_format($booking->total_amount) }}</p>
                             </div>
                         </div>
                     @else

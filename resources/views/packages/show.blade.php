@@ -371,7 +371,7 @@
                                 <h3 class="text-xl font-bold text-gray-900 mb-1">Book Your Holiday</h3>
                                 <p class="text-xs text-gray-500 mb-4">Secure your spot today</p>
                                 <div class="flex items-center justify-center space-x-2">
-                                    <span class="text-2xl font-black text-red-600">৳{{ number_format($package->price) }}</span>
+                                    <span class="text-2xl font-black text-red-600">£{{ number_format($package->price) }}</span>
                                     <span class="text-[10px] font-bold text-gray-400 uppercase">Per person</span>
                                 </div>
                             </div>
@@ -439,10 +439,10 @@
                                 <!-- Total Display -->
                                 <div class="bg-red-50 p-4 rounded-xl border border-red-100/50 flex justify-between items-center mt-6">
                                     <div class="flex flex-col">
-                                        <span class="text-[9px] font-bold text-red-800 uppercase tracking-wider line-through opacity-50" x-show="quantity > 1" x-text="'৳' + (price).toLocaleString() + ' x ' + quantity"></span>
+                                        <span class="text-[9px] font-bold text-red-800 uppercase tracking-wider line-through opacity-50" x-show="quantity > 1" x-text="'£' + (price).toLocaleString() + ' x ' + quantity"></span>
                                         <span class="text-xs font-bold text-red-800 uppercase tracking-wider">Total</span>
                                     </div>
-                                    <span class="text-lg font-black text-red-600" x-text="'৳' + total.toLocaleString()"></span>
+                                    <span class="text-lg font-black text-red-600" x-text="'£' + total.toLocaleString()"></span>
                                 </div>
 
                                 <button type="submit" class="w-full py-4 bg-red-600 text-white rounded-xl font-bold text-base shadow-lg hover:bg-red-700 transition-all duration-200 active:scale-95 mt-4">
@@ -494,7 +494,7 @@
                                     <div class="text-[10px] font-bold text-red-500 uppercase tracking-widest mb-1">{{ $rel->location }}</div>
                                     <h3 class="font-bold text-gray-900 text-sm mb-3 truncate">{{ $rel->title }}</h3>
                                     <div class="flex items-center justify-between pt-3 border-t border-gray-50">
-                                        <p class="text-sm font-bold text-red-600">৳{{ number_format($rel->price) }}</p>
+                                        <p class="text-sm font-bold text-red-600">£{{ number_format($rel->price) }}</p>
                                         <div class="w-7 h-7 bg-gray-50 text-gray-400 rounded-full flex items-center justify-center group-hover:bg-red-500 group-hover:text-white transition-colors">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                         </div>

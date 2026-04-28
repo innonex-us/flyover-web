@@ -45,7 +45,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Price (BDT)</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Price (GBP)</label>
                         <input type="number" name="price" value="{{ old('price') }}" required
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
                             placeholder="0.00">

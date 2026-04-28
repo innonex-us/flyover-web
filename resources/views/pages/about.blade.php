@@ -6,9 +6,9 @@
                 <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2021&q=80" alt="Travel Background" class="w-full h-full object-cover opacity-20">
             </div>
             <div class="relative max-w-7xl mx-auto px-6 text-center lg:px-8">
-                <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">About FlyoverBD</h1>
+                <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">About AamarTrip Limited</h1>
                 <p class="mt-6 text-lg leading-8 text-red-100 max-w-2xl mx-auto">
-                    Your trusted partner in navigating the world. We simplify travel, one visa and one destination at a time.
+                    A travel service provider based in the United Kingdom, helping travelers plan with confidence.
                 </p>
             </div>
         </div>
@@ -20,10 +20,10 @@
                     <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl mb-6">Who We Are</h2>
                     <div class="prose prose-lg text-gray-600">
                         <p>
-                            FlyoverBD is a premier travel consultancy firm based in Dhaka, Bangladesh. Established with a vision to eliminate the complexities of travel, we specialize in providing comprehensive visa processing services, tailored tour packages, and expert travel advice.
+                            AamarTrip Limited is a UK-based travel service provider offering end-to-end travel solutions. We specialize in domestic and international flight bookings, curated holiday packages, visa support, and hotel reservations worldwide.
                         </p>
                         <p>
-                            We understand that every journey is unique. Whether you are a business traveler needing a quick visa turnaround, a family planning a summer vacation, or a student aspiring to study abroad, our dedicated team of professionals is here to guide you through every step.
+                            We understand that every journey is unique. Whether you are traveling for business, planning a family holiday, or preparing essential travel documents, our team is ready to support you every step of the way.
                         </p>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                             </div>
                             <h3 class="text-xl font-bold text-gray-900">Our Mission</h3>
                         </div>
-                        <p class="text-gray-600">To empower travelers by providing accurate information, transparent processing, and stress-free services, making global travel accessible to everyone.</p>
+                        <p class="text-gray-600">To make travel planning simple and dependable through transparent guidance, responsive support, and complete travel services.</p>
                     </div>
                     <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100">
                         <div class="flex items-center mb-4">
@@ -44,7 +44,7 @@
                             </div>
                             <h3 class="text-xl font-bold text-gray-900">Our Vision</h3>
                         </div>
-                        <p class="text-gray-600">To be Bangladesh's most trusted and innovative travel partner, recognized for integrity, excellence, and customer satisfaction.</p>
+                        <p class="text-gray-600">To be a trusted global travel partner known for reliable service, practical solutions, and customer-first support.</p>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
         <div class="py-24 sm:py-32">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="mx-auto max-w-2xl text-center">
-                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Why Choose FlyoverBD?</h2>
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Why Choose AamarTrip?</h2>
                     <p class="mt-6 text-lg leading-8 text-gray-600">We go the extra mile to ensure your journey starts smoothly.</p>
                 </div>
                 <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">

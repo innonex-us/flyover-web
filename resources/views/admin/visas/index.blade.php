@@ -43,7 +43,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            ৳{{ number_format($visa->price) }}
+                            £{{ number_format($visa->price) }}
                         </td>
                         <td class="px-6 py-4 text-center">
                             @if($visa->is_active)
