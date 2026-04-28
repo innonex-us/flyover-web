@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         // Create Admin User
         User::factory()->create([
             'name' => 'Admin User',
-            'email' => 'admin@flyoverbd.com',
+            'email' => 'admin@aamartrip.com',
             'password' => bcrypt('password'), // You can change this later
             'role' => 'admin',
         ]);

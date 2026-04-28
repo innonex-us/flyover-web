@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- SEO Meta Tags -->
-    <title>{{ $title ?? config('app.name', 'AamarTrip Limited') }}</title>
+    <title>{{ $title ?? 'AamarTrip Limited' }}</title>
     {{-- <meta name="description" content="{{ $meta_description ?? 'AamarTrip Limited is your trusted UK travel service partner for flights, holiday packages, visa support, and hotel reservations.' }}">
     <meta name="keywords" content="{{ $meta_keywords ?? 'travel agency uk, flight booking, holiday packages, visa support, hotel reservation, aamartrip' }}">
     <link rel="canonical" href="{{ url()->current() }}">
