@@ -102,7 +102,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
-                        <a href="{{ route('home') }}" class="mb-4 inline-block">
+                        <a href="{{ route('home') }}" class="mb-4 inline-block bg-white rounded-lg px-3 py-2 shadow-sm">
                              <img src="{{ asset('logo.png') }}" alt="AamarTrip Limited" class="h-10 w-auto">
                         </a>
                         <p class="text-gray-400 text-sm">AamarTrip Limited is your trusted UK-based travel service partner.</p>
