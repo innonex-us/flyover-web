@@ -126,7 +126,9 @@
                     <div>
                         <h3 class="text-lg font-bold mb-4">Contact</h3>
                         <ul class="space-y-2 text-gray-400 text-sm">
-                            <li>Email: support@flyoverbd.com</li>
+                            <li>Email: info.flyoverbd@gmail.com</li>
+                            <li>Email: info@flyoverbd.net</li>
+                            <li>Phone: 09611-677989</li>
                             <li>Phone: +880 1335 111370</li>
                         </ul>
                     </div>

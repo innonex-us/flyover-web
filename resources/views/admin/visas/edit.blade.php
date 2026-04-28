@@ -83,8 +83,9 @@
                 <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-6">Details</h3>
                 <div class="space-y-6">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Description / Overview</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Visa Summary</label>
                         <textarea name="description" rows="4" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('description', $visa->description) }}</textarea>
+                        <p class="text-xs text-gray-500 mt-1">Use a new line for each summary point. Line breaks will be preserved on the website.</p>
                         @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
@@ -171,8 +172,9 @@
                 <div x-show="tabs === 'fees'" style="display: none;">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Fees Info</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Processing Fee</label>
                             <textarea name="fees" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('fees', $visa->fees) }}</textarea>
+                            <p class="text-xs text-gray-500 mt-1">This is shown separately from Visa Fee (Price).</p>
                             @error('fees') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>

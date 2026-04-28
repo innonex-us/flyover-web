@@ -85,20 +85,23 @@
 
                         <!-- Summary Tab -->
                         <div x-show="activeTab === 'summary'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
-                            <h2 class="text-xl font-bold text-gray-900 mb-4">Visa Overview</h2>
-                            <p class="text-gray-600 leading-relaxed mb-8">{{ $visa->description }}</p>
+                            <h2 class="text-xl font-bold text-gray-900 mb-4">Visa Summary</h2>
+                            <p class="text-gray-600 leading-relaxed mb-8 whitespace-pre-line">{{ $visa->description }}</p>
 
                             <div class="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-8">
                                 <h3 class="text-lg font-bold text-gray-900 mb-4">Processing Details</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div>
                                         <p class="text-sm text-gray-500 mb-1">Processing Time</p>
                                         <p class="font-semibold text-gray-900">{{ $visa->validity_info ?? $visa->processing_time }}</p>
-                                        <p class="text-xs text-gray-400 mt-1">(from the date of submission)</p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-500 mb-1">Visa Fee</p>
-                                        <p class="font-semibold text-gray-900">{{ $visa->fees ?? '৳'.number_format($visa->price) }}</p>
+                                        <p class="font-semibold text-gray-900">৳{{ number_format($visa->price) }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500 mb-1">Processing Fee</p>
+                                        <p class="font-semibold text-gray-900">{{ $visa->fees ?? 'As per current rate' }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +120,7 @@
                                 <div class="flex flex-col sm:flex-row gap-4">
                                     <a href="#" class="flex items-center text-blue-700 font-semibold hover:underline">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                        +88 09678 332211
+                                        09611-677989
                                     </a>
                                     <a href="#" class="flex items-center text-blue-700 font-semibold hover:underline">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
@@ -241,7 +244,16 @@
                         
                          <h3 class="text-xl font-bold text-gray-900 mb-4">Apply Now</h3>
                          
-                         <form action="{{ route('bookings.store') }}" method="POST">
+                        @if ($errors->any())
+                            <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                                <ul class="list-disc pl-5 text-sm space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        <form action="{{ route('bookings.store') }}" method="POST">
                             @csrf
                             <input type="hidden" name="payable_type" value="visa">
                             <input type="hidden" name="payable_id" value="{{ $visa->id }}">
@@ -249,12 +261,12 @@
                             <div class="space-y-5 mb-8">
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-2">Expected Travel Date</label>
-                                    <input type="date" name="booking_date" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" min="{{ date('Y-m-d') }}">
+                                    <input type="date" name="booking_date" value="{{ old('booking_date') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3" min="{{ date('Y-m-d') }}">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-2">Number of Persons</label>
-                                    <input type="number" name="quantity" value="1" min="1" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
+                                    <input type="number" name="quantity" value="{{ old('quantity', 1) }}" min="1" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
                                 </div>
                                 
                                 @auth
@@ -275,15 +287,15 @@
                                     <!-- Editable fields for guests -->
                                     <div>
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
-                                        <input type="text" name="guest_name" required placeholder="John Doe" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
+                                        <input type="text" name="guest_name" value="{{ old('guest_name') }}" required placeholder="John Doe" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
-                                        <input type="email" name="guest_email" required placeholder="john@example.com" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
+                                        <input type="email" name="guest_email" value="{{ old('guest_email') }}" required placeholder="john@example.com" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
-                                        <input type="text" name="guest_phone" required placeholder="+8801..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
+                                        <input type="text" name="guest_phone" value="{{ old('guest_phone') }}" required placeholder="+8801..." class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 py-3">
                                     </div>
                                 @endauth
                             </div>
@@ -302,7 +314,7 @@
                                     </div>
                                     <div>
                                         <p class="text-xs text-gray-500 uppercase font-semibold">Call Us 24/7</p>
-                                        <p class="font-bold text-gray-900">+88 09678 332211</p>
+                                        <p class="font-bold text-gray-900">09611-677989</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -311,7 +323,7 @@
                                     </div>
                                     <div>
                                         <p class="text-xs text-gray-500 uppercase font-semibold">Email Us</p>
-                                        <p class="font-bold text-gray-900">visa@flyoverbd.com</p>
+                                        <p class="font-bold text-gray-900">visa.flyoverbd@gmail.com</p>
                                     </div>
                                 </div>
                             </div>

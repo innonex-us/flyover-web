@@ -57,7 +57,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $visa->processing_time }}
+                            {{ $visa->validity_info ?? $visa->processing_time }}
                         </td>
                         <td class="px-6 py-4 text-center text-sm font-medium">
                             <div class="flex justify-center space-x-3">

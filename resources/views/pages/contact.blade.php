@@ -31,7 +31,8 @@
                                 Call Us
                             </h3>
                             <p class="text-gray-600 ml-12">
-                                +880 1335 111370<br>
+                                09611-677989<br>
+                                +880 1335 111370
                             </p>
                         </div>
 
@@ -43,8 +44,8 @@
                                 Email Us
                             </h3>
                             <p class="text-gray-600 ml-12">
-                                support@flyoverbd.com<br>
-                                visa@flyoverbd.com
+                                info.flyoverbd@gmail.com<br>
+                                info@flyoverbd.net
                             </p>
                         </div>
                     </div>
