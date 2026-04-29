@@ -6,9 +6,9 @@
                 <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2021&q=80" alt="Travel Background" class="w-full h-full object-cover opacity-20">
             </div>
             <div class="relative max-w-7xl mx-auto px-6 text-center lg:px-8">
-                <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">About AamarTrip Limited</h1>
+                <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">About AamarTrip</h1>
                 <p class="mt-6 text-lg leading-8 text-red-100 max-w-2xl mx-auto">
-                    A travel service provider based in the United Kingdom, helping travelers plan with confidence.
+                    Turning your dream vacations into reality with reliable travel support from London.
                 </p>
             </div>
         </div>
@@ -20,10 +20,10 @@
                     <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl mb-6">Who We Are</h2>
                     <div class="prose prose-lg text-gray-600">
                         <p>
-                            AamarTrip Limited is a UK-based travel service provider offering end-to-end travel solutions. We specialize in domestic and international flight bookings, curated holiday packages, visa support, and hotel reservations worldwide.
+                            AamarTrip is a London-based travel service provider offering end-to-end travel solutions. We support Schengen and other tourist visa applications, international flight bookings, hotel reservations, and airport pick-up/drop services.
                         </p>
                         <p>
-                            We understand that every journey is unique. Whether you are traveling for business, planning a family holiday, or preparing essential travel documents, our team is ready to support you every step of the way.
+                            We understand that every journey is unique. Whether you are traveling for business or planning a family holiday, our team helps you with practical planning, transparent guidance, and responsive support at every step.
                         </p>
                     </div>
                 </div>

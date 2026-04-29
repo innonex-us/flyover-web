@@ -112,7 +112,7 @@
                                     Visit our UK office for visa consultation with our travel experts and get started on your application.
                                 </p>
                                 <div class="bg-white p-4 rounded-lg border border-blue-200 mb-4">
-                                    <p class="font-semibold text-gray-900">New Road Business Centre, 109-110 New Road, 2nd Floor, Suite S2, London, E1 1HJ, United Kingdom</p>
+                                    <p class="font-semibold text-gray-900">New Road Business Centre, 2nd Floor,109 New Road, Suite- S2, Whitechapel, London, United Kingdom, E1 1HJ</p>
                                 </div>
                                 <div class="flex flex-col sm:flex-row gap-4">
                                     <a href="tel:+447424233719" class="flex items-center text-blue-700 font-semibold hover:underline">

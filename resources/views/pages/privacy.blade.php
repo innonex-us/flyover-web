@@ -8,7 +8,7 @@
                 </div>
 
                 <div class="prose prose-lg prose-red max-w-none text-gray-600">
-                    <p class="lead">At AamarTrip Limited, we respect your privacy and are committed to protecting the personal information you share with us. This policy outlines how we collect, use, and safeguard your data.</p>
+                    <p class="lead">At AamarTrip, we respect your privacy and are committed to protecting the personal information you share with us. This policy outlines how we collect, use, and safeguard your data.</p>
 
                     <h3 class="text-gray-900 font-bold mt-8">1. Information We Collect</h3>
                     <p>We collect information that you provide to us directly when you use our services. This includes:</p>
@@ -43,18 +43,22 @@
                     <h3 class="text-gray-900 font-bold mt-8">6. Contact Us</h3>
                     <p>If you have any questions about this Privacy Policy, please contact us:</p>
                     <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 not-prose mt-4">
-                        <ul class="space-y-2 text-gray-600">
-                            <li class="flex items-start">
-                                <span class="font-bold w-20">Email:</span>
-                                <span>facebook.com/aamartrip</span>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start gap-2">
+                                <span class="font-bold w-24 shrink-0">Facebook:</span>
+                                <span><a href="https://facebook.com/aamartrip" target="_blank" rel="noopener noreferrer" class="text-red-600 hover:text-red-700 hover:underline">facebook.com/aamartrip</a></span>
                             </li>
-                            <li class="flex items-start">
-                                <span class="font-bold w-20">Phone:</span>
-                                <span>+44 7424 233719</span>
+                            <li class="flex items-start gap-2">
+                                <span class="font-bold w-24 shrink-0">Phone:</span>
+                                <span>+44 20 3576 6766</span>
                             </li>
-                            <li class="flex items-start">
-                                <span class="font-bold w-20">Address:</span>
-                                <span>New Road Business Centre, 109-110 New Road, 2nd Floor, Suite S2, London, E1 1HJ, United Kingdom</span>
+                            <li class="flex items-start gap-2">
+                                <span class="font-bold w-24 shrink-0">Email:</span>
+                                <span>info@aamartrip.world</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="font-bold w-24 shrink-0">Address:</span>
+                                <span class="leading-relaxed">New Road Business Centre, 2nd Floor,109 New Road, Suite- S2,<br>Whitechapel, London, United Kingdom, E1 1HJ</span>
                             </li>
                         </ul>
                     </div>

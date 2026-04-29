@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="mx-auto max-w-2xl lg:mx-0 mb-16">
                 <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Contact Us</h2>
-                <p class="mt-2 text-lg leading-8 text-gray-600">Need help with flights, holiday packages, visa support, or hotels? We are here to help.</p>
+                <p class="mt-2 text-lg leading-8 text-gray-600">Need help with Schengen or tourist visas, flights, hotels, or pick-up and drop services? We are here to help.</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -18,8 +18,8 @@
                                 Visit Our Office
                             </h3>
                             <p class="text-gray-600 ml-12">
-                                New Road Business Centre, 109-110 New Road,<br>
-                                2nd Floor, Suite S2, London, E1 1HJ, United Kingdom
+                                New Road Business Centre, 2nd Floor,109 New Road, Suite- S2,<br>
+                                Whitechapel, London, United Kingdom, E1 1HJ
                             </p>
                         </div>
                         
@@ -31,7 +31,7 @@
                                 Call Us
                             </h3>
                             <p class="text-gray-600 ml-12">
-                                +44 7424 233719<br>
+                                +44 20 3576 6766<br>
                             </p>
                         </div>
 
@@ -45,6 +45,20 @@
                             <p class="text-gray-600 ml-12">
                                 <a href="https://facebook.com/aamartrip" target="_blank" rel="noopener noreferrer" class="text-red-600 hover:text-red-700 hover:underline">
                                     facebook.com/aamartrip
+                                </a>
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                                <span class="bg-red-100 p-2 rounded-lg text-red-600 mr-3">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12l-4 4m0 0l-4-4m4 4V8m8 8a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h14z"></path></svg>
+                                </span>
+                                Email Us
+                            </h3>
+                            <p class="text-gray-600 ml-12">
+                                <a href="mailto:info@aamartrip.world" class="text-red-600 hover:text-red-700 hover:underline">
+                                    info@aamartrip.world
                                 </a>
                             </p>
                         </div>
