@@ -29,8 +29,12 @@ class BookingController extends Controller
         ]);
 
         // Verify reCAPTCHA
-        $recaptchaSecret = '6LcQnNwsAAAAAFWm1IQpYlHMH8NnnAba5SX9qPck';
+        $recaptchaSecret = env('RECAPTCHA_SECRET_KEY');
         $recaptchaResponse = $request->input('g-recaptcha-response');
+
+        if (!$recaptchaSecret) {
+            abort(500, 'reCAPTCHA not configured');
+        }
 
         $verification = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
             'secret' => $recaptchaSecret,

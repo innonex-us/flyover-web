@@ -442,7 +442,7 @@
 
                                 <!-- reCAPTCHA -->
                                 <div class="mt-4">
-                                    <div class="g-recaptcha" data-sitekey="6LcQnNwsAAAAABvle33fNo7zSBPxOfSenx_xUo3j"></div>
+                                    <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
                                     @error('g-recaptcha-response')
                                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                                     @enderror
