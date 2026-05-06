@@ -28,7 +28,7 @@ Route::get('/visas/{slug}', [VisaController::class, 'show'])->name('visas.show')
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
 
-Route::post('/bookings', [App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store')->middleware('throttle:booking_submission');
+Route::post('/bookings', [App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
 Route::get('/bookings/{booking}/confirmation', [App\Http\Controllers\BookingController::class, 'confirmation'])->name('bookings.confirmation');
 
 Route::get('/search/suggestions', [App\Http\Controllers\SearchController::class, 'suggestions'])->name('search.suggestions');

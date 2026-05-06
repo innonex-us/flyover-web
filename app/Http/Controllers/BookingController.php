@@ -7,7 +7,7 @@ use App\Models\Booking;
 use App\Models\Package;
 use App\Models\Visa;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,7 +25,22 @@ class BookingController extends Controller
             'quantity' => 'required|integer|min:1',
             'notes' => 'nullable|string|max:1000',
             'details' => 'nullable|array',
+            'g-recaptcha-response' => 'required|string',
         ]);
+
+        // Verify reCAPTCHA
+        $recaptchaSecret = '6LcQnNwsAAAAAFWm1IQpYlHMH8NnnAba5SX9qPck';
+        $recaptchaResponse = $request->input('g-recaptcha-response');
+
+        $verification = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => $recaptchaSecret,
+            'response' => $recaptchaResponse,
+            'remoteip' => $request->ip(),
+        ]);
+
+        if (!$verification->json('success')) {
+            return back()->withErrors(['g-recaptcha-response' => 'The reCAPTCHA verification failed. Please try again.'])->withInput();
+        }
 
         $bookingData = [
             'payable_id' => $validated['payable_id'],

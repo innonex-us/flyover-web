@@ -27,6 +27,10 @@
     <link rel="preload" href="{{ $mainImage }}" as="image">
     @endpush
 
+    @push('scripts')
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endpush
+
     <div class="bg-gray-50/50 min-h-screen pb-12" x-data="{ 
         openInquiryModal: false,
         activeSection: 'itinerary',
@@ -434,6 +438,14 @@
                                         <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Special Requirements</label>
                                         <textarea name="notes" rows="2" class="w-full bg-gray-50 border-gray-100 rounded-lg py-2 px-3 text-xs focus:bg-white" placeholder="Any requests?"></textarea>
                                     </div>
+                                </div>
+
+                                <!-- reCAPTCHA -->
+                                <div class="mt-4">
+                                    <div class="g-recaptcha" data-sitekey="6LcQnNwsAAAAABvle33fNo7zSBPxOfSenx_xUo3j"></div>
+                                    @error('g-recaptcha-response')
+                                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Total Display -->
