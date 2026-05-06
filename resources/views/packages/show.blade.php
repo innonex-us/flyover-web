@@ -28,7 +28,22 @@
     @endpush
 
     @push('scripts')
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{ env('RECAPTCHA_SITE_KEY') }}"></script>
+    <script>
+        grecaptcha.ready(function() {
+            document.querySelector('form[action="{{ route('bookings.store') }}"]').addEventListener('submit', function(e) {
+                e.preventDefault();
+                grecaptcha.execute('{{ env('RECAPTCHA_SITE_KEY') }}', {action: 'submit'}).then(function(token) {
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'g-recaptcha-response';
+                    input.value = token;
+                    document.querySelector('form[action="{{ route('bookings.store') }}"]').appendChild(input);
+                    document.querySelector('form[action="{{ route('bookings.store') }}"]').submit();
+                });
+            });
+        });
+    </script>
     @endpush
 
     <div class="bg-gray-50/50 min-h-screen pb-12" x-data="{ 
@@ -438,14 +453,6 @@
                                         <label class="text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">Special Requirements</label>
                                         <textarea name="notes" rows="2" class="w-full bg-gray-50 border-gray-100 rounded-lg py-2 px-3 text-xs focus:bg-white" placeholder="Any requests?"></textarea>
                                     </div>
-                                </div>
-
-                                <!-- reCAPTCHA -->
-                                <div class="mt-4">
-                                    <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
-                                    @error('g-recaptcha-response')
-                                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                                    @enderror
                                 </div>
 
                                 <!-- Total Display -->

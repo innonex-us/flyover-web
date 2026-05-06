@@ -42,7 +42,7 @@ class BookingController extends Controller
             'remoteip' => $request->ip(),
         ]);
 
-        if (!$verification->json('success')) {
+        if (!$verification->json('success') || $verification->json('score') < 0.5) {
             return back()->withErrors(['g-recaptcha-response' => 'The reCAPTCHA verification failed. Please try again.'])->withInput();
         }
 
