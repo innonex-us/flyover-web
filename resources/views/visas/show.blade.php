@@ -49,8 +49,7 @@
                         <div>
                             <h1 class="text-3xl font-extrabold text-gray-900 mb-2">{{ $visa->country }} Visa</h1>
                             <div class="flex flex-wrap gap-2">
-                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-semibold">{{ $visa->entry_type ?? $visa->type }}</span>
-                                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-semibold">{{ $visa->processing_time }}</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-semibold">{{ $visa->type }}</span>
                             </div>
                         </div>
                     </div>
@@ -88,24 +87,6 @@
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Visa Summary</h2>
                             <p class="text-gray-600 leading-relaxed mb-8 whitespace-pre-line">{{ $visa->description }}</p>
 
-                            <div class="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-8">
-                                <h3 class="text-lg font-bold text-gray-900 mb-4">Processing Details</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div>
-                                        <p class="text-sm text-gray-500 mb-1">Processing Time</p>
-                                        <p class="font-semibold text-gray-900">{{ $visa->validity_info ?? $visa->processing_time }}</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-500 mb-1">Visa Fee</p>
-                                        <p class="font-semibold text-gray-900">৳{{ number_format($visa->price) }}</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-500 mb-1">Processing Fee</p>
-                                        <p class="font-semibold text-gray-900">{{ $visa->fees ?? 'As per current rate' }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
                             <div class="bg-blue-50 rounded-xl p-6 border border-blue-100">
                                 <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
                                     <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -118,7 +99,7 @@
                                     <p class="font-semibold text-gray-900">House 45, Road 13, Block D, Banani, Dhaka</p>
                                 </div>
                                 <div class="flex flex-col sm:flex-row gap-4">
-                                    <a href="#" class="flex items-center text-blue-700 font-semibold hover:underline">
+                                    <a href="tel:09611677989" class="flex items-center text-blue-700 font-semibold hover:underline">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                                         09611-677989
                                     </a>
@@ -239,6 +220,19 @@
                             <div class="flex items-baseline">
                                 <span class="text-4xl font-extrabold text-red-600">৳{{ number_format($visa->price) }}</span>
                                 <span class="text-gray-400 ml-2">/ person</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-6 pb-6 border-b border-gray-100">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-gray-500 text-xs uppercase tracking-wide font-semibold mb-1">Validity</p>
+                                    <p class="font-bold text-gray-900">{{ $visa->validity ?? 'N/A' }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-xs uppercase tracking-wide font-semibold mb-1">Maximum Stay</p>
+                                    <p class="font-bold text-gray-900">{{ $visa->maximum_stay ?? 'N/A' }}</p>
+                                </div>
                             </div>
                         </div>
                         

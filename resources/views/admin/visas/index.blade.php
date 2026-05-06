@@ -24,7 +24,7 @@
                         <th class="px-6 py-4 text-left">Country / Type</th>
                         <th class="px-6 py-4 text-left">Price</th>
                         <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4 text-left">Processing Time</th>
+                        <th class="px-6 py-4 text-left">Validity / Max Stay</th>
                         <th class="px-6 py-4 text-center">Actions</th>
                     </tr>
                 </thead>
@@ -57,7 +57,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $visa->validity_info ?? $visa->processing_time }}
+                            {{ $visa->validity ?? '-' }} / {{ $visa->maximum_stay ?? '-' }}
                         </td>
                         <td class="px-6 py-4 text-center text-sm font-medium">
                             <div class="flex justify-center space-x-3">

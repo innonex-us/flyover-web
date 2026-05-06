@@ -27,7 +27,7 @@ class HomeController extends Controller
                 $visaQuery->where('is_active', true);
             }
             return $visaQuery
-                ->select('id', 'country', 'slug', 'thumbnail', 'type', 'price', 'processing_time')
+                ->select('id', 'country', 'slug', 'thumbnail', 'type', 'price', 'validity', 'maximum_stay')
                 ->latest()
                 ->take(8)
                 ->get();

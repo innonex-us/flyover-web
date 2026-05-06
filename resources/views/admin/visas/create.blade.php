@@ -58,21 +58,15 @@
                     </div>
 
                     <div>
-                         <label class="block text-sm font-semibold text-gray-700 mb-2">Processing Time</label>
-                        <input type="text" name="processing_time" value="{{ old('processing_time') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. 5-7 Working Days">
-                        @error('processing_time') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Validity</label>
+                        <input type="text" name="validity" value="{{ old('validity') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. 3 Months">
+                        @error('validity') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Entry Type</label>
-                         <input type="text" name="entry_type" value="{{ old('entry_type') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. Single Entry">
-                         @error('entry_type') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Validity Info</label>
-                         <input type="text" name="validity_info" value="{{ old('validity_info') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. 3 Months Validity / 30 Days Stay">
-                         @error('validity_info') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Maximum Stay</label>
+                        <input type="text" name="maximum_stay" value="{{ old('maximum_stay') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. 30 Days">
+                        @error('maximum_stay') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>
