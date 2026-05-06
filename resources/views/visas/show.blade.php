@@ -17,6 +17,26 @@
     }
     </script>
     @endpush --}}
+
+    @push('scripts')
+    <script src="https://www.google.com/recaptcha/api.js?render={{ env('RECAPTCHA_SITE_KEY') }}"></script>
+    <script>
+        grecaptcha.ready(function() {
+            document.querySelector('form[action="{{ route('bookings.store') }}"]').addEventListener('submit', function(e) {
+                e.preventDefault();
+                grecaptcha.execute('{{ env('RECAPTCHA_SITE_KEY') }}', {action: 'submit'}).then(function(token) {
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'g-recaptcha-response';
+                    input.value = token;
+                    document.querySelector('form[action="{{ route('bookings.store') }}"]').appendChild(input);
+                    document.querySelector('form[action="{{ route('bookings.store') }}"]').submit();
+                });
+            });
+        });
+    </script>
+    @endpush
+
     <div class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
