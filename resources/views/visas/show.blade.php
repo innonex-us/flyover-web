@@ -236,7 +236,7 @@
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-2xl shadow-xl p-8 sticky top-24 border border-gray-100 transform transition hover:scale-[1.01]">
                         <div class="mb-6 pb-6 border-b border-gray-100">
-                            <p class="text-gray-500 text-sm uppercase tracking-wide font-semibold mb-1">Visa Fee</p>
+                            <p class="text-gray-500 text-sm uppercase tracking-wide font-semibold mb-1">Price</p>
                             <div class="flex items-baseline">
                                 <span class="text-4xl font-extrabold text-red-600">৳{{ number_format($visa->price) }}</span>
                                 <span class="text-gray-400 ml-2">/ person</span>
