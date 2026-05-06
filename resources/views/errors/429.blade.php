@@ -37,7 +37,7 @@
                 </div>
                 
                 <p class="mt-8 text-xs text-gray-400">
-                    Reference ID: {{ request()->id() }}
+                    Reference ID: {{ request()->ip() }}
                 </p>
             </div>
         </div>
