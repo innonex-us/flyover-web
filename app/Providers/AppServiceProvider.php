@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
                 return \Illuminate\Cache\RateLimiting\Limit::perMinute(1000);
             }
             return \Illuminate\Cache\RateLimiting\Limit::perMinutes(30, 1)->by($request->user()?->id ?: $request->ip())->response(function () {
-                return view('errors.429');
+                return response()->view('errors.429', [], 429);
             });
         });
     }
