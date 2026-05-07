@@ -222,8 +222,9 @@
                                         @endforeach
                                     </ul>
                                 </div>
-                            @elseif($visa->terms)
-                                <div class="prose max-w-none text-gray-600">{{ $visa->terms }}</div>
+                            @endif
+                            @if($visa->terms)
+                                <div class="prose max-w-none text-gray-600 mt-6">{{ $visa->terms }}</div>
                             @endif
                         </div>
                     </div>
