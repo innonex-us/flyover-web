@@ -32,7 +32,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     @stack('meta')
-    @stack('scripts')
 </head>
 
 <body class="font-sans antialiased text-gray-900 bg-gray-50">
@@ -137,6 +136,8 @@
             </div>
         </footer>
     </div>
+
+    @stack('scripts')
 
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/8801335111370" target="_blank" class="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 hover:scale-110 transition-transform duration-300 flex items-center justify-center group">

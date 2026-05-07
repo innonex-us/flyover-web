@@ -83,11 +83,6 @@
                         @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Requirements (Additional Details)</label>
-                        <textarea name="requirements" rows="4" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('requirements', $visa->requirements) }}</textarea>
-                        @error('requirements') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
 
                     <div x-data="fileUploader">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Thumbnail Image</label>
@@ -165,12 +160,6 @@
 
                 <div x-show="tabs === 'fees'" style="display: none;">
                     <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Processing Fee</label>
-                            <textarea name="fees" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('fees', $visa->fees) }}</textarea>
-                            <p class="text-xs text-gray-500 mt-1">This is shown separately from Visa Fee (Price).</p>
-                            @error('fees') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                        </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Terms & Conditions</label>
                             <textarea name="terms" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('terms', $visa->terms) }}</textarea>

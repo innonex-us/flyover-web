@@ -198,9 +198,6 @@
                                         @endif
                                     @endforeach
                                 </div>
-                                <div class="mt-6 p-4 bg-yellow-50 text-yellow-800 text-sm rounded-lg border border-yellow-200">
-                                    <strong>N.B:</strong> All documents must be submitted in physical form, in person at our office.
-                                </div>
                             @else
                                 <div class="bg-white border border-gray-200 rounded-xl p-6">
                                     <p class="whitespace-pre-line text-gray-600">{{ $visa->requirements }}</p>
@@ -315,7 +312,7 @@
                             </div>
 
                             <button type="submit" class="w-full bg-red-600 text-white text-lg font-bold py-4 px-6 rounded-xl hover:bg-red-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-6">
-                                Submit Application
+                                Booking Visa
                             </button>
                         </form>
 
