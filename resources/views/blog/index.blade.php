@@ -1,4 +1,24 @@
-<x-app-layout>
+<x-app-layout
+    title="Travel Blog | {{ config('app.name', 'FlyoverBD') }}"
+    meta_description="Discover travel tips, visa guides, and tour insights from Bangladesh's trusted travel agency FlyoverBD."
+    meta_image="{{ asset('logo.png') }}"
+>
+    @push('meta')
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "FlyoverBD Travel Blog",
+      "description": "Travel tips, visa guides, and tour insights from Bangladesh",
+      "url": "{{ route('blog.index') }}",
+      "publisher": {
+        "@type": "Organization",
+        "name": "FlyoverBD",
+        "logo": { "@type": "ImageObject", "url": "{{ asset('logo.png') }}" }
+      }
+    }
+    </script>
+    @endpush
     <div class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-16">
@@ -8,11 +28,17 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 @forelse($posts as $post)
+                    @php
+                        $cardAuthor = $post->custom_author ?? ($post->author->name ?? 'FlyoverBD');
+                        $cardWords = str_word_count(strip_tags($post->content ?? ''));
+                        $cardReadTime = max(1, (int) ceil($cardWords / 200));
+                    @endphp
                     <article class="flex flex-col bg-white rounded-2xl shadow-lg hover:shadow-xl transition overflow-hidden border border-gray-100 group">
                         <a href="{{ route('blog.show', $post->slug) }}" class="overflow-hidden h-56 relative">
-                            <img src="{{ $post->image ? Storage::url($post->image) : 'https://via.placeholder.com/800x600?text=FlyoverBD+Blog' }}" 
-                                 alt="{{ $post->title }}" 
-                                 class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 ease-in-out">
+                            <img src="{{ $post->image ? Storage::url($post->image) : asset('logo.png') }}"
+                                 alt="{{ $post->title }}"
+                                 class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 ease-in-out"
+                                 loading="lazy">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                             @if(!$post->is_published)
                                 <div class="absolute top-4 right-4 bg-red-600/90 backdrop-blur text-white text-xs font-bold px-2 py-1 rounded shadow-sm border border-red-400">
@@ -21,11 +47,15 @@
                             @endif
                         </a>
                         <div class="flex-1 p-8 flex flex-col">
-                            <div class="flex items-center text-sm text-gray-500 mb-3 space-x-4">
+                            <div class="flex items-center text-xs text-gray-500 mb-3 gap-x-3 flex-wrap gap-y-1">
                                 <span class="flex items-center">
-                                    <svg class="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    <svg class="w-3.5 h-3.5 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     {{ $post->published_at ? $post->published_at->format('M d, Y') : 'Draft' }}
                                 </span>
+                                <span>·</span>
+                                <span>{{ $cardReadTime }} min read</span>
+                                <span>·</span>
+                                <span>By {{ $cardAuthor }}</span>
                             </div>
                             <h2 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-red-600 transition">
                                 <a href="{{ route('blog.show', $post->slug) }}">
@@ -37,7 +67,7 @@
                             </p>
                             <div class="mt-auto">
                                 <a href="{{ route('blog.show', $post->slug) }}" class="inline-flex items-center text-red-600 font-semibold hover:text-red-700">
-                                    Read Article 
+                                    Read Article
                                     <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                                 </a>
                             </div>

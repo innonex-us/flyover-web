@@ -47,18 +47,25 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $post->author->name }}
+                            {{ $post->custom_author ?? $post->author->name }}
                         </td>
                         <td class="px-6 py-4 text-center">
-                            @if($post->is_published)
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    Published
-                                </span>
-                            @else
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                    Draft
-                                </span>
-                            @endif
+                            <div class="flex flex-col items-center gap-1">
+                                @if($post->is_published)
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Published
+                                    </span>
+                                @else
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                        Draft
+                                    </span>
+                                @endif
+                                @if(!$post->seo_title || !$post->seo_description)
+                                    <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-yellow-100 text-yellow-700" title="Missing SEO title or meta description">
+                                        SEO incomplete
+                                    </span>
+                                @endif
+                            </div>
                         </td>
                          <td class="px-6 py-4 text-sm text-gray-600">
                             {{ $post->published_at ? $post->published_at->format('M d, Y') : '-' }}

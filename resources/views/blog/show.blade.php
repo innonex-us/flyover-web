@@ -1,28 +1,38 @@
+@php
+    $postAuthor = $post->custom_author ?? ($post->author->name ?? 'FlyoverBD');
+    $wordCount = str_word_count(strip_tags($post->content ?? ''));
+    $readTime = max(1, (int) ceil($wordCount / 200));
+@endphp
+
 <x-app-layout>
-    {{-- @push('meta')
+    @push('meta')
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org/",
-      "@type": "Article",
-      "headline": "{{ $post->title }}",
-      "description": "{{ $post->seo_description ?? \Illuminate\Support\Str::limit(strip_tags($post->content), 160) }}",
-      "image": "{{ $meta_image ?? '' }}",
+      "@@context": "https://schema.org/",
+      "@@type": "Article",
+      "headline": {!! Illuminate\Support\Js::from($post->title) !!},
+      "description": {!! Illuminate\Support\Js::from($meta_description) !!},
+      "image": "{{ $meta_image }}",
       "author": {
-        "@type": "Person",
-        "name": "{{ $post->custom_author ?? $post->author->name ?? 'FlyoverBD' }}"
+        "@@type": "Person",
+        "name": {!! Illuminate\Support\Js::from($postAuthor) !!}
       },
-      "datePublished": "{{ $post->published_at ? $post->published_at->toIso8601String() : '' }}",
+      "publisher": {
+        "@@type": "Organization",
+        "name": "FlyoverBD",
+        "logo": {
+          "@@type": "ImageObject",
+          "url": "{{ asset('logo.png') }}"
+        }
+      },
+      "datePublished": "{{ $post->published_at ? $post->published_at->toIso8601String() : $post->created_at->toIso8601String() }}",
       "dateModified": "{{ $post->updated_at->toIso8601String() }}"
     }
     </script>
+    <meta property="article:published_time" content="{{ $post->published_at ? $post->published_at->toIso8601String() : '' }}">
+    <meta property="article:modified_time" content="{{ $post->updated_at->toIso8601String() }}">
+    <meta property="article:author" content="{{ $postAuthor }}">
     @endpush
-    <x-slot name="header">
-        <meta name="description" content="{{ $post->seo_description ?? Str::limit(strip_tags($post->content), 160) }}">
-        <meta property="og:title" content="{{ $post->seo_title ?? $post->title }} - FlyoverBD">
-        <meta property="og:description" content="{{ $post->seo_description ?? Str::limit(strip_tags($post->content), 160) }}">
-        <meta property="og:image" content="{{ $post->image ? Storage::url($post->image) : '' }}">
-        <title>{{ $post->seo_title ?? $post->title }} - FlyoverBD</title>
-    </x-slot> --}}
 
     <div class="bg-gray-50 min-h-screen pb-12">
         @if(!$post->is_published)
@@ -50,15 +60,19 @@
                     {{ $post->title }}
                 </h1>
 
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-4 flex-wrap gap-y-3">
                     <div class="flex items-center">
-                        <div class="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-lg">
-                            {{ substr($post->custom_author ?? $post->author->name, 0, 1) }}
+                        <div class="h-10 w-10 rounded-full overflow-hidden flex items-center justify-center bg-white border border-gray-200">
+                            <img src="{{ asset('logo.png') }}" alt="FlyoverBD" class="h-full w-full object-contain">
                         </div>
                         <div class="ml-3">
-                            <p class="text-sm font-medium text-gray-900">{{ $post->custom_author ?? $post->author->name }}</p>
-                            <div class="flex space-x-1 text-sm text-gray-500">
+                            <p class="text-sm font-medium text-gray-900">{{ $postAuthor }}</p>
+                            <div class="flex items-center space-x-3 text-sm text-gray-500">
                                 <time datetime="{{ $post->published_at }}">{{ $post->published_at ? $post->published_at->format('M d, Y') : 'Draft' }}</time>
+                                <span>·</span>
+                                <span>{{ $readTime }} min read</span>
+                                <span>·</span>
+                                <span>{{ number_format($wordCount) }} words</span>
                             </div>
                         </div>
                     </div>
@@ -106,7 +120,7 @@
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.017-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                                 </a>
                                 <button x-data="{ copied: false }" 
-                                        @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2000)" 
+                                        @@click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2000)" 
                                         class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-600 hover:text-white transition relative">
                                     <svg x-show="!copied" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                     <svg x-show="copied" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -118,11 +132,11 @@
 
                     <!-- Author Box -->
                     <div class="mt-10 bg-white rounded-2xl shadow-sm p-8 flex items-start space-x-6">
-                        <div class="h-16 w-16 rounded-full bg-red-100 flex flex-shrink-0 items-center justify-center text-red-600 font-bold text-2xl">
-                            {{ substr($post->custom_author ?? $post->author->name, 0, 1) }}
+                        <div class="h-16 w-16 rounded-full overflow-hidden flex flex-shrink-0 items-center justify-center bg-white border border-gray-200">
+                            <img src="{{ asset('logo.png') }}" alt="FlyoverBD" class="h-full w-full object-contain">
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Written by {{ $post->custom_author ?? $post->author->name }}</h3>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Written by {{ $postAuthor }}</h3>
                             <p class="text-gray-600">Travel expert at FlyoverBD. Passionate about helping you explore the beauty of Bangladesh and beyond.</p>
                         </div>
                     </div>
@@ -146,7 +160,7 @@
                             @forelse($recentPosts as $recent)
                                 <div class="group flex space-x-4">
                                     <a href="{{ route('blog.show', $recent->slug) }}" class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
-                                        <img src="{{ $recent->image ? Storage::url($recent->image) : 'https://via.placeholder.com/150' }}" 
+                                        <img src="{{ $recent->image ? Storage::url($recent->image) : asset('logo.png') }}"
                                              alt="{{ $recent->title }}" 
                                              class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                     </a>

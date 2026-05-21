@@ -40,12 +40,13 @@ class BlogController extends Controller
             ->get();
 
         // SEO Data
-        $title = $post->title . ' | FlyoverBD Blog';
+        $title = ($post->seo_title ?? $post->title) . ' | ' . config('app.name', 'FlyoverBD');
         $meta_description = $post->seo_description ?? \Illuminate\Support\Str::limit(strip_tags($post->content), 155);
-        $meta_image = $post->image 
+        $meta_image = $post->image
             ? (\Illuminate\Support\Str::startsWith($post->image, 'http') ? $post->image : \Illuminate\Support\Facades\Storage::url($post->image))
             : asset('logo.png');
+        $og_type = 'article';
 
-        return view('blog.show', compact('post', 'recentPosts', 'title', 'meta_description', 'meta_image'));
+        return view('blog.show', compact('post', 'recentPosts', 'title', 'meta_description', 'meta_image', 'og_type'));
     }
 }

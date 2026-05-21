@@ -17,68 +17,87 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+
         <!-- Revenue Card -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 lg:col-span-1">
             <div class="flex justify-between items-start mb-4">
                 <div>
-                     <p class="text-gray-500 text-sm font-medium">Total Revenue</p>
+                    <p class="text-gray-500 text-sm font-medium">Revenue</p>
                     <h3 class="text-2xl font-bold text-gray-800">৳{{ number_format($totalRevenue) }}</h3>
                 </div>
-                 <div class="p-2 bg-green-50 rounded-lg text-green-600">
+                <div class="p-2 bg-green-50 rounded-lg text-green-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
             </div>
-             <p class="text-xs text-green-600 font-semibold flex items-center">
-                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                 From confirmed bookings
-             </p>
+            <p class="text-xs text-green-600 font-semibold flex items-center">
+                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                Confirmed bookings
+            </p>
         </div>
 
         <!-- Bookings Card -->
         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div class="flex justify-between items-start mb-4">
                 <div>
-                     <p class="text-gray-500 text-sm font-medium">Bookings</p>
+                    <p class="text-gray-500 text-sm font-medium">Bookings</p>
                     <h3 class="text-2xl font-bold text-gray-800">{{ number_format($totalBookings) }}</h3>
                 </div>
-                 <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+                <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                 </div>
             </div>
-             <div class="flex gap-2">
-                 <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">{{ $newBookingsCount }} Pending</span>
-                 <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{{ $confirmedBookingsCount }} Confirmed</span>
-             </div>
+            <div class="flex gap-2 flex-wrap">
+                <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">{{ $newBookingsCount }} Pending</span>
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{{ $confirmedBookingsCount }} Confirmed</span>
+            </div>
         </div>
 
-         <!-- Packages Card -->
-         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <!-- Packages Card -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div class="flex justify-between items-start mb-4">
                 <div>
-                     <p class="text-gray-500 text-sm font-medium">Active Packages</p>
+                    <p class="text-gray-500 text-sm font-medium">Packages</p>
                     <h3 class="text-2xl font-bold text-gray-800">{{ $totalPackages }}</h3>
                 </div>
-                 <div class="p-2 bg-purple-50 rounded-lg text-purple-600">
+                <div class="p-2 bg-purple-50 rounded-lg text-purple-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
             </div>
-             <p class="text-xs text-gray-500">Live tour packages</p>
+            <p class="text-xs text-gray-500">Live tour packages</p>
         </div>
 
         <!-- Visas Card -->
         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div class="flex justify-between items-start mb-4">
                 <div>
-                     <p class="text-gray-500 text-sm font-medium">Visa Services</p>
+                    <p class="text-gray-500 text-sm font-medium">Visa Services</p>
                     <h3 class="text-2xl font-bold text-gray-800">{{ $activeVisas }}</h3>
                 </div>
-                 <div class="p-2 bg-red-50 rounded-lg text-red-600">
+                <div class="p-2 bg-red-50 rounded-lg text-red-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                 </div>
             </div>
             <p class="text-xs text-gray-500">Available destinations</p>
+        </div>
+
+        <!-- Blog Posts Card -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Blog Posts</p>
+                    <h3 class="text-2xl font-bold text-gray-800">{{ $publishedPostsCount + $draftPostsCount }}</h3>
+                </div>
+                <div class="p-2 bg-orange-50 rounded-lg text-orange-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                </div>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{{ $publishedPostsCount }} Published</span>
+                @if($draftPostsCount > 0)
+                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{{ $draftPostsCount }} Drafts</span>
+                @endif
+            </div>
         </div>
 
     </div>
@@ -135,15 +154,15 @@
 
         <!-- Quick Actions -->
         <div class="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="font-bold text-gray-800 mb-6">Quick Actions</h3>
-            <div class="space-y-4">
+            <h3 class="font-bold text-gray-800 mb-4">Quick Actions</h3>
+            <div class="space-y-3">
                 <a href="{{ route('admin.packages.create') }}" class="block p-4 border border-dashed border-gray-200 rounded-xl hover:border-red-500 hover:bg-red-50 transition group">
                     <div class="flex items-center">
                         <div class="bg-red-100 text-red-600 p-2 rounded-lg mr-3 group-hover:bg-red-200 transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         </div>
                         <div>
-                            <div class="font-semibold text-gray-800 group-hover:text-red-700">Add New Package</div>
+                            <div class="font-semibold text-gray-800 group-hover:text-red-700 text-sm">Add Tour Package</div>
                             <div class="text-xs text-gray-500">Create a new tour package</div>
                         </div>
                     </div>
@@ -154,26 +173,42 @@
                         <div class="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3 group-hover:bg-blue-200 transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
-                         <div>
-                            <div class="font-semibold text-gray-800 group-hover:text-blue-700">Add Visa Service</div>
+                        <div>
+                            <div class="font-semibold text-gray-800 group-hover:text-blue-700 text-sm">Add Visa Service</div>
                             <div class="text-xs text-gray-500">Offer a new visa destination</div>
                         </div>
                     </div>
                 </a>
 
-                 <div class="mt-6 pt-6 border-t border-gray-100">
-                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">System Status</h4>
-                    <div class="space-y-2">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Server Status</span>
-                            <span class="text-green-600 font-semibold flex items-center"><span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span> Online</span>
+                <a href="{{ route('admin.blog.create') }}" class="block p-4 border border-dashed border-gray-200 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition group">
+                    <div class="flex items-center">
+                        <div class="bg-orange-100 text-orange-600 p-2 rounded-lg mr-3 group-hover:bg-orange-200 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">App Version</span>
-                            <span class="text-gray-800">v1.2.0</span>
+                        <div>
+                            <div class="font-semibold text-gray-800 group-hover:text-orange-700 text-sm">Write Blog Post</div>
+                            <div class="text-xs text-gray-500">Publish a new article</div>
                         </div>
                     </div>
+                </a>
+
+                <!-- Recent Blog Posts -->
+                @if($recentPosts->count())
+                <div class="mt-4 pt-4 border-t border-gray-100">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Recent Posts</h4>
+                        <a href="{{ route('admin.blog.index') }}" class="text-xs text-red-600 hover:text-red-700">View all</a>
+                    </div>
+                    <div class="space-y-2">
+                        @foreach($recentPosts as $rp)
+                        <a href="{{ route('admin.blog.edit', $rp) }}" class="flex items-center gap-2 group p-2 rounded-lg hover:bg-gray-50 transition">
+                            <div class="w-2 h-2 rounded-full flex-shrink-0 {{ $rp->is_published ? 'bg-green-500' : 'bg-gray-300' }}"></div>
+                            <span class="text-xs text-gray-700 group-hover:text-red-600 truncate">{{ $rp->title }}</span>
+                        </a>
+                        @endforeach
+                    </div>
                 </div>
+                @endif
             </div>
         </div>
 

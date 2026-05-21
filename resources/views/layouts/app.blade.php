@@ -8,23 +8,24 @@
 
     <!-- SEO Meta Tags -->
     <title>{{ $title ?? config('app.name', 'FlyoverBD') }}</title>
-    {{-- <meta name="description" content="{{ $meta_description ?? 'FlyoverBD is your trusted partner for visa processing, tour packages, and travel consulting in Bangladesh.' }}">
+    <meta name="description" content="{{ $meta_description ?? 'FlyoverBD is your trusted partner for visa processing, tour packages, and travel consulting in Bangladesh.' }}">
     <meta name="keywords" content="{{ $meta_keywords ?? 'visa processing, tour packages, travel agency bangladesh, flyoverbd, tourist visa, business visa' }}">
     <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ $og_type ?? 'website' }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="{{ $title ?? config('app.name', 'FlyoverBD') }}">
     <meta property="og:description" content="{{ $meta_description ?? 'Your trusted partner for hassle-free visa processing and unforgettable tour packages.' }}">
     <meta property="og:image" content="{{ $meta_image ?? asset('logo.png') }}">
+    <meta property="og:site_name" content="{{ config('app.name', 'FlyoverBD') }}">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="{{ $title ?? config('app.name', 'FlyoverBD') }}">
     <meta name="twitter:description" content="{{ $meta_description ?? 'Your trusted partner for hassle-free visa processing and unforgettable tour packages.' }}">
-    <meta name="twitter:image" content="{{ $meta_image ?? asset('logo.png') }}"> --}}
+    <meta name="twitter:image" content="{{ $meta_image ?? asset('logo.png') }}">
 
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
 

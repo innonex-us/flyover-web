@@ -26,9 +26,13 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-6">
                 <!-- Title -->
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Post Title</label>
-                    <input type="text" name="title" value="{{ old('title') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="Enter an engaging title">
+                <div x-data="{ title: '{{ old('title') }}' }">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-bold text-gray-700">Post Title</label>
+                        <span class="text-xs text-gray-400" x-text="title.length + ' chars'"></span>
+                    </div>
+                    <input type="text" name="title" x-model="title" value="{{ old('title') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="Enter an engaging title" id="post-title">
+                    <p class="text-xs text-gray-400 mt-1">Slug preview: <span id="slug-preview" class="font-mono text-gray-600 break-all"></span></p>
                     @error('title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -100,17 +104,57 @@
                 </div>
 
                 <!-- SEO Settings -->
-                <div class="pt-6 border-t border-gray-200">
-                    <h3 class="text-sm font-bold text-gray-900 mb-4 uppercase">SEO Settings</h3>
-                    
+                <div class="pt-6 border-t border-gray-200" x-data="{
+                    seoTitle: '{{ old('seo_title') }}',
+                    seoDesc: '{{ old('seo_description') }}',
+                    focusKw: '',
+                    get titleLen() { return this.seoTitle.length; },
+                    get descLen() { return this.seoDesc.length; },
+                    get titleColor() { return this.titleLen > 60 ? 'text-red-600' : this.titleLen > 50 ? 'text-yellow-600' : 'text-green-600'; },
+                    get descColor() { return this.descLen > 160 ? 'text-red-600' : this.descLen > 140 ? 'text-yellow-600' : 'text-green-600'; }
+                }">
+                    <h3 class="text-sm font-bold text-gray-900 mb-4 uppercase flex items-center gap-2">
+                        SEO Settings
+                        <span class="text-xs font-normal text-gray-400 normal-case">Helps rank on Google</span>
+                    </h3>
+
+                    <!-- Focus Keyword -->
                     <div class="mb-4">
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">SEO Title (Tab Title)</label>
-                        <input type="text" name="seo_title" value="{{ old('seo_title') }}" class="w-full border-gray-300 rounded-lg shadow-sm text-sm focus:border-red-500 focus:ring-red-200">
+                        <label class="block text-xs font-semibold text-gray-500 mb-1">Focus Keyword</label>
+                        <input type="text" name="focus_keyword" x-model="focusKw" value="{{ old('focus_keyword') }}" placeholder="e.g. Bangladesh tour packages" class="w-full border-gray-300 rounded-lg shadow-sm text-sm focus:border-red-500 focus:ring-red-200">
+                        <p class="text-xs text-gray-400 mt-1">Primary keyword this post should rank for.</p>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">Meta Description</label>
-                        <textarea name="seo_description" rows="4" class="w-full border-gray-300 rounded-lg shadow-sm text-sm focus:border-red-500 focus:ring-red-200">{{ old('seo_description') }}</textarea>
+                    <!-- SEO Title -->
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-xs font-semibold text-gray-500">SEO Title</label>
+                            <span class="text-xs font-semibold" :class="titleColor" x-text="titleLen + '/60'"></span>
+                        </div>
+                        <input type="text" name="seo_title" x-model="seoTitle" value="{{ old('seo_title') }}" maxlength="70" class="w-full border-gray-300 rounded-lg shadow-sm text-sm focus:border-red-500 focus:ring-red-200" placeholder="Leave blank to use post title">
+                        <div class="mt-1 h-1 rounded-full bg-gray-100 overflow-hidden">
+                            <div class="h-full rounded-full transition-all" :class="titleLen > 60 ? 'bg-red-500' : titleLen > 50 ? 'bg-yellow-400' : 'bg-green-500'" :style="'width:' + Math.min(100, (titleLen/60)*100) + '%'"></div>
+                        </div>
+                    </div>
+
+                    <!-- Meta Description -->
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-xs font-semibold text-gray-500">Meta Description</label>
+                            <span class="text-xs font-semibold" :class="descColor" x-text="descLen + '/160'"></span>
+                        </div>
+                        <textarea name="seo_description" x-model="seoDesc" rows="3" maxlength="180" class="w-full border-gray-300 rounded-lg shadow-sm text-sm focus:border-red-500 focus:ring-red-200" placeholder="Compelling summary that appears in Google results...">{{ old('seo_description') }}</textarea>
+                        <div class="mt-1 h-1 rounded-full bg-gray-100 overflow-hidden">
+                            <div class="h-full rounded-full transition-all" :class="descLen > 160 ? 'bg-red-500' : descLen > 140 ? 'bg-yellow-400' : 'bg-green-500'" :style="'width:' + Math.min(100, (descLen/160)*100) + '%'"></div>
+                        </div>
+                    </div>
+
+                    <!-- SERP Preview -->
+                    <div class="mt-4 p-4 bg-white rounded-lg border border-gray-200">
+                        <p class="text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wider">Google Preview</p>
+                        <div class="text-[13px] text-blue-700 font-medium leading-tight truncate" x-text="seoTitle || 'Your post title will appear here'"></div>
+                        <div class="text-[11px] text-green-700 mt-0.5 truncate">{{ url('/blog') }}/<span id="serp-slug">your-post-slug</span></div>
+                        <div class="text-[12px] text-gray-600 mt-1 line-clamp-2 leading-relaxed" x-text="seoDesc || 'Your meta description will appear here. Make it compelling to improve click-through rates.'"></div>
                     </div>
                 </div>
 
@@ -149,6 +193,28 @@
                 
                 reader.readAsDataURL(input.files[0]);
             }
+        }
+
+        // Slug preview from title
+        function slugify(text) {
+            return text.toLowerCase().trim()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/[\s_-]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+        const titleInput = document.getElementById('post-title');
+        const slugPreview = document.getElementById('slug-preview');
+        const serpSlug = document.getElementById('serp-slug');
+        if (titleInput) {
+            titleInput.addEventListener('input', function() {
+                const slug = slugify(this.value);
+                if (slugPreview) slugPreview.textContent = slug || '—';
+                if (serpSlug) serpSlug.textContent = slug || 'your-post-slug';
+            });
+            // Init
+            const initSlug = slugify(titleInput.value);
+            if (slugPreview) slugPreview.textContent = initSlug || '—';
+            if (serpSlug) serpSlug.textContent = initSlug || 'your-post-slug';
         }
 
         let dayCount = 0;

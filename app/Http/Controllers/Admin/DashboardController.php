@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Package;
+use App\Models\Post;
 use App\Models\Visa;
 use Illuminate\Http\Request;
 
@@ -33,6 +34,11 @@ class DashboardController extends Controller
         $newBookingsCount = Booking::where('status', 'pending')->count();
         $confirmedBookingsCount = Booking::where('status', 'confirmed')->count();
 
+        // Blog Stats
+        $publishedPostsCount = Post::where('is_published', true)->count();
+        $draftPostsCount = Post::where('is_published', false)->count();
+        $recentPosts = Post::latest()->take(3)->get();
+
         return view('admin.dashboard', compact(
             'totalPackages',
             'activeVisas',
@@ -40,7 +46,10 @@ class DashboardController extends Controller
             'totalRevenue',
             'recentBookings',
             'newBookingsCount',
-            'confirmedBookingsCount'
+            'confirmedBookingsCount',
+            'publishedPostsCount',
+            'draftPostsCount',
+            'recentPosts'
         ));
     }
 }
