@@ -45,14 +45,8 @@
                 <!-- Content -->
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Content</label>
-                    @php
-                        $contentValue = old('content', '');
-                        if ($contentValue !== '' && $contentValue === strip_tags($contentValue)) {
-                            $lines = explode("\n", $contentValue);
-                            $contentValue = '<p>' . implode('</p><p>', array_map('e', $lines)) . '</p>';
-                        }
-                    @endphp
-                    <textarea name="content" rows="15" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 p-4" placeholder="Write your article content here...">{!! $contentValue !!}</textarea>
+                    <div id="quill-editor" class="bg-white rounded-lg border border-gray-300" style="min-height: 400px;"></div>
+                    <textarea name="content" class="hidden">{{ old('content') }}</textarea>
                     @error('content') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -168,15 +162,50 @@
         </div>
     </form>
 
+    @push('styles')
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <style>
+        #quill-editor .ql-editor { min-height: 400px; font-size: 15px; line-height: 1.7; }
+        #quill-editor .ql-toolbar { border-radius: 0.5rem 0.5rem 0 0; border-color: #d1d5db; background: #f9fafb; }
+        #quill-editor .ql-container { border-radius: 0 0 0.5rem 0.5rem; border-color: #d1d5db; }
+    </style>
+    @endpush
+
     @push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
     <script>
-        tinymce.init({
-            selector: 'textarea[name="content"]',
-            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-            height: 500
-        });
+        (function() {
+            var contentTextarea = document.querySelector('textarea[name="content"]');
+            var quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                placeholder: 'Write your article content here...',
+                modules: {
+                    toolbar: [
+                        [{ header: [1, 2, 3, 4, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ color: [] }, { background: [] }],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        [{ indent: '-1' }, { indent: '+1' }],
+                        [{ align: [] }],
+                        ['link', 'image', 'blockquote', 'code-block'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // Load existing content on validation re-display (admin-authored HTML)
+            var existing = contentTextarea.value.trim();
+            if (existing) {
+                quill.clipboard.dangerouslyPasteHTML(existing);
+            }
+
+            // Sync Quill output to hidden textarea before submit
+            window._quillSync = function() {
+                var html = quill.root.innerHTML;
+                contentTextarea.value = (html === '<p><br></p>') ? '' : html;
+            };
+            contentTextarea.closest('form').addEventListener('submit', window._quillSync, true);
+        })();
 
         function previewImage(input) {
             const preview = document.getElementById('image-preview');

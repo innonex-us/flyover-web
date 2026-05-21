@@ -13,6 +13,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 <body class="font-sans antialiased bg-gray-100">
     <div class="min-h-screen flex">
@@ -121,9 +122,12 @@
                 uploading: false,
                 submitForm(event) {
                     const form = event.target;
-                    // Sync TinyMCE (and other rich editors) content into form fields before submit
+                    // Sync rich editors content into form fields before submit
                     if (typeof tinymce !== 'undefined') {
                         tinymce.triggerSave();
+                    }
+                    if (typeof window._quillSync === 'function') {
+                        window._quillSync();
                     }
                     const formData = new FormData(form);
                     const xhr = new XMLHttpRequest();
