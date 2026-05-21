@@ -129,6 +129,9 @@
                     if (typeof window._quillSync === 'function') {
                         window._quillSync();
                     }
+                    if (typeof window._joditSync === 'function') {
+                        window._joditSync();
+                    }
                     const formData = new FormData(form);
                     const xhr = new XMLHttpRequest();
 

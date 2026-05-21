@@ -45,8 +45,7 @@
                 <!-- Content -->
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Content</label>
-                    <div id="quill-editor" class="bg-white rounded-lg border border-gray-300" style="min-height: 400px;"></div>
-                    <textarea name="content" class="hidden">{{ old('content') }}</textarea>
+                    <textarea name="content" id="jodit-content">{{ old('content') }}</textarea>
                     @error('content') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -163,48 +162,62 @@
     </form>
 
     @push('styles')
-    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jodit@3/build/jodit.min.css">
     <style>
-        #quill-editor .ql-editor { min-height: 400px; font-size: 15px; line-height: 1.7; }
-        #quill-editor .ql-toolbar { border-radius: 0.5rem 0.5rem 0 0; border-color: #d1d5db; background: #f9fafb; }
-        #quill-editor .ql-container { border-radius: 0 0 0.5rem 0.5rem; border-color: #d1d5db; }
+        .jodit-container { border-radius: 0.5rem !important; border-color: #d1d5db !important; }
+        .jodit-toolbar__box { border-radius: 0.5rem 0.5rem 0 0 !important; background: #f9fafb !important; }
+        .jodit-wysiwyg { font-size: 15px !important; line-height: 1.75 !important; }
     </style>
     @endpush
 
     @push('scripts')
-    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jodit@3/build/jodit.min.js"></script>
     <script>
         (function() {
-            var contentTextarea = document.querySelector('textarea[name="content"]');
-            var quill = new Quill('#quill-editor', {
-                theme: 'snow',
-                placeholder: 'Write your article content here...',
-                modules: {
-                    toolbar: [
-                        [{ header: [1, 2, 3, 4, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ color: [] }, { background: [] }],
-                        [{ list: 'ordered' }, { list: 'bullet' }],
-                        [{ indent: '-1' }, { indent: '+1' }],
-                        [{ align: [] }],
-                        ['link', 'image', 'blockquote', 'code-block'],
-                        ['clean']
-                    ]
-                }
+            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            var editor = Jodit.make('textarea[name="content"]', {
+                height: 520,
+                language: 'en',
+                toolbarAdaptive: false,
+                spellcheck: true,
+                showCharsCounter: true,
+                showWordsCounter: true,
+                showXPathInStatusbar: false,
+                allowResizeY: true,
+                allowResizeX: false,
+                buttons: [
+                    'source', '|',
+                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'superscript', 'subscript', '|',
+                    'ul', 'ol', '|',
+                    'outdent', 'indent', '|',
+                    'font', 'fontsize', 'brush', 'paragraph', '|',
+                    'image', 'video', 'table', 'link', '|',
+                    'align', '|',
+                    'undo', 'redo', '|',
+                    'hr', 'eraser', '|',
+                    'fullsize', 'print', '|',
+                    'find'
+                ],
+                uploader: {
+                    url: '{{ route("admin.upload.image") }}',
+                    headers: { 'X-CSRF-TOKEN': csrfToken },
+                    isSuccess: function(resp) { return !resp.error; },
+                    getMessage: function(resp) { return resp.message || 'Upload failed'; },
+                    process: function(resp) { return resp; },
+                    defaultHandlerSuccess: function(data) {
+                        var j = this;
+                        if (data.files && data.files.length) {
+                            data.files.forEach(function(url) { j.s.insertImage(url); });
+                        }
+                    }
+                },
+                filebrowser: { ajax: { url: '{{ route("admin.upload.image") }}' } }
             });
 
-            // Load existing content on validation re-display (admin-authored HTML)
-            var existing = contentTextarea.value.trim();
-            if (existing) {
-                quill.clipboard.dangerouslyPasteHTML(existing);
-            }
-
-            // Sync Quill output to hidden textarea before submit
-            window._quillSync = function() {
-                var html = quill.root.innerHTML;
-                contentTextarea.value = (html === '<p><br></p>') ? '' : html;
-            };
-            contentTextarea.closest('form').addEventListener('submit', window._quillSync, true);
+            window._joditSync = function() { editor.synchronizeValues(); };
+            document.querySelector('textarea[name="content"]').closest('form')
+                .addEventListener('submit', window._joditSync, true);
         })();
 
         function previewImage(input) {
