@@ -90,7 +90,15 @@
                         </div>
                     @endif
 
-                    <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 prose prose-lg prose-red max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-img:rounded-xl prose-a:text-red-600 prose-a:no-underline hover:prose-a:underline">
+                    <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 prose prose-lg prose-red max-w-none
+                         prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600
+                         prose-img:rounded-xl prose-img:max-w-full prose-img:h-auto
+                         prose-a:text-red-600 prose-a:no-underline hover:prose-a:underline
+                         prose-table:w-full
+                         [&_img]:max-w-full [&_img]:h-auto
+                         [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:h-auto [&_iframe]:rounded-xl [&_iframe]:my-4
+                         [&_table]:block [&_table]:overflow-x-auto [&_table]:whitespace-normal
+                         [&_pre]:overflow-x-auto [&_pre]:rounded-lg">
                         @php
                             $content = $post->content ?? '';
                             $hasHtml = $content !== strip_tags($content);
