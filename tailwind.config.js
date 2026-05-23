@@ -12,7 +12,28 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Geist', 'Inter Tight', ...defaultTheme.fontFamily.sans],
+                serif: ['Instrument Serif', 'Cormorant Garamond', 'Georgia', 'serif'],
+                mono: ['JetBrains Mono', 'IBM Plex Mono', 'ui-monospace', 'monospace'],
+            },
+            colors: {
+                brand: {
+                    red:      '#C8102E',
+                    'red-deep': '#9E0B23',
+                    'red-ink': '#5C0814',
+                    cream:    '#FAF6EE',
+                    'cream-deep': '#F1ECDF',
+                    paper:    '#FFFFFF',
+                    ink:      '#18130E',
+                    ink2:     '#3A332B',
+                    mute:     '#7A7166',
+                    rule:     '#E4DCC9',
+                    'rule-soft': '#EFE9DA',
+                    emerald:  '#1F4A3D',
+                },
+            },
+            screens: {
+                'xs': '480px',
             },
         },
     },

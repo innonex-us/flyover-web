@@ -1,183 +1,365 @@
 <x-admin-layout>
-    <div class="mb-8">
-        <a href="{{ route('admin.visas.index') }}" class="text-gray-500 hover:text-gray-700 flex items-center mb-4 transition">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Back to Visas
+
+    {{-- Page header --}}
+    <div class="mb-6">
+        <a href="{{ route('admin.visas.index') }}"
+           class="inline-flex items-center gap-1.5 text-sm transition hover:opacity-70"
+           style="color:#6B7280;">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Visa Services
         </a>
-        <h2 class="text-3xl font-bold text-gray-800">Add New Visa</h2>
+        <h1 class="mt-3 text-2xl font-bold" style="color:#0F1419;">Add New Visa Service</h1>
     </div>
 
-    <form action="{{ route('admin.visas.store') }}" method="POST" enctype="multipart/form-data" class="max-w-4xl relative" x-data="formUploader" @submit.prevent="submitForm">
+    <form action="{{ route('admin.visas.store') }}" method="POST" enctype="multipart/form-data"
+          class="relative" x-data="formUploader" @submit.prevent="submitForm">
         @csrf
-        
-        <!-- Upload Overlay -->
-        <div x-show="uploading" 
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            class="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center rounded-xl"
-            style="display: none;">
-            <div class="w-64 bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
-                <div class="bg-red-600 h-4 rounded-full transition-all duration-300" :style="`width: ${progress}%`"></div>
+
+        {{-- Upload progress overlay --}}
+        <div x-show="uploading"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-xl backdrop-blur-sm"
+             style="background:rgba(255,255,255,0.85); display:none;">
+            <div class="mb-3 h-2 w-64 overflow-hidden rounded-full" style="background:#E6E8EC;">
+                <div class="h-2 rounded-full transition-all duration-300" style="background:#C8102E;"
+                     :style="`width:${progress}%`"></div>
             </div>
-            <div class="text-gray-800 font-bold text-lg">Uploading... <span x-text="progress + '%'"></span></div>
-            <div class="text-gray-500 text-sm mt-2">Please wait while we process your files.</div>
+            <p class="font-semibold" style="color:#0F1419;">Uploading… <span x-text="progress + '%'"></span></p>
+            <p class="mt-1 text-xs" style="color:#6B7280;">Please wait while we process your files.</p>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 space-y-8">
-            
-            <!-- Basic Info -->
-            <div>
-                <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-6">Basic Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Country</label>
-                        <input type="text" name="country" value="{{ old('country') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. Thailand">
-                        @error('country') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
+        {{-- Two-column layout --}}
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Visa Type</label>
-                        <select name="type" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
-                            <option value="Tourist Visa" {{ old('type') == 'Tourist Visa' ? 'selected' : '' }}>Tourist Visa</option>
-                            <option value="Business Visa" {{ old('type') == 'Business Visa' ? 'selected' : '' }}>Business Visa</option>
-                            <option value="Student Visa" {{ old('type') == 'Student Visa' ? 'selected' : '' }}>Student Visa</option>
-                            <option value="Work Visa" {{ old('type') == 'Work Visa' ? 'selected' : '' }}>Work Visa</option>
-                            <option value="E-Visa" {{ old('type') == 'E-Visa' ? 'selected' : '' }}>E-Visa</option>
-                        </select>
-                        @error('type') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Price (BDT)</label>
-                        <input type="number" name="price" value="{{ old('price') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="0.00">
-                        @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
+            {{-- LEFT — main content (8/12) --}}
+            <div class="space-y-6 lg:col-span-8">
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Validity</label>
-                        <input type="text" name="validity" value="{{ old('validity') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. 3 Months">
-                        @error('validity') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
+                {{-- Basic Information --}}
+                <div class="rounded-xl p-6" style="background:#fff; border:1px solid #E6E8EC;">
+                    <p class="mb-5 text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">Basic Information</p>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Maximum Stay</label>
-                        <input type="text" name="maximum_stay" value="{{ old('maximum_stay') }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200" placeholder="e.g. 30 Days">
-                        @error('maximum_stay') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-                </div>
-            </div>
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
 
-            <!-- Docs & Description -->
-            <div>
-                <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-6">Details</h3>
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Visa Summary</label>
-                        <textarea name="description" rows="4" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('description') }}</textarea>
-                        <p class="text-xs text-gray-500 mt-1">Use a new line for each summary point. Line breaks will be preserved on the website.</p>
-                        @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-
-                    <div x-data="fileUploader">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Thumbnail Image (Required)</label>
-                        <input type="file" name="thumbnail" @change="handleFileChange" required accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
-                        @error('thumbnail') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                        <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display: none;">
-                            Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
+                        {{-- Country --}}
+                        <div>
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Country <span style="color:#C8102E;">*</span>
+                            </label>
+                            <input type="text" name="country" value="{{ old('country') }}" required
+                                   placeholder="e.g. Thailand"
+                                   class="w-full rounded-lg border px-3 py-2 text-sm transition focus:outline-none focus:ring-2"
+                                   style="border-color:{{ $errors->has('country') ? '#C8102E' : '#E6E8EC' }}; color:#0F1419; focus:border-color:#C8102E;">
+                            @error('country')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
                         </div>
+
+                        {{-- Slug --}}
+                        <div>
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Slug
+                            </label>
+                            <input type="text" name="slug" value="{{ old('slug') }}"
+                                   placeholder="auto-generated if blank"
+                                   class="w-full rounded-lg border px-3 py-2 text-sm transition focus:outline-none focus:ring-2"
+                                   style="border-color:{{ $errors->has('slug') ? '#C8102E' : '#E6E8EC' }}; color:#0F1419;">
+                            @error('slug')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Visa Type --}}
+                        <div>
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Visa Type <span style="color:#C8102E;">*</span>
+                            </label>
+                            <select name="type" required
+                                    class="w-full rounded-lg border px-3 py-2 text-sm transition focus:outline-none focus:ring-2"
+                                    style="border-color:{{ $errors->has('type') ? '#C8102E' : '#E6E8EC' }}; color:#0F1419;">
+                                @foreach(['Tourist Visa','Business Visa','Student Visa','Work Visa','E-Visa'] as $t)
+                                    <option value="{{ $t }}" {{ old('type') == $t ? 'selected' : '' }}>{{ $t }}</option>
+                                @endforeach
+                            </select>
+                            @error('type')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Fee --}}
+                        <div>
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Fee (BDT) <span style="color:#C8102E;">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-sm" style="color:#6B7280;">৳</span>
+                                <input type="number" name="price" value="{{ old('price') }}" required min="0" step="0.01"
+                                       placeholder="0"
+                                       class="w-full rounded-lg border py-2 pl-7 pr-3 text-sm transition focus:outline-none focus:ring-2"
+                                       style="border-color:{{ $errors->has('price') ? '#C8102E' : '#E6E8EC' }}; color:#0F1419;">
+                            </div>
+                            @error('price')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Validity --}}
+                        <div>
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Validity
+                            </label>
+                            <input type="text" name="validity" value="{{ old('validity') }}"
+                                   placeholder="e.g. 3 Months"
+                                   class="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                                   style="border-color:#E6E8EC; color:#0F1419;">
+                            @error('validity')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Maximum Stay --}}
+                        <div>
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Maximum Stay
+                            </label>
+                            <input type="text" name="maximum_stay" value="{{ old('maximum_stay') }}"
+                                   placeholder="e.g. 30 Days"
+                                   class="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                                   style="border-color:#E6E8EC; color:#0F1419;">
+                            @error('maximum_stay')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                     </div>
                 </div>
-            </div>
-            
-            <!-- Additional Info -->
-            <div x-data="{ tabs: 'required_documents' }">
-                <div class="border-b border-gray-200 mb-4">
-                    <nav class="-mb-px flex space-x-6">
-                        <a href="#" @click.prevent="tabs = 'required_documents'" :class="tabs === 'required_documents' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium">Required Documents</a>
-                        <a href="#" @click.prevent="tabs = 'fees'" :class="tabs === 'fees' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium">Fees & Terms</a>
-                    </nav>
+
+                {{-- Description & Thumbnail --}}
+                <div class="rounded-xl p-6" style="background:#fff; border:1px solid #E6E8EC;">
+                    <p class="mb-5 text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">Details</p>
+
+                    <div class="space-y-5">
+
+                        {{-- Visa Summary --}}
+                        <div>
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Visa Summary <span style="color:#C8102E;">*</span>
+                            </label>
+                            <textarea name="description" rows="5" required
+                                      class="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                                      style="border-color:{{ $errors->has('description') ? '#C8102E' : '#E6E8EC' }}; color:#0F1419;">{{ old('description') }}</textarea>
+                            <p class="mt-1 text-xs" style="color:#6B7280;">One summary point per line. Line breaks are preserved on the public site.</p>
+                            @error('description')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Thumbnail --}}
+                        <div x-data="fileUploader">
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Thumbnail Image <span style="color:#C8102E;">*</span>
+                            </label>
+                            <input type="file" name="thumbnail" @change="handleFileChange" required accept="image/*"
+                                   class="w-full rounded-lg border px-3 py-2 text-sm file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-white transition"
+                                   style="border-color:#E6E8EC; file:background:#C8102E;">
+                            @error('thumbnail')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
+                            <p x-show="fileName" class="mt-1.5 text-xs" style="color:#065F46; display:none;">
+                                Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
+                            </p>
+                        </div>
+
+                        {{-- Requirements --}}
+                        <div>
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Requirements (plain text)
+                            </label>
+                            <textarea name="requirements" rows="4"
+                                      class="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                                      style="border-color:#E6E8EC; color:#0F1419;">{{ old('requirements') }}</textarea>
+                            @error('requirements')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                    </div>
                 </div>
-                
-                <!-- JSON Documents Handling Placeholder: For now simple textareas for structured text if JSON logic is too complex for basic CRUD -->
-                <!-- We will rely on simple fields or text areas for now as user didn't ask for full JSON builder UI yet -->
-                <div x-show="tabs === 'required_documents'"> 
-                    <div x-data="{ 
-                        sections: [
-                            { 
-                                section: 'Job Holders', 
-                                documents: [''] 
-                            }
-                        ] 
-                    }">
-                        <label class="block text-sm font-semibold text-gray-700 mb-4">Required Documents List</label>
+
+                {{-- Required Documents builder --}}
+                <div class="rounded-xl p-6" style="background:#fff; border:1px solid #E6E8EC;"
+                     x-data="{ tabs: 'required_documents' }">
+
+                    {{-- Tab nav --}}
+                    <div class="mb-5 flex gap-1" style="border-bottom:1px solid #E6E8EC;">
+                        <button type="button"
+                                @click="tabs = 'required_documents'"
+                                :class="tabs === 'required_documents' ? 'border-b-2 font-semibold' : 'opacity-60'"
+                                class="pb-3 pr-4 text-xs uppercase tracking-wider transition"
+                                :style="tabs === 'required_documents' ? 'border-color:#C8102E; color:#C8102E;' : 'color:#6B7280;'">
+                            Required Documents
+                        </button>
+                        <button type="button"
+                                @click="tabs = 'fees'"
+                                :class="tabs === 'fees' ? 'border-b-2 font-semibold' : 'opacity-60'"
+                                class="pb-3 pr-4 text-xs uppercase tracking-wider transition"
+                                :style="tabs === 'fees' ? 'border-color:#C8102E; color:#C8102E;' : 'color:#6B7280;'">
+                            Fees &amp; Terms
+                        </button>
+                    </div>
+
+                    {{-- Required Documents tab --}}
+                    <div x-show="tabs === 'required_documents'"
+                         x-data="{
+                             sections: [{ section: 'General Requirements', documents: [''] }]
+                         }">
+
                         <template x-for="(section, sIndex) in sections" :key="sIndex">
-                            <div class="mb-6 p-5 border border-gray-200 rounded-xl bg-gray-50/50">
-                                <div class="flex justify-between items-center mb-4">
-                                    <input type="text" :name="'required_documents[' + sIndex + '][section]'" x-model="sections[sIndex].section" class="font-bold text-gray-800 bg-white border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 w-full max-w-md" placeholder="Section Title (e.g. Job Holders)" required>
-                                    <button type="button" @click="sections.splice(sIndex, 1)" class="text-red-500 hover:text-red-700 p-2 ml-4 bg-white rounded-lg border border-red-100 shadow-sm" title="Remove Section">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            <div class="mb-4 rounded-lg p-4" style="border:1px solid #E6E8EC; background:#F4F5F7;">
+                                <div class="mb-3 flex items-center gap-3">
+                                    <input type="text"
+                                           :name="'required_documents[' + sIndex + '][section]'"
+                                           x-model="sections[sIndex].section"
+                                           placeholder="Section title (e.g. Job Holders)"
+                                           required
+                                           class="flex-1 rounded-lg border px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2"
+                                           style="border-color:#E6E8EC; color:#0F1419; background:#fff;">
+                                    <button type="button" @click="sections.splice(sIndex, 1)"
+                                            class="flex-shrink-0 rounded-lg border p-2 transition hover:opacity-70"
+                                            style="border-color:#FEE2E2; color:#991B1B; background:#FEF2F2;"
+                                            title="Remove section">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
                                     </button>
                                 </div>
-                                
-                                <div class="space-y-3 pl-4 sm:pl-6 border-l-2 border-red-200">
+
+                                <div class="space-y-2 border-l-2 pl-4" style="border-color:#C8102E;">
                                     <template x-for="(doc, dIndex) in sections[sIndex].documents" :key="dIndex">
-                                        <div class="flex gap-2 items-start">
-                                            <input type="text" :name="'required_documents[' + sIndex + '][documents][]'" x-model="sections[sIndex].documents[dIndex]" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 text-sm" placeholder="e.g. A passport valid for at least seven (7) months..." required>
-                                            <button type="button" @click="sections[sIndex].documents.splice(dIndex, 1)" x-show="sections[sIndex].documents.length > 1" class="text-gray-400 hover:text-red-600 p-2 mt-1">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        <div class="flex items-center gap-2">
+                                            <input type="text"
+                                                   :name="'required_documents[' + sIndex + '][documents][]'"
+                                                   x-model="sections[sIndex].documents[dIndex]"
+                                                   placeholder="e.g. Valid passport with 6+ months validity"
+                                                   required
+                                                   class="flex-1 rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2"
+                                                   style="border-color:#E6E8EC; color:#0F1419; background:#fff;">
+                                            <button type="button"
+                                                    @click="sections[sIndex].documents.splice(dIndex, 1)"
+                                                    x-show="sections[sIndex].documents.length > 1"
+                                                    class="rounded p-1 transition hover:opacity-70"
+                                                    style="color:#6B7280;">
+                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                </svg>
                                             </button>
                                         </div>
                                     </template>
-                                    <button type="button" @click="sections[sIndex].documents.push('')" class="text-xs text-red-600 font-bold hover:underline py-1.5 px-3 bg-white rounded border border-red-100 flex items-center mt-2 shadow-sm transition-shadow hover:shadow">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> Add Document
+                                    <button type="button"
+                                            @click="sections[sIndex].documents.push('')"
+                                            class="mt-1 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition hover:opacity-80"
+                                            style="border-color:#E6E8EC; color:#C8102E; background:#fff;">
+                                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                        </svg>
+                                        Add Document
                                     </button>
                                 </div>
                             </div>
                         </template>
-                        
-                        <button type="button" @click="sections.push({ section: '', documents: [''] })" class="inline-flex items-center mt-2 text-sm text-white font-bold hover:bg-red-700 py-2.5 px-4 bg-red-600 rounded-xl shadow-sm hover:shadow transition-all">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> Add New Section
+
+                        <button type="button"
+                                @click="sections.push({ section: '', documents: [''] })"
+                                class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+                                style="background:#C8102E;">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                            </svg>
+                            Add Section
                         </button>
                     </div>
-                </div>
 
-                <div x-show="tabs === 'fees'" style="display: none;">
-                    <div class="space-y-4">
+                    {{-- Fees & Terms tab --}}
+                    <div x-show="tabs === 'fees'" style="display:none;" class="space-y-5">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Terms & Conditions</label>
-                            <textarea name="terms" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('terms') }}</textarea>
-                            @error('terms') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Terms &amp; Conditions
+                            </label>
+                            <textarea name="terms" rows="4"
+                                      class="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                                      style="border-color:#E6E8EC; color:#0F1419;">{{ old('terms') }}</textarea>
+                            @error('terms')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Important Notes</label>
-                            <textarea name="important_notes" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">{{ old('important_notes') }}</textarea>
-                            @error('important_notes') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                                Important Notes
+                            </label>
+                            <textarea name="important_notes" rows="4"
+                                      class="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                                      style="border-color:#E6E8EC; color:#0F1419;">{{ old('important_notes') }}</textarea>
+                            @error('important_notes')
+                                <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
+
                 </div>
+
             </div>
 
-            <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
-                <div class="flex items-center">
-                    <label class="flex items-center space-x-3 cursor-pointer bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
-                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50 h-5 w-5">
-                        <div>
-                            <span class="text-sm font-bold text-gray-900 block">Active Status</span>
-                            <span class="text-xs text-gray-500 block">Show on website</span>
-                        </div>
-                    </label>
-                    @error('is_active') <p class="text-red-500 text-xs mt-1 ml-3">{{ $message }}</p> @enderror
+            {{-- RIGHT — publish sidebar (4/12) --}}
+            <div class="lg:col-span-4">
+                <div class="sticky top-6 rounded-xl p-6" style="background:#fff; border:1px solid #E6E8EC;">
+                    <p class="mb-5 text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">Publish</p>
+
+                    {{-- is_active toggle --}}
+                    <div class="mb-6" x-data="{ active: {{ old('is_active', true) ? 'true' : 'false' }} }">
+                        <label class="mb-1.5 block text-[10px] font-semibold uppercase tracking-widest" style="color:#6B7280;">
+                            Visibility
+                        </label>
+                        <button type="button"
+                                @click="active = !active"
+                                class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none"
+                                :style="active ? 'background:#C8102E;' : 'background:#E6E8EC;'"
+                                role="switch"
+                                :aria-checked="active.toString()">
+                            <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200"
+                                  :class="active ? 'translate-x-5' : 'translate-x-0'"></span>
+                        </button>
+                        <input type="hidden" name="is_active" :value="active ? '1' : '0'">
+                        <p class="mt-2 text-xs" style="color:#6B7280;">
+                            <span x-show="active" style="color:#065F46;">Active — visible on the website</span>
+                            <span x-show="!active" style="color:#6B7280;">Inactive — hidden from public</span>
+                        </p>
+                        @error('is_active')
+                            <p class="mt-1 text-xs" style="color:#C8102E;">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div style="border-top:1px solid #E6E8EC;" class="pt-5 space-y-3">
+                        <button type="submit"
+                                class="w-full rounded-lg py-2.5 text-sm font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2"
+                                style="background:#C8102E;">
+                            Create Visa Service
+                        </button>
+                        <a href="{{ route('admin.visas.index') }}"
+                           class="block w-full rounded-lg border py-2.5 text-center text-sm font-semibold transition hover:opacity-70"
+                           style="border-color:#E6E8EC; color:#6B7280;">
+                            Cancel
+                        </a>
+                    </div>
                 </div>
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
-                    Create Visa Service
-                </button>
             </div>
 
         </div>
     </form>
+
 </x-admin-layout>

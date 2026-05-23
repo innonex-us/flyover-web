@@ -1,5 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 [x-cloak] { display: none !important; }
+
+@layer base {
+    :root {
+        --red:       #C8102E;
+        --red-deep:  #9E0B23;
+        --cream:     #FAF6EE;
+        --cream-deep:#F1ECDF;
+        --paper:     #FFFFFF;
+        --ink:       #18130E;
+        --ink2:      #3A332B;
+        --mute:      #7A7166;
+        --rule:      #E4DCC9;
+        --rule-soft: #EFE9DA;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: 'Geist', 'Inter Tight', system-ui, sans-serif;
+        color: var(--ink);
+        background: var(--cream);
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+@layer components {
+    /* ── Typography ──────────────────────────────────────── */
+    .fb-serif   { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; letter-spacing: -0.01em; }
+    .fb-mono    { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mute); }
+    .fb-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); }
+
+    .fb-h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(48px, 7vw, 88px); line-height: 0.96; letter-spacing: -0.025em; }
+    .fb-h2 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(32px, 4vw, 56px); line-height: 1.02; letter-spacing: -0.02em; }
+    .fb-h3 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(24px, 3vw, 36px); line-height: 1.1; letter-spacing: -0.015em; }
+
+    .ota-h1 { font-weight: 700; font-size: clamp(40px, 5.5vw, 76px); line-height: 1.0; letter-spacing: -0.025em; }
+    .ota-h2 { font-weight: 700; font-size: clamp(24px, 3vw, 38px); line-height: 1.1; letter-spacing: -0.02em; }
+    .ota-h3 { font-weight: 600; font-size: clamp(18px, 2vw, 24px); line-height: 1.2; letter-spacing: -0.01em; }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn-red {
+        @apply inline-flex items-center justify-center gap-2 font-semibold text-sm px-5 py-3 rounded-full border-0 cursor-pointer transition-all duration-150;
+        background: var(--red); color: #fff;
+        box-shadow: 0 4px 12px rgba(200,16,46,0.25);
+    }
+    .btn-red:hover { background: var(--red-deep); transform: translateY(-1px); }
+
+    .btn-ghost {
+        @apply inline-flex items-center justify-center gap-2 font-semibold text-sm px-5 py-3 rounded-full cursor-pointer transition-all duration-150;
+        background: #fff; color: var(--ink);
+        border: 1px solid var(--rule);
+    }
+    .btn-ghost:hover { border-color: var(--ink); background: var(--paper); }
+
+    .btn-ink {
+        @apply inline-flex items-center justify-center gap-2 font-semibold text-sm px-5 py-3 rounded-full border-0 cursor-pointer transition-all duration-150;
+        background: var(--ink); color: var(--cream);
+    }
+    .btn-ink:hover { background: #000; }
+
+    /* ── OTA rounded buttons ──────────────────────────────── */
+    .ota-btn-primary {
+        @apply inline-flex items-center justify-center gap-2 font-semibold text-sm px-5 py-3 cursor-pointer transition-all duration-150;
+        background: var(--red); color: #fff; border-radius: 10px; border: none;
+        box-shadow: 0 4px 12px rgba(200,16,46,0.25);
+    }
+    .ota-btn-primary:hover { background: var(--red-deep); transform: translateY(-1px); }
+
+    .ota-btn-ghost {
+        @apply inline-flex items-center justify-center gap-2 font-semibold text-sm px-5 py-3 cursor-pointer transition-all duration-150;
+        background: #fff; color: var(--ink); border: 1px solid var(--rule); border-radius: 10px;
+    }
+    .ota-btn-ghost:hover { border-color: var(--ink); }
+
+    .ota-btn-dark {
+        @apply inline-flex items-center justify-center gap-2 font-semibold text-sm px-5 py-3 cursor-pointer transition-all duration-150;
+        background: var(--ink); color: #fff; border-radius: 10px; border: none;
+    }
+
+    /* ── Cards ────────────────────────────────────────────── */
+    .ota-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid var(--rule);
+        box-shadow: 0 1px 2px rgba(24,19,14,0.04);
+        transition: box-shadow .15s, transform .15s;
+    }
+    .ota-card:hover {
+        box-shadow: 0 12px 32px rgba(24,19,14,0.08);
+        transform: translateY(-2px);
+    }
+
+    .fb-card {
+        background: var(--paper);
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    /* ── Tags / badges ────────────────────────────────────── */
+    .ota-tag-red    { @apply inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-md; background: var(--red); color: #fff; }
+    .ota-tag-soft   { @apply inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-md; background: #FFE9EC; color: var(--red); }
+    .ota-tag-green  { @apply inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-md; background: #E8F5EC; color: #1F6E3D; }
+    .ota-tag-amber  { @apply inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-md; background: #FFF4D6; color: #8A5A00; }
+    .ota-eyebrow    { @apply inline-block text-xs font-semibold tracking-wide px-3 py-1.5 rounded-full; color: var(--red); background: #FFE9EC; }
+
+    /* ── Form fields ──────────────────────────────────────── */
+    .fb-field {
+        display: flex; flex-direction: column; gap: 4px;
+        padding: 14px 18px;
+        background: var(--paper);
+        border-radius: 14px;
+        border: 1px solid var(--rule);
+    }
+    .fb-field-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mute);
+    }
+    .fb-input {
+        font-size: 14px; color: var(--ink); background: transparent; border: none; outline: none; width: 100%; padding: 0;
+    }
+    .fb-input::placeholder { color: var(--mute); }
+
+    .fb-chip {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 12px;
+        border: 1px solid var(--rule); border-radius: 999px;
+        font-size: 12px; color: var(--ink2); background: var(--paper);
+    }
+
+    /* ── Section dividers ─────────────────────────────────── */
+    .fb-divider { height: 1px; background: var(--rule); border: 0; margin: 0; }
+
+    /* ── Stars / rating ───────────────────────────────────── */
+    .rating-badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 3px 8px; background: #1F6E3D; color: #fff;
+        border-radius: 6px; font-size: 11px; font-weight: 700;
+    }
+
+    /* ── Placeholder images ───────────────────────────────── */
+    .img-placeholder {
+        position: relative; overflow: hidden; width: 100%; border-radius: 4px;
+        background: linear-gradient(135deg, #2A2520 0%, #4A3F35 55%, #8C7F6E 100%);
+    }
+    .img-placeholder::before {
+        content: '';
+        position: absolute; inset: 0;
+        background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 18px);
+    }
+    .img-placeholder::after {
+        content: '';
+        position: absolute; inset: 0;
+        background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06), transparent 40%), radial-gradient(circle at 75% 75%, rgba(0,0,0,0.18), transparent 50%);
+    }
+
+    /* ── Scroll snapping for category strips ─────────────── */
+    .scroll-snap-x { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .scroll-snap-x > * { scroll-snap-align: start; }
+
+    /* ── Admin styles ─────────────────────────────────────── */
+    .adm-card { background: #fff; border-radius: 12px; border: 1px solid #E6E8EC; }
+    .adm-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 5px; font-size: 11px; font-weight: 600; }
+    .adm-btn  { @apply inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold border-none cursor-pointer transition-all; }
+    .adm-btn-primary { background: var(--red); color: #fff; }
+    .adm-btn-ghost   { background: #fff; color: #0F1419; border: 1px solid #E6E8EC; }
+    .adm-btn-dark    { background: #0F1419; color: #fff; }
+}

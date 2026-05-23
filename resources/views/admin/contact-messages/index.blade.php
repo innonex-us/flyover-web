@@ -1,71 +1,132 @@
 <x-admin-layout>
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Contact Messages</h2>
+
+    {{-- Page Header --}}
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div>
+                <h1 class="text-2xl font-bold" style="color:#0F1419;">Messages</h1>
+                <p class="text-sm mt-0.5" style="color:#6B7280;">
+                    {{ $messages->total() }} {{ Str::plural('message', $messages->total()) }} total
+                </p>
+            </div>
+            @php
+                $unreadCount = $messages->getCollection()->where('is_read', false)->count();
+            @endphp
+            @if($unreadCount > 0)
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold"
+                      style="background:#FEF3C7;color:#92400E;">
+                    {{ $unreadCount }} unread
+                </span>
+            @endif
+        </div>
     </div>
 
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <span class="block sm:inline">{{ session('success') }}</span>
-        </div>
-    @endif
-
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+    {{-- Table Card --}}
+    <div class="rounded-xl overflow-hidden" style="background:#fff;border:1px solid #E6E8EC;">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <table class="w-full text-sm">
+                <thead>
+                    <tr style="background:#F4F5F7;border-bottom:1px solid #E6E8EC;">
+                        <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color:#6B7280;">Sender</th>
+                        <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color:#6B7280;">Subject</th>
+                        <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color:#6B7280;">Date</th>
+                        <th class="px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider" style="color:#6B7280;">Status</th>
+                        <th class="px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider" style="color:#6B7280;">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody>
                     @forelse($messages as $message)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $message->created_at->format('M d, Y h:i A') }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $message->first_name }} {{ $message->last_name }}</div>
-                                <div class="text-sm text-gray-500">{{ $message->email }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ Str::limit($message->subject ?? 'No Subject', 30) }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($message->is_read)
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                        Read
-                                    </span>
-                                @else
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        New
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ route('admin.contact-messages.show', $message->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                                <form action="{{ route('admin.contact-messages.destroy', $message->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure?');">
+                    <tr class="transition hover:bg-[#F4F5F7]"
+                        style="border-bottom:1px solid #E6E8EC;{{ !$message->is_read ? 'background:#FFFBEB;' : '' }}">
+
+                        {{-- Sender --}}
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-3">
+                                {{-- Unread dot --}}
+                                <div class="w-2 h-2 rounded-full flex-shrink-0"
+                                     style="{{ !$message->is_read ? 'background:#C8102E;' : 'background:#E6E8EC;' }}"></div>
+                                <div>
+                                    <div class="font-semibold" style="color:#0F1419;">
+                                        {{ $message->first_name }} {{ $message->last_name }}
+                                    </div>
+                                    <div class="text-xs mt-0.5" style="color:#6B7280;">
+                                        {{ $message->email }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        {{-- Subject --}}
+                        <td class="px-5 py-4" style="color:#0F1419;">
+                            {{ Str::limit($message->subject ?? 'No Subject', 40) }}
+                        </td>
+
+                        {{-- Date --}}
+                        <td class="px-5 py-4 whitespace-nowrap" style="color:#6B7280;">
+                            {{ $message->created_at->format('M d, Y') }}
+                            <div class="text-xs" style="color:#6B7280;">
+                                {{ $message->created_at->format('h:i A') }}
+                            </div>
+                        </td>
+
+                        {{-- Status badge --}}
+                        <td class="px-5 py-4 text-center">
+                            @if($message->is_read)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                                      style="background:#F3F4F6;color:#6B7280;">
+                                    Read
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                                      style="background:#FEF3C7;color:#92400E;">
+                                    New
+                                </span>
+                            @endif
+                        </td>
+
+                        {{-- Actions --}}
+                        <td class="px-5 py-4">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('admin.contact-messages.show', $message->id) }}"
+                                   class="text-xs font-semibold px-3 py-1.5 rounded-lg transition hover:opacity-80"
+                                   style="background:#F4F5F7;color:#0F1419;border:1px solid #E6E8EC;">
+                                    View
+                                </a>
+                                <form action="{{ route('admin.contact-messages.destroy', $message->id) }}" method="POST"
+                                      class="inline"
+                                      onsubmit="return confirm('Delete this message? This cannot be undone.');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                    <button type="submit"
+                                            class="text-xs font-semibold px-3 py-1.5 rounded-lg transition hover:opacity-80"
+                                            style="background:#FEF2F2;color:#C8102E;border:1px solid #FECACA;">
+                                        Delete
+                                    </button>
                                 </form>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                                No messages found.
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="5" class="px-5 py-16 text-center" style="color:#6B7280;">
+                            <svg class="w-10 h-10 mx-auto mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            <p class="font-medium">No messages yet.</p>
+                            <p class="text-xs mt-1">Messages from the contact form will appear here.</p>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        <div class="px-6 py-4 border-t border-gray-100">
+
+        @if($messages->hasPages())
+        <div class="px-5 py-4" style="border-top:1px solid #E6E8EC;background:#F4F5F7;">
             {{ $messages->links() }}
         </div>
+        @endif
     </div>
+
 </x-admin-layout>

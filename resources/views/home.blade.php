@@ -1,345 +1,386 @@
 <x-app-layout>
-    <!-- Hero Section -->
-    <div 
-        x-data="{
-            activeSlide: 0,
-            slides: [0, 1, 2],
-            init() {
-                setInterval(() => {
-                    this.activeSlide = (this.activeSlide + 1) % this.slides.length;
-                }, 5000);
-            }
-        }"
-        class="relative bg-white overflow-hidden h-[600px] flex items-center justify-center"
-    >
-        <!-- Background Images (Slider) - Hardcoded for Instant Loading -->
-        <div 
-            class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
-            style="background-image: url('{{ asset('banner/hero-banner-1.png') }}')"
-            :class="activeSlide === 0 ? 'opacity-100' : 'opacity-0'"
-        ></div>
-        
-        <div 
-            class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
-            style="background-image: url('{{ asset('banner/helo-banner-2.png') }}')"
-            :class="activeSlide === 1 ? 'opacity-100' : 'opacity-0'"
-        ></div>
 
-        <div 
-            class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
-            style="background-image: url('{{ asset('banner/hero-banner-3.png') }}')"
-            :class="activeSlide === 2 ? 'opacity-100' : 'opacity-0'"
-        ></div>
-        
-        <div class="absolute inset-0 bg-black/40"></div> <!-- Overlay for contrast -->
+{{-- ── HERO ──────────────────────────────────────────────────────────── --}}
+<section class="px-4 lg:px-16 pt-10 pb-14" style="background:#FAF6EE;">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-screen-xl mx-auto">
 
-        <div class="relative z-10 text-left w-full max-w-2xl px-4">
-            <h1 class="text-2xl md:text-3xl font-serif font-bold text-white mb-6 drop-shadow-md">
-                Welcome to FLYOVER!
+        {{-- Left copy --}}
+        <div>
+            <span class="ota-eyebrow">🏆 #1 travel agency in Bangladesh · 2024 award</span>
+            <h1 class="mt-5 font-bold leading-none" style="font-size:clamp(44px,6vw,76px);letter-spacing:-0.025em;color:#18130E;">
+                The world is<br>
+                <span class="relative inline-block">cheaper
+                    <svg style="position:absolute;left:0;bottom:-8px;width:100%;" height="12" viewBox="0 0 220 12" fill="none">
+                        <path d="M2 6 Q 60 1, 120 6 T 218 6" stroke="#C8102E" stroke-width="4" stroke-linecap="round" fill="none"/>
+                    </svg>
+                </span>
+                with us.
             </h1>
-            <!-- Search Widget -->
-            <div class="w-full max-w-2xl mx-auto bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8" 
-                x-data="{ 
-                    activeTab: 'tours',
-                    query: '',
-                    suggestions: [],
-                    showSuggestions: false,
-                    loading: false,
-                    fetchTimer: null,
-                    
-                    fetchSuggestions() {
-                        this.loading = true;
-                        clearTimeout(this.fetchTimer);
-                        this.fetchTimer = setTimeout(() => {
-                            fetch(`{{ route('search.suggestions') }}?type=${this.activeTab}&query=${this.query}`)
-                                .then(res => res.json())
-                                .then(data => {
-                                    this.suggestions = data;
-                                    this.showSuggestions = true;
-                                    this.loading = false;
-                                })
-                                .catch(() => {
-                                    this.loading = false;
-                                });
-                        }, 300);
-                    },
-                    selectSuggestion(url) {
-                        window.location.href = url;
-                    },
-                    switchTab(tab) {
-                        this.activeTab = tab;
-                        this.query = '';
-                        this.suggestions = [];
-                        this.showSuggestions = false;
-                    }
-                }"
-                @click.away="showSuggestions = false"
-            >
-                
-                <!-- Tabs -->
-                <div class="flex space-x-8 border-b border-gray-200 pb-4 mb-6 justify-center">
-                    <button 
-                        @click="switchTab('tours')" 
-                        :class="activeTab === 'tours' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-red-600'"
-                        class="flex items-center pb-2 font-bold transition duration-300 text-lg"
-                    >
-                        <!-- Flight/Plane Icon -->
-                         <img src="data:image/png;base64,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" alt="around-the-globe"  alt="Tour" class="w-6 h-6 mr-2">
-                        Tour Packages
-                    </button>
-                    
-                    <button 
-                        @click="switchTab('visas')" 
-                        :class="activeTab === 'visas' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-red-600'"
-                        class="flex items-center pb-2 font-bold transition duration-300 text-lg"
-                    >
-                        <!-- Passport/Document Icon -->
-                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACWUlEQVR4nO2avW7UQBDHf6K4JDSYAgTp8gKhgAroQEI08Aa5VGmiVERECTUEXgB4CEiegAgIygctke6OD4lEuRR8BKGjXxTpb2kVGZ+9vvWai0cayTPeWc3P3t0ZS4YTIA3gCXAAmMDaBZaVU255XAEAc0wfuYB0FXyV8HLNejO5JX4KVRHjmk8N4klMDcIJB4mAaWAVaAN/pG35mhpTVj7kDRwFFoBfGerBIXBfMb7ycQocB7YTEn5lXa8l3N8CLlYFZBzY1divwEtdfwLGrHnG5DMaE8fsZoQxPkFGrTexqbX/UfadhHnu6roDnD0WOxISZEFjPgPngCvWUz6VMM+Rb0/2ZeA88EX2fCiQyNrYt+R7IPtpyjzPZS/Jvm0dAFEIkGndf2354v0xkzLPjOwXlm9dvmaBfJwDV3V/1vLtyHcjZZ6bsj9YvjnrECgdJN7Uk5bvp3wTKfNMyP5u+S7J1y6Qj3NgL0Phy6u9YQH5HQKkk7C0fuRYWt8SllarQD7OgSvDstmbuv9mAMfvO/mmCuTjHBipiNkFcUn2swwFcTGhIJ4JAYJa8UG1KPcGkE+hpnFL47bVCHZyNI3vZW+EbhpRC2635P9q40/rzcWbes9q/S/QX4xvkBhmM6EurPX5sNrICFEaCFoa89YBkKaH2hMjHvMpHBjpaF5RgetJW1pSU31Op8qA+BJTg1CDeBFTg1CDVB+koe9q41nXywBplQDy1jdISDE1CDWIFzE1CEMC0lXg0e8ToeW6ctl3CV4uoV7k1YcuIA3BxG8mpO4Lwuk3p/9K/gI5HHNwyRPgDAAAAABJRU5ErkJggg==" alt="passport" class="h-6 w-6 mr-2">
-                        Visa Service
-                    </button>
+            <p class="mt-6 text-base leading-relaxed max-w-md" style="color:#3A332B;">
+                Up to 65% off hotels · 11% off international flights with bKash · EMI from 0%. Real deals, no fine print.
+            </p>
+            <div class="flex flex-wrap gap-3 mt-7">
+                <a href="{{ route('packages.index') }}" class="ota-btn-primary px-6 py-3 text-base">🔍 Find your trip</a>
+                <a href="{{ route('packages.index') }}" class="ota-btn-ghost px-6 py-3 text-base">View all deals →</a>
+            </div>
+            <div class="flex items-center gap-4 mt-7">
+                <div class="flex -space-x-2.5">
+                    @foreach(['2A2520','6B4F40','36473A','574535'] as $c)
+                        <div class="w-9 h-9 rounded-full border-2 border-white" style="background:#{{ $c }};"></div>
+                    @endforeach
                 </div>
-
-                <!-- Tours Search Form -->
-                <div x-show="activeTab === 'tours'" class="animate-fade-in-up relative">
-                    <form action="{{ route('packages.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
-                        <div class="flex-grow">
-                            <label class="block text-left text-xs font-bold text-gray-500 uppercase mb-1">Destination</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                </div>
-                                <input 
-                                    type="text" 
-                                    name="search" 
-                                    x-model="query"
-                                    @input="fetchSuggestions()"
-                                    @focus="fetchSuggestions()"
-                                    placeholder="Where do you want to go?" 
-                                    class="pl-10 w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 py-3"
-                                    autocomplete="off"
-                                >
-                            </div>
-                                                       <!-- Suggestions Dropdown -->
-                            <div 
-                                x-show="showSuggestions && activeTab === 'tours'" 
-                                x-transition:enter="transition ease-out duration-200"
-                                x-transition:enter-start="opacity-0 translate-y-2"
-                                x-transition:enter-end="opacity-100 translate-y-0"
-                                class="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-2xl z-50 text-left overflow-hidden border border-gray-100"
-                                style="display: none;"
-                            >
-                                <div class="p-3 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" x-text="query ? 'Search Results' : 'Latest Packages'"></span>
-                                    <div x-show="loading" class="animate-spin rounded-full h-3 w-3 border-b-2 border-red-600"></div>
-                                </div>
-                                <ul class="divide-y divide-gray-50 max-h-[400px] overflow-y-auto scrollbar-hide">
-                                    <template x-for="item in suggestions" :key="item.slug">
-                                        <li @click="selectSuggestion(item.url)" class="px-4 py-3 hover:bg-red-50/50 cursor-pointer transition-colors duration-200 flex items-center group">
-                                            <div class="relative w-12 h-12 shrink-0 mr-4 rounded-lg overflow-hidden shadow-sm">
-                                                <img :src="item.image" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="">
-                                                <div class="absolute inset-0 bg-black/5"></div>
-                                            </div>
-                                            <div class="flex-grow min-w-0">
-                                                <div class="text-sm font-bold text-gray-900 truncate group-hover:text-red-600 transition-colors" x-text="item.text"></div>
-                                                <div class="text-[11px] text-gray-500 flex items-center mt-0.5">
-                                                    <svg class="w-3 h-3 mr-1 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                                    <span class="truncate" x-text="item.subtext"></span>
-                                                </div>
-                                            </div>
-                                            <div class="shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0">
-                                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                                            </div>
-                                        </li>
-                                    </template>
-                                    <li x-show="suggestions.length === 0 && !loading" class="px-4 py-8 text-center">
-                                        <div class="text-gray-400 mb-2">
-                                            <svg class="w-8 h-8 mx-auto opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                        </div>
-                                        <p class="text-sm text-gray-500">No matching tours found</p>
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </div>
-                        <div class="w-full md:w-auto flex items-end">
-                            <button type="submit" class="w-full md:w-auto bg-red-600 text-white font-bold py-3 px-10 rounded-lg hover:bg-red-700 transition shadow-lg transform hover:-translate-y-0.5">
-                                Search Tours
-                            </button>
-                        </div>
-                    </form>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-amber-400 text-sm">★★★★★</span>
+                        <span class="text-sm font-bold">4.8 / 5</span>
+                    </div>
+                    <div class="text-xs mt-0.5" style="color:#7A7166;">Trusted by 1.2M+ travellers</div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Visa Search Form -->
-                <div x-show="activeTab === 'visas'" class="animate-fade-in-up relative" style="display: none;">
-                    <form action="{{ route('visas.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
-                         <div class="flex-grow">
-                            <label class="block text-left text-xs font-bold text-gray-500 uppercase mb-1">Country</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                                <input 
-                                    type="text" 
-                                    name="search" 
-                                    x-model="query"
-                                    @input="fetchSuggestions()"
-                                    @focus="fetchSuggestions()"
-                                    placeholder="Which country visa do you need?" 
-                                    class="pl-10 w-full border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 py-3"
-                                    autocomplete="off"
-                                >
-                            </div>
-
-                             <!-- Suggestions Dropdown (Visas) -->
-                             <div 
-                                x-show="showSuggestions && activeTab === 'visas'" 
-                                x-transition:enter="transition ease-out duration-200"
-                                x-transition:enter-start="opacity-0 translate-y-2"
-                                x-transition:enter-end="opacity-100 translate-y-0"
-                                class="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-2xl z-50 text-left overflow-hidden border border-gray-100"
-                                style="display: none;"
-                            >
-                                <div class="p-3 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" x-text="query ? 'Search Results' : 'Latest Visas'"></span>
-                                    <div x-show="loading" class="animate-spin rounded-full h-3 w-3 border-b-2 border-red-600"></div>
-                                </div>
-                                <ul class="divide-y divide-gray-50 max-h-[400px] overflow-y-auto scrollbar-hide">
-                                    <template x-for="item in suggestions" :key="item.slug">
-                                        <li @click="selectSuggestion(item.url)" class="px-4 py-3 hover:bg-red-50/50 cursor-pointer transition-colors duration-200 flex items-center group">
-                                            <div class="relative w-12 h-12 shrink-0 mr-4 rounded-lg overflow-hidden bg-red-50 flex items-center justify-center">
-                                                <img x-show="item.image" :src="item.image" class="w-full h-full object-cover" alt="">
-                                                <span x-show="!item.image" class="text-xl">🌍</span>
-                                                <div class="absolute inset-0 bg-black/5"></div>
-                                            </div>
-                                            <div class="flex-grow min-w-0">
-                                                <div class="text-sm font-bold text-gray-900 truncate group-hover:text-red-600 transition-colors" x-text="item.text"></div>
-                                                <div class="text-[11px] text-gray-500 mt-0.5" x-text="item.subtext"></div>
-                                            </div>
-                                            <div class="shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0">
-                                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                                            </div>
-                                        </li>
-                                    </template>
-                                    <li x-show="suggestions.length === 0 && !loading" class="px-4 py-8 text-center">
-                                        <div class="text-gray-400 mb-2">
-                                            <svg class="w-8 h-8 mx-auto opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                        </div>
-                                        <p class="text-sm text-gray-500">No matching visas found</p>
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </div>
-                         <div class="w-full md:w-auto flex items-end">
-                            <button type="submit" class="w-full md:w-auto bg-red-600 text-white font-bold py-3 px-10 rounded-lg hover:bg-red-700 transition shadow-lg transform hover:-translate-y-0.5">
-                                Search Visa
-                            </button>
-                        </div>
-                    </form>
+        {{-- Right photo collage --}}
+        <div class="relative h-96 lg:h-[460px] hidden lg:block">
+            <div class="absolute top-0 right-0 w-72 h-60 rounded-2xl overflow-hidden shadow-2xl" style="background:linear-gradient(135deg,#1A1F26 0%,#384552 55%,#7B8895 100%);">
+                <div class="absolute inset-0" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,0.025) 0 2px,transparent 2px 18px);"></div>
+                <div class="absolute bottom-4 left-4 text-white">
+                    <p class="font-serif italic text-xl leading-none">Maldives</p>
+                    <p class="font-mono text-[10px] tracking-widest mt-1.5 opacity-75">FROM ৳1,24,000</p>
                 </div>
-
+            </div>
+            <div class="absolute top-12 left-0 w-56 h-64 rounded-2xl overflow-hidden shadow-2xl" style="background:linear-gradient(135deg,#1E2A22 0%,#36473A 55%,#7C8E80 100%);transform:rotate(-3deg);">
+                <div class="absolute inset-0" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,0.025) 0 2px,transparent 2px 18px);"></div>
+                <div class="absolute bottom-4 left-4 text-white">
+                    <p class="font-serif italic text-xl leading-none">Bhutan</p>
+                    <p class="font-mono text-[10px] tracking-widest mt-1.5 opacity-75">FROM ৳98,000</p>
+                </div>
+            </div>
+            <div class="absolute bottom-0 right-16 w-52 h-48 rounded-2xl overflow-hidden shadow-2xl" style="background:linear-gradient(135deg,#2B2117 0%,#574535 55%,#A89178 100%);transform:rotate(4deg);">
+                <div class="absolute inset-0" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,0.025) 0 2px,transparent 2px 18px);"></div>
+                <div class="absolute bottom-4 left-4 text-white">
+                    <p class="font-serif italic text-xl leading-none">Dubai</p>
+                    <p class="font-mono text-[10px] tracking-widest mt-1.5 opacity-75">FROM ৳74,000</p>
+                </div>
+            </div>
+            <div class="absolute bottom-8 left-4 bg-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3">
+                <span class="text-2xl">🎁</span>
+                <div>
+                    <p class="text-xs font-semibold" style="color:#7A7166;">FLASH SALE · ENDS IN</p>
+                    <p class="text-base font-bold mt-0.5" style="color:#C8102E;" x-data="{}" x-text="'14 : 22 : 09'">14 : 22 : 09</p>
+                </div>
+            </div>
+            <div class="absolute top-20 -right-2 bg-white px-3 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5 max-w-[200px]">
+                <span class="w-8 h-8 rounded-full flex items-center justify-center text-base shrink-0" style="background:#E8F5EC;">✓</span>
+                <div>
+                    <p class="text-xs font-bold">Just booked</p>
+                    <p class="text-xs mt-0.5" style="color:#7A7166;">Anika H. · Nepal 7N</p>
+                </div>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Featured Tours Section -->
-    <div class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">Featured Tour Packages</h2>
-            
-            @if($packages->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    @foreach($packages as $package)
-                        <x-package-card :package="$package" />
-                    @endforeach
-                </div>
-                <div class="mt-12 text-center">
-                    <a href="{{ route('packages.index') }}" class="inline-block border-2 border-red-600 text-red-600 font-bold py-3 px-8 rounded-md hover:bg-red-600 hover:text-white transition">
-                        View All Packages
-                    </a>
-                </div>
-            @else
-                <div class="text-center py-12 bg-gray-50 rounded-lg">
-                    <p class="text-gray-500">No tour packages available at the moment.</p>
-                </div>
-            @endif
+{{-- ── SEARCH WIDGET ─────────────────────────────────────────────────── --}}
+<section class="px-4 lg:px-16 pb-8 max-w-screen-xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-xl border border-[#E4DCC9] overflow-hidden">
+        <div class="flex border-b border-[#EFE9DA] overflow-x-auto px-2">
+            @foreach([['Flights','✈',false,false],['Hotels','🏨',false,true],['Tour Packages','🧳',true,false],['Visa','📘',false,false],['Pick &amp; Drop','🚗',false,true]] as $i => [$t,$e,$active,$isNew])
+                <button class="flex items-center gap-2 px-5 py-4 text-sm font-semibold whitespace-nowrap shrink-0 border-b-2 transition-colors duration-150 -mb-px
+                    {{ $active ? 'text-[#C8102E] border-[#C8102E]' : 'text-[#3A332B] border-transparent hover:text-[#18130E]' }}">
+                    <span class="text-base">{{ $e }}</span>
+                    {!! $t !!}
+                    @if($isNew)<span class="ml-1 text-[9px] font-bold bg-[#C8102E] text-white px-1.5 py-0.5 rounded">NEW</span>@endif
+                </button>
+            @endforeach
         </div>
+        <form action="{{ route('packages.index') }}" method="GET" class="p-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                @foreach([['DESTINATION','Pokhara, Nepal','📍','destination'],['DURATION','7 nights','📅','duration'],['TRAVELLERS','2 adults','👤','travellers'],['BUDGET','৳ 60k – 1.2L','💰','budget']] as $i => [$l,$v,$e,$name])
+                    <div class="p-3 border rounded-xl {{ $i === 0 ? 'border-[#C8102E] bg-[#FFFAFA]' : 'border-[#E4DCC9] bg-white' }}">
+                        <p class="fb-field-label">{{ $l }}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span>{{ $e }}</span>
+                            <input type="text" name="{{ $name }}" placeholder="{{ $v }}" class="text-sm font-semibold bg-transparent border-none outline-none w-full text-[#18130E] placeholder-[#7A7166]">
+                        </div>
+                    </div>
+                @endforeach
+                <button type="submit" class="ota-btn-primary py-3 text-sm font-semibold rounded-xl">Find trip →</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+{{-- ── PROMO STRIP ───────────────────────────────────────────────────── --}}
+<section class="px-4 lg:px-16 pb-10 max-w-screen-xl mx-auto">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        @foreach([
+            ['🎁','Up to 11% off','on international flights · bKash payment','#FFE9EC','#C8102E'],
+            ['💳','EMI from 0%','3 / 6 / 12 months · all major banks','#E8F5EC','#1F6E3D'],
+            ['📱','Get the app','৳ 500 first-booking credit','#FFF4D6','#8A5A00'],
+            ['🏝','Cox\'s Bazar deals','Stays from ৳ 2,200 / night','#E5F0FF','#1E4DAA'],
+        ] as [$emo,$t,$d,$bg,$fg])
+            <div class="flex items-center gap-3 p-4 rounded-xl border border-black/5" style="background:{{ $bg }};">
+                <span class="text-3xl">{{ $emo }}</span>
+                <div>
+                    <p class="text-sm font-bold" style="color:{{ $fg }};">{{ $t }}</p>
+                    <p class="text-xs mt-0.5" style="color:#3A332B;">{{ $d }}</p>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</section>
+
+{{-- ── FEATURED DEALS ────────────────────────────────────────────────── --}}
+<section class="px-4 lg:px-16 py-10 max-w-screen-xl mx-auto">
+    <div class="flex justify-between items-end mb-6">
+        <div>
+            <span class="ota-eyebrow">🔥 Hot deals this week</span>
+            <h2 class="ota-h2 mt-3">Limited time, real savings</h2>
+        </div>
+        <span class="text-sm font-bold px-3 py-2 rounded-full" style="color:#C8102E;background:#FFE9EC;">⏱ Refresh in 2h 14m</span>
     </div>
 
-    <!-- Visa Services Section -->
-    <div class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">Visa Processing Services</h2>
-            
-            @if(isset($visas) && $visas->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    @foreach($visas as $visa)
-                        <x-visa-card :visa="$visa" />
-                    @endforeach
+    <div class="grid grid-cols-2 lg:grid-cols-3 lg:grid-rows-2 gap-4" style="min-height:500px;">
+        {{-- Big featured deal --}}
+        <div class="col-span-2 lg:col-span-1 lg:row-span-2 ota-card overflow-hidden relative min-h-[400px]">
+            <div class="absolute inset-0" style="background:linear-gradient(135deg,#1A1F26 0%,#384552 55%,#7B8895 100%);"></div>
+            <div class="absolute inset-0" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,0.025) 0 2px,transparent 2px 18px);"></div>
+            <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(24,19,14,0.1) 30%,rgba(24,19,14,0.85) 100%);"></div>
+            <div class="absolute top-5 left-5 flex gap-2">
+                <span class="ota-tag-red text-xs">🏆 EDITOR'S PICK</span>
+                <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-white text-[#18130E]">SAVE 22%</span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-7 text-white">
+                <p class="text-sm font-semibold opacity-85">🧳 TOUR PACKAGE · 4N / 5D</p>
+                <h3 class="text-2xl font-bold mt-2 leading-tight">Maldives honeymoon — overwater villa</h3>
+                <div class="flex gap-4 mt-3 text-xs opacity-90">
+                    <span>★ 4.93 (211)</span><span>📍 Noonu Atoll</span>
                 </div>
-                <div class="mt-12 text-center">
-                    <a href="{{ route('visas.index') }}" class="inline-block border-2 border-red-600 text-red-600 font-bold py-3 px-8 rounded-md hover:bg-red-600 hover:text-white transition">
-                        View All Visa Services
-                    </a>
+                <div class="flex justify-between items-end mt-4">
+                    <div>
+                        <p class="text-xs opacity-70 line-through">৳ 1,58,000</p>
+                        <p class="text-3xl font-bold">৳ 1,24,000</p>
+                    </div>
+                    <a href="{{ route('packages.index') }}" class="px-4 py-2 bg-white font-bold rounded-lg text-sm" style="color:#C8102E;">Book →</a>
                 </div>
-            @else
-                <div class="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
-                    <p class="text-gray-500">Visa services coming soon.</p>
+            </div>
+        </div>
+
+        @foreach([
+            ['Bhutan 6N','from ৳98,000','TOP RATED','1E2A22','6B4F40'],
+            ['Dubai 5N','from ৳74,000','FAMILY','2B2117','574535'],
+            ['Bali 8N','from ৳1,02,000','ADVENTURE','1A1F26','384552'],
+            ['Kashmir 6N','from ৳68,000','NEW','3D2E26','6B4F40'],
+        ] as [$t,$p,$tag,$c1,$c2])
+            <div class="ota-card overflow-hidden relative min-h-[180px]">
+                <div class="absolute inset-0" style="background:linear-gradient(135deg,#{{ $c1 }} 0%,#{{ $c2 }} 100%);"></div>
+                <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(0,0,0,0) 50%,rgba(0,0,0,0.8) 100%);"></div>
+                <span class="absolute top-3 left-3 px-2.5 py-1 bg-white text-xs font-bold rounded" style="color:#18130E;">{{ $tag }}</span>
+                <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+                    <p class="text-lg font-bold">{{ $t }}</p>
+                    <p class="text-xs mt-1 opacity-90">{{ $p }}</p>
                 </div>
-            @endif
+            </div>
+        @endforeach
+    </div>
+</section>
+
+{{-- ── CATEGORY STRIP ────────────────────────────────────────────────── --}}
+<section class="px-4 lg:px-16 pb-10 max-w-screen-xl mx-auto">
+    <div class="flex gap-3 overflow-x-auto pb-2" style="scrollbar-width:none;">
+        @foreach([
+            ['Beach & Islands','🏝',248,'#E5F0FF'],
+            ['Mountains','⛰',142,'#E8F5EC'],
+            ['Cultural tours','🏛',86,'#FFE9EC'],
+            ['Adventure','🥾',64,'#FFF4D6'],
+            ['Honeymoon','💍',38,'#F0E5FF'],
+            ['Family-friendly','👨‍👩‍👧',120,'#FFE9D6'],
+            ['Group tours','👥',56,'#E5F4FF'],
+            ['Wildlife','🐅',28,'#FFE0E5'],
+        ] as [$t,$e,$c,$bg])
+            <a href="{{ route('packages.index') }}?style={{ urlencode($t) }}" class="ota-card shrink-0 p-5 cursor-pointer" style="min-width:180px;">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style="background:{{ $bg }};">{{ $e }}</div>
+                <p class="text-sm font-bold mt-3.5">{{ $t }}</p>
+                <p class="text-xs mt-0.5" style="color:#7A7166;">{{ $c }} trips</p>
+            </a>
+        @endforeach
+    </div>
+</section>
+
+{{-- ── HOTEL DEALS ───────────────────────────────────────────────────── --}}
+<section class="px-4 lg:px-16 py-10 max-w-screen-xl mx-auto">
+    <div class="flex justify-between items-end mb-6">
+        <div>
+            <span class="ota-eyebrow">🏨 Hotel deals · NEW SERVICE</span>
+            <h2 class="ota-h2 mt-3">Negotiated rates, paid at hotel</h2>
+        </div>
+        <a href="{{ route('hotels.index') }}" class="text-sm font-bold" style="color:#C8102E;">All 8,400 properties →</a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        @foreach([
+            ['Pavilions Himalayas','Pokhara, Nepal','5★ Resort','18,500','23,400','4.92',421,'EDITOR PICK','2A2520'],
+            ['Amankora Punakha','Punakha, Bhutan','5★ Lodge','84,000',null,'4.97',188,'','1E2A22'],
+            ['Soneva Jani','Noonu, Maldives','Overwater villa','1,42,000','1,68,000','4.99',96,'15% OFF','1A1F26'],
+            ['Atlantis the Palm','Dubai, UAE','5★ Resort','26,800',null,'4.84',1422,'FAMILY','2B2117'],
+        ] as [$n,$loc,$type,$p,$was,$r,$rev,$tag,$c])
+            <div class="ota-card overflow-hidden">
+                <div class="relative">
+                    <div class="h-44" style="background:linear-gradient(135deg,#{{ $c }} 0%,#574535 55%,#A89178 100%);"></div>
+                    @if($tag)
+                        <span class="absolute top-2.5 left-2.5 text-[10px] font-bold text-white px-2 py-0.5 rounded"
+                              style="background:{{ $tag === 'EDITOR PICK' ? '#C8102E' : ($tag === 'FAMILY' ? '#18130E' : '#1F6E3D') }};">{{ $tag }}</span>
+                    @endif
+                    <div class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/95 flex items-center justify-center text-xs">♡</div>
+                </div>
+                <div class="p-3.5">
+                    <p class="fb-field-label">{{ strtoupper($type) }}</p>
+                    <p class="text-sm font-bold mt-1 leading-snug">{{ $n }}</p>
+                    <p class="text-xs mt-1" style="color:#7A7166;">📍 {{ $loc }}</p>
+                    <div class="flex items-center gap-1.5 mt-2">
+                        <span class="rating-badge">★ {{ $r }}</span>
+                        <span class="text-xs" style="color:#7A7166;">({{ $rev }})</span>
+                    </div>
+                    <div class="flex justify-between items-end mt-3 pt-3 border-t border-[#EFE9DA]">
+                        <div>
+                            @if($was)<p class="text-xs line-through" style="color:#7A7166;">৳ {{ $was }}</p>@endif
+                            <p class="text-base font-bold" style="color:#C8102E;">৳ {{ $p }}</p>
+                            <p class="text-[9px]" style="color:#7A7166;">per night</p>
+                        </div>
+                        <a href="{{ route('hotels.index') }}" class="text-xs font-semibold">View →</a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</section>
+
+{{-- ── PICK & DROP BANNER ────────────────────────────────────────────── --}}
+<section class="px-4 lg:px-16 py-10 max-w-screen-xl mx-auto">
+    <div class="ota-card overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+        <div class="p-10 lg:p-12 relative overflow-hidden" style="background:#18130E;">
+            <div class="absolute top-0 right-0 w-48 h-48 rounded-full" style="background:rgba(200,16,46,0.2);filter:blur(40px);transform:translate(20px,-20px);"></div>
+            <div class="relative">
+                <span class="ota-tag-red">🚗 NEW SERVICE · 2026</span>
+                <h2 class="text-3xl font-bold mt-4 leading-tight text-white">A driver, <span style="color:#C8102E;">waiting</span> at arrivals.</h2>
+                <p class="text-sm mt-4 leading-relaxed" style="color:rgba(255,255,255,0.7);">Airport, hourly, intercity, cross-border. Verified drivers, fixed pricing, English on request.</p>
+                <a href="{{ route('pickdrop.index') }}" class="inline-block mt-6 px-6 py-3 bg-white font-bold text-sm rounded-lg" style="color:#18130E;">Book a ride →</a>
+            </div>
+        </div>
+        <div class="p-6 grid grid-cols-2 gap-3">
+            @foreach([
+                ['✈','Airport transfer','From ৳ 1,400','Driver waits in arrivals · flight tracked'],
+                ['⏱','Hourly chauffeur','৳ 600 / hr','Meetings, shopping, airport at the end'],
+                ['🛣','Intercity','From ৳ 8,500','Dhaka ↔ Chittagong / Sylhet'],
+                ['🌐','Cross-border','From ৳ 18,000','Dhaka → Kolkata via Petrapole'],
+            ] as [$e,$t,$p,$d])
+                <div class="p-4 border border-[#E4DCC9] rounded-xl">
+                    <span class="text-xl">{{ $e }}</span>
+                    <p class="text-sm font-bold mt-2.5">{{ $t }}</p>
+                    <p class="text-xs font-semibold mt-1" style="color:#C8102E;">{{ $p }}</p>
+                    <p class="text-xs mt-1.5 leading-relaxed" style="color:#7A7166;">{{ $d }}</p>
+                </div>
+            @endforeach
         </div>
     </div>
+</section>
 
-    <!-- Latest Blog Posts -->
-    <div class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">Latest Travel Insights</h2>
+{{-- ── STATS BAND ────────────────────────────────────────────────────── --}}
+<section class="px-4 py-14 bg-white border-y border-[#E4DCC9]">
+    <div class="max-w-screen-xl mx-auto grid grid-cols-2 md:grid-cols-5 divide-x divide-[#E4DCC9]">
+        @foreach([['1.2M+','travellers booked'],['62','destinations'],['4.8★','24,000 reviews'],['94.2%','visa approval'],['24/7','support']] as [$n,$l])
+            <div class="px-6 py-4 text-center">
+                <p class="font-bold" style="font-size:clamp(28px,3.5vw,44px);letter-spacing:-0.02em;color:#18130E;">{{ $n }}</p>
+                <p class="text-xs font-semibold mt-1.5 tracking-wide uppercase" style="color:#7A7166;">{{ $l }}</p>
+            </div>
+        @endforeach
+    </div>
+</section>
 
-            @if(isset($recentPosts) && $recentPosts->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    @foreach($recentPosts as $post)
-                        <article class="flex flex-col bg-white rounded-2xl shadow-lg hover:shadow-xl transition overflow-hidden border border-gray-100 group">
-                            <a href="{{ route('blog.show', $post->slug) }}" class="overflow-hidden h-56 relative">
-                                <img src="{{ $post->image ? Storage::url($post->image) : 'https://via.placeholder.com/800x600?text=FlyoverBD+Blog' }}" 
-                                     alt="{{ $post->title }}" 
-                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 ease-in-out">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                            </a>
-                            <div class="flex-1 p-6 flex flex-col">
-                                <div class="flex items-center text-sm text-gray-500 mb-3 space-x-4">
-                                    <span class="flex items-center">
-                                        <svg class="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                        {{ $post->published_at ? $post->published_at->format('M d, Y') : 'Draft' }}
-                                    </span>
-                                </div>
-                                <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-red-600 transition">
-                                    <a href="{{ route('blog.show', $post->slug) }}">
-                                        {{ $post->title }}
-                                    </a>
-                                </h3>
-                                <p class="text-gray-600 mb-4 flex-1 line-clamp-3">
-                                    {{ $post->seo_description ?? Str::limit(strip_tags($post->content), 100) }}
-                                </p>
-                                <div class="mt-auto">
-                                    <a href="{{ route('blog.show', $post->slug) }}" class="inline-flex items-center text-red-600 font-semibold hover:text-red-700">
-                                        Read Article 
-                                        <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </article>
-                    @endforeach
+{{-- ── PACKAGES GRID ─────────────────────────────────────────────────── --}}
+@if(isset($packages) && $packages->count())
+<section class="px-4 lg:px-16 py-10 max-w-screen-xl mx-auto">
+    <div class="flex justify-between items-end mb-6">
+        <div>
+            <span class="ota-eyebrow">🧳 Tour packages</span>
+            <h2 class="ota-h2 mt-3">Handpicked, never resold</h2>
+        </div>
+        <a href="{{ route('packages.index') }}" class="text-sm font-bold" style="color:#C8102E;">All packages →</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach($packages->take(6) as $pkg)
+            <a href="{{ route('packages.show', $pkg->slug) }}" class="ota-card overflow-hidden flex flex-col">
+                @if($pkg->image)
+                    <img src="{{ asset('storage/'.$pkg->image) }}" alt="{{ $pkg->title }}" class="w-full h-48 object-cover">
+                @else
+                    <div class="h-48 relative" style="background:linear-gradient(135deg,#2A2520 0%,#4A3F35 55%,#8C7F6E 100%);">
+                        <div class="absolute inset-0" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,0.025) 0 2px,transparent 2px 18px);"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <p class="font-serif italic text-lg leading-none">{{ $pkg->destination ?? $pkg->title }}</p>
+                        </div>
+                    </div>
+                @endif
+                <div class="p-5 flex flex-col flex-1">
+                    <p class="text-xs font-semibold tracking-wide uppercase" style="color:#7A7166;">{{ $pkg->duration ?? '7N / 8D' }}</p>
+                    <h3 class="text-lg font-bold mt-1.5 leading-snug">{{ $pkg->title }}</h3>
+                    <p class="text-xs mt-2" style="color:#7A7166;">📍 {{ $pkg->destination ?? 'International' }}</p>
+                    <div class="flex justify-between items-end mt-auto pt-4 border-t border-[#EFE9DA]">
+                        <div>
+                            <p class="text-xs font-mono tracking-wide" style="color:#C8102E;">FROM</p>
+                            <p class="text-xl font-bold mt-0.5">৳ {{ number_format($pkg->price ?? 0) }}</p>
+                        </div>
+                        <span class="ota-btn-dark text-xs px-4 py-2 rounded-lg">View →</span>
+                    </div>
                 </div>
-                <div class="mt-12 text-center">
-                    <a href="{{ route('blog.index') }}" class="inline-block border-2 border-red-600 text-red-600 font-bold py-3 px-8 rounded-md hover:bg-red-600 hover:text-white transition">
-                        Read More Articles
-                    </a>
-                </div>
-            @else
-                <div class="text-center py-12 bg-gray-50 rounded-lg">
-                    <p class="text-gray-500">No blog posts available at the moment.</p>
-                </div>
-            @endif
+            </a>
+        @endforeach
+    </div>
+</section>
+@endif
+
+{{-- ── VISA HIGHLIGHT ────────────────────────────────────────────────── --}}
+<section class="px-4 lg:px-16 py-10 max-w-screen-xl mx-auto">
+    <div class="rounded-2xl p-8 lg:p-12" style="background:linear-gradient(135deg,#18130E 0%,#3A332B 100%);">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+                <span class="ota-tag-red">📘 VISA PROCESSING</span>
+                <h2 class="text-3xl font-bold mt-4 leading-tight text-white">The paperwork, <span style="color:#C8102E;font-style:italic;">handled.</span></h2>
+                <p class="text-sm mt-4 leading-relaxed" style="color:rgba(255,255,255,0.7);">94.2% approval rate · 12,800+ applications filed · 184 countries supported.</p>
+                <a href="{{ route('visas.index') }}" class="inline-block mt-6 px-6 py-3 font-bold text-sm rounded-lg" style="background:#C8102E;color:#fff;">Start an application →</a>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                @foreach([['94.2%','Approval rate'],['12,800+','Applications filed'],['184','Countries'],['4.2 days','Avg. doc prep']] as [$n,$l])
+                    <div class="p-4 rounded-xl" style="background:rgba(255,255,255,0.08);">
+                        <p class="text-2xl font-bold text-white">{{ $n }}</p>
+                        <p class="text-xs mt-1" style="color:rgba(255,255,255,0.6);">{{ $l }}</p>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
+</section>
+
+{{-- ── CTA STRIP ─────────────────────────────────────────────────────── --}}
+<section class="px-4 lg:px-16 py-10 max-w-screen-xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="p-10 rounded-2xl relative overflow-hidden" style="background:#C8102E;">
+            <span class="inline-block text-xs font-bold tracking-wide px-3 py-1.5 rounded-full mb-4" style="background:rgba(255,255,255,0.2);color:#fff;">📱 GET THE APP</span>
+            <h3 class="text-2xl font-bold text-white leading-tight">৳ 500 off your first booking</h3>
+            <p class="text-sm mt-2 text-white/85 max-w-xs">Download the Flyover app · iOS and Android · 100k+ downloads</p>
+            <div class="flex gap-3 mt-6">
+                <span class="px-4 py-2.5 bg-white font-bold text-sm rounded-lg" style="color:#C8102E;">App Store</span>
+                <span class="px-4 py-2.5 bg-white font-bold text-sm rounded-lg" style="color:#C8102E;">Google Play</span>
+            </div>
+        </div>
+        <div class="p-10 rounded-2xl relative" style="background:#18130E;">
+            <span class="inline-block text-xs font-bold tracking-wide px-3 py-1.5 rounded-full mb-4" style="background:rgba(255,255,255,0.12);color:#fff;">💬 NEED HELP?</span>
+            <h3 class="text-2xl font-bold text-white leading-tight">Chat with a human now</h3>
+            <p class="text-sm mt-2 text-white/70 max-w-xs">WhatsApp or call · 14-minute average response · open 24/7</p>
+            <div class="flex flex-wrap gap-3 mt-6">
+                <a href="https://wa.me/8801335111370" target="_blank" class="px-5 py-2.5 font-bold text-sm rounded-lg text-white" style="background:#25D366;">WhatsApp now</a>
+                <a href="tel:+8809678332211" class="px-5 py-2.5 font-bold text-sm rounded-lg border text-white" style="border-color:rgba(255,255,255,0.3);">+880 9678 332211</a>
+            </div>
+        </div>
+    </div>
+</section>
+
 </x-app-layout>

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"/Users/rokon-dev/.claude/projects/-Users-rokon-dev-Desktop-innonexus-projects-innonexus-flyoverbd2/c01fe6f3-0639-495c-9d31-7e9adfe2189c/tool-results/webfetch-1779553805695-5ido9p.bin\" /tmp/design.gz)",
+      "Read(//private/tmp/**)",
+      "Bash(tar -tzf design.gz)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Http/Controllers/HotelController.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Http/Controllers/PickDropController.php)"
+    ]
+  }
+}

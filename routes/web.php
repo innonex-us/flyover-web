@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\VisaController;
+use App\Http\Controllers\HotelController;
+use App\Http\Controllers\PickDropController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -24,6 +26,10 @@ Route::prefix('api/export/v1')->middleware('api.token')->group(function () {
 
 Route::get('/visas', [VisaController::class, 'index'])->name('visas.index');
 Route::get('/visas/{slug}', [VisaController::class, 'show'])->name('visas.show');
+
+// New services
+Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
+Route::get('/pick-and-drop', [PickDropController::class, 'index'])->name('pickdrop.index');
 
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
