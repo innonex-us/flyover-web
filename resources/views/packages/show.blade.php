@@ -100,7 +100,18 @@
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Mobile: sticky bottom booking CTA -->
+            <div class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 shadow-lg px-4 py-3 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">From</p>
+                    <p class="text-lg font-black text-red-600">৳{{ number_format($package->price) }} <span class="text-[10px] font-bold text-gray-400">/ person</span></p>
+                </div>
+                <a href="#booking-form" class="px-6 py-2.5 bg-red-600 text-white font-bold text-sm rounded-xl shadow-md hover:bg-red-700 transition">
+                    Book Now
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-20 lg:pb-0">
                 <!-- Left Column: Primary Content -->
                 <div class="lg:col-span-2 space-y-6">
                     
@@ -108,8 +119,9 @@
                     @php $showPhotoGallery = count($galleryImages) > 1; @endphp
                     <div id="tour-gallery-wrap" class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
                         @if($showPhotoGallery)
-                        <div class="flex flex-row gap-3 sm:gap-4 p-3 sm:p-4 items-start">
-                            <figure class="relative m-0 min-w-0 flex-1 aspect-video bg-gray-100 rounded-xl overflow-hidden">
+                        {{-- Desktop: main image left, vertical thumbs right; Mobile: main image top, horizontal thumbs below --}}
+                        <div class="p-3 sm:p-4">
+                            <figure class="relative m-0 aspect-video bg-gray-100 rounded-xl overflow-hidden">
                                 <img
                                     id="main-tour-image"
                                     src="{{ $mainImage }}"
@@ -117,17 +129,18 @@
                                     class="w-full h-full object-cover"
                                     fetchpriority="high"
                                     decoding="async"
-                                    sizes="(min-width: 1024px) 720px, calc(100vw - 8rem)"
+                                    sizes="(min-width: 1024px) 720px, 100vw"
                                 >
                             </figure>
-                            <aside class="flex w-[5.25rem] sm:w-24 md:w-28 shrink-0 flex-col gap-3" aria-labelledby="tour-photo-gallery-heading">
-                                <div class="flex flex-col gap-2 overflow-y-auto max-h-[min(28rem,60vh)] pl-0.5 [scrollbar-width:thin]" role="list">
+                            {{-- Thumbnails: horizontal strip on mobile, vertical on sm+ using flex-row / sm:flex-col trick via parent direction --}}
+                            <aside class="mt-3 sm:mt-0" aria-labelledby="tour-photo-gallery-heading">
+                                <div class="flex flex-row gap-2 overflow-x-auto sm:grid sm:grid-cols-5 sm:gap-2 sm:overflow-x-visible pb-1 sm:pb-0 [scrollbar-width:thin]" role="list">
                                     @foreach($galleryImages as $index => $gImg)
                                     <button
                                         type="button"
                                         role="listitem"
                                         data-tour-image="{{ e($gImg) }}"
-                                        class="tour-gallery-thumb group block w-full aspect-[4/3] shrink-0 rounded-lg overflow-hidden bg-gray-100 border-2 {{ $index === 0 ? 'border-red-500 ring-2 ring-red-500 ring-offset-1 ring-offset-white' : 'border-gray-200' }} hover:border-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1 transition-colors text-left"
+                                        class="tour-gallery-thumb group flex-shrink-0 w-20 sm:w-auto aspect-[4/3] rounded-lg overflow-hidden bg-gray-100 border-2 {{ $index === 0 ? 'border-red-500 ring-2 ring-red-500 ring-offset-1 ring-offset-white' : 'border-gray-200' }} hover:border-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1 transition-colors text-left"
                                         aria-label="Show image {{ $index + 1 }} in main view"
                                         aria-pressed="{{ $index === 0 ? 'true' : 'false' }}"
                                     >
@@ -252,7 +265,7 @@
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400 transition-transform duration-300" :class="activeSection === 'itinerary' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div x-show="activeSection === 'itinerary'" x-collapse class="p-5 pt-0 ml-14">
+                            <div x-show="activeSection === 'itinerary'" x-collapse class="p-4 sm:p-5 pt-0 sm:ml-14">
                                 <div class="space-y-6 pt-4 border-t border-gray-50">
                                     @if(!empty($package->itinerary) && is_array($package->itinerary))
                                         @foreach($package->itinerary as $index => $day)
@@ -304,7 +317,7 @@
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400 transition-transform duration-300" :class="activeSection === '{{ $sec['id'] }}' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="px-5 pb-5 pt-0 {{ $sec['id'] === 'included' ? 'ml-14' : 'ml-14' }}">
+                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="px-4 sm:px-5 pb-4 sm:pb-5 pt-0 sm:ml-14">
                                 <div class="pt-4 border-t border-gray-100 rounded-b-xl {{ $sec['id'] === 'included' ? 'bg-green-50/40' : '' }} {{ $sec['id'] === 'excluded' ? 'bg-orange-50/40' : '' }} {{ in_array($sec['id'], ['included', 'excluded']) ? 'px-4 py-3 -mx-1' : 'pt-1' }}">
                                     @if(isset($sec['is_list']) && is_array($sec['content']))
                                         @if(isset($sec['list_style']) && $sec['list_style'] === 'included')
@@ -360,10 +373,10 @@
                     </div>
 
                     <!-- Customized Tour Banner (same width as Overview) -->
-                    <div class="mt-12 bg-white rounded-2xl p-8 border border-gray-100 flex flex-col md:flex-row items-center justify-between shadow-sm relative overflow-hidden group">
+                    <div class="mt-8 sm:mt-12 bg-white rounded-2xl p-5 sm:p-8 border border-gray-100 flex flex-col md:flex-row items-center justify-between shadow-sm relative overflow-hidden group">
                         <div class="absolute -right-20 -top-20 w-60 h-60 bg-red-50 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
-                        <div class="relative z-10 text-center md:text-left mb-6 md:mb-0">
-                            <h2 class="text-xl font-bold text-gray-900 mb-2">Need a Personalized Plan?</h2>
+                        <div class="relative z-10 text-center md:text-left mb-4 md:mb-0">
+                            <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-1.5">Need a Personalized Plan?</h2>
                             <p class="text-sm text-gray-500 max-w-md">Our experts can craft a custom itinerary tailored to your specific needs and budget.</p>
                         </div>
                         <div class="relative z-10 flex gap-3">
@@ -375,9 +388,9 @@
                 </div>
 
                 <!-- Right Column: Sidebar -->
-                <div class="lg:col-span-1">
-                    <div class="sticky top-20 space-y-6">
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8" x-data="{ 
+                <div class="lg:col-span-1" id="booking-form">
+                    <div class="lg:sticky lg:top-20 space-y-6">
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:p-8" x-data="{ 
                             adults: 1,
                             children: 0,
                             infants: 0,
@@ -498,8 +511,8 @@
 
             <!-- Related Packages -->
             @if(isset($relatedPackages) && count($relatedPackages) > 0)
-                <div class="mt-16">
-                    <div class="flex items-center justify-between mb-8">
+                <div class="mt-10 sm:mt-16">
+                    <div class="flex items-center justify-between mb-5 sm:mb-8">
                         <h2 class="text-xl font-bold text-gray-900">Recommended Tours</h2>
                         <a href="{{ route('packages.index') }}" class="text-xs font-bold text-red-600 hover:underline">View All</a>
                     </div>
