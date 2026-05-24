@@ -1,6 +1,13 @@
 /* Google Fonts — must be FIRST */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,700;1,700&display=swap');
 
+/* iOS safe area for bottom nav */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  @media (min-width: 768px) { body { padding-bottom: 0; } }
+  .mobile-bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

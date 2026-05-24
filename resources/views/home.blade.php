@@ -37,7 +37,7 @@
 {{-- ═══════════════════════════════════════
      HERO  — image slider + search card
 ═══════════════════════════════════════ --}}
-<div class="relative" style="min-height:680px;"
+<div class="relative" style="min-height:520px;"
      x-data="{ s:0, init(){ setInterval(()=>this.s=(this.s+1)%3, 5500) } }">
 
     {{-- Slides --}}
@@ -55,12 +55,12 @@
     <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.65) 100%);"></div>
 
     {{-- Content --}}
-    <div class="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center">
-        <h1 class="text-white font-extrabold text-4xl md:text-6xl leading-tight mb-3 drop-shadow-xl"
+    <div class="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center pt-8 pb-6">
+        <h1 class="text-white font-extrabold text-3xl sm:text-4xl md:text-6xl leading-tight mb-2 drop-shadow-xl"
             style="font-family:'Merriweather',Georgia,serif;">
             Discover <span class="text-red-400"> Beyond</span>
         </h1>
-        <p class="text-white/80 text-lg mb-10 max-w-xl">Tours · Visa · Hotels · Airport Transfers. All in one trusted place.</p>
+        <p class="text-white/80 text-sm sm:text-base md:text-lg mb-6 max-w-xl">Tours · Visa · Hotels · Airport Transfers. All in one trusted place.</p>
 
         {{-- ── Search Widget ── --}}
         <div class="w-full max-w-3xl"
@@ -84,29 +84,29 @@
              @click.away="show=false">
 
             {{-- Modern Tabs --}}
-            <div class="flex flex-wrap justify-center gap-1 mb-6 bg-white/10 backdrop-blur-md rounded-2xl p-1.5 w-fit mx-auto">
+            <div class="flex justify-center gap-1 mb-4 bg-white/10 backdrop-blur-md rounded-2xl p-1 w-full sm:w-fit mx-auto overflow-x-auto scrollbar-hide">
                 <button @click="reset('tours')"
-                        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+                        class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5"
                         :class="tab==='tours' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
-                    <svg class="w-4 h-4" :class="tab==='tours' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='tours' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     Tours
                 </button>
                 <button @click="reset('visas')"
-                        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+                        class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5"
                         :class="tab==='visas' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
-                    <svg class="w-4 h-4" :class="tab==='visas' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0H6"/></svg>
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='visas' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0H6"/></svg>
                     Visa
                 </button>
                 <button @click="reset('hotels')"
-                        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+                        class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5"
                         :class="tab==='hotels' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
-                    <svg class="w-4 h-4" :class="tab==='hotels' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='hotels' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     Hotels
                 </button>
                 <button @click="reset('transfers')"
-                        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+                        class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5"
                         :class="tab==='transfers' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
-                    <svg class="w-4 h-4" :class="tab==='transfers' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='transfers' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
                     Pick &amp; Drop
                 </button>
             </div>
@@ -279,6 +279,8 @@
                                 </button>
                             </div>
                         </div>
+                    </form>
+                </template>
 
                 {{-- Autocomplete dropdown --}}
                 <div x-show="show && suggestions.length > 0"
@@ -321,7 +323,7 @@
      TRUST BAR
 ═══════════════════════════════════════ --}}
 <div class="bg-white border-b border-gray-100 shadow-sm">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex flex-wrap items-center justify-center gap-8 text-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm">
         <div class="flex items-center gap-2.5 text-gray-600">
             <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
                 <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
@@ -358,13 +360,13 @@
 {{-- ═══════════════════════════════════════
      FEATURED PACKAGES
 ═══════════════════════════════════════ --}}
-<section class="bg-gray-50 py-14">
+<section class="bg-gray-50 py-8 sm:py-14">
     <div class="max-w-6xl mx-auto px-4">
 
-        <div class="flex items-end justify-between mb-8">
+        <div class="flex items-end justify-between mb-5 sm:mb-8">
             <div>
-                <p class="section-eyebrow mb-1.5">Handpicked for you</p>
-                <h2 class="text-3xl font-extrabold text-gray-900">Featured Tour Packages</h2>
+                <p class="section-eyebrow mb-1">Handpicked for you</p>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900">Featured Tour Packages</h2>
             </div>
             <a href="{{ route('packages.index') }}" class="hidden md:flex items-center gap-1 text-sm font-semibold text-red-600 hover:text-red-700">
                 View all <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -372,11 +374,11 @@
         </div>
 
         @if($packages->count() > 0)
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
             @foreach($packages as $package)
             <a href="{{ route('packages.show', $package->slug) }}" class="travel-card flex flex-col group">
                 {{-- Image --}}
-                <div class="relative overflow-hidden" style="height:200px;">
+                <div class="relative overflow-hidden" style="height:160px;">
                     @if($package->thumbnail)
                         <img src="{{ Str::startsWith($package->thumbnail,'http') ? $package->thumbnail : Storage::url($package->thumbnail) }}"
                              alt="{{ $package->title }}"
@@ -400,22 +402,21 @@
                     @endif
                 </div>
                 {{-- Info --}}
-                <div class="p-4 flex flex-col flex-1">
-                    <div class="flex items-center gap-1 text-xs text-gray-400 font-medium mb-1">
-                        <svg class="w-3.5 h-3.5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
-                        {{ $package->location ?? $package->destination ?? 'International' }}
+                <div class="p-3 sm:p-4 flex flex-col flex-1">
+                    <div class="flex items-center gap-1 text-[10px] sm:text-xs text-gray-400 font-medium mb-1">
+                        <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-red-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                        <span class="truncate">{{ $package->location ?? $package->destination ?? 'International' }}</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 mb-3 group-hover:text-red-600 transition flex-1">
+                    <h3 class="font-bold text-gray-900 text-xs sm:text-sm leading-snug line-clamp-2 mb-2 sm:mb-3 group-hover:text-red-600 transition flex-1">
                         {{ $package->title }}
                     </h3>
-                    <div class="flex items-center justify-between border-t border-gray-50 pt-3">
+                    <div class="flex items-center justify-between border-t border-gray-50 pt-2 sm:pt-3">
                         <div>
-                            <span class="text-[10px] text-gray-400 block">Starting from</span>
-                            <span class="text-lg font-extrabold text-red-600">৳{{ number_format($package->price) }}</span>
-                            <span class="text-[10px] text-gray-400 block">per person</span>
+                            <span class="text-[9px] sm:text-[10px] text-gray-400 block">From</span>
+                            <span class="text-sm sm:text-lg font-extrabold text-red-600">৳{{ number_format($package->price) }}</span>
                         </div>
-                        <span class="bg-gray-900 text-white text-xs font-semibold px-3 py-2 rounded-lg group-hover:bg-red-600 transition">
-                            Book Now
+                        <span class="bg-gray-900 text-white text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg group-hover:bg-red-600 transition">
+                            Book
                         </span>
                     </div>
                 </div>
@@ -439,13 +440,13 @@
 {{-- ═══════════════════════════════════════
      POPULAR DESTINATIONS
 ═══════════════════════════════════════ --}}
-<section class="bg-white py-12">
+<section class="bg-white py-8 sm:py-12">
     <div class="max-w-6xl mx-auto px-4">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-extrabold text-gray-900">Popular Destinations</h2>
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900">Popular Destinations</h2>
             <a href="{{ route('packages.index') }}" class="text-sm font-semibold text-red-600 hover:underline">Explore all</a>
         </div>
-        <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-3">
+        <div class="grid grid-cols-5 sm:grid-cols-5 lg:grid-cols-10 gap-2 sm:gap-3">
             @php $dests = [
                 ["Cox's Bazar",'BD','#3b82f6'],['Bandarban','BD','#10b981'],['Sylhet','BD','#8b5cf6'],
                 ['Maldives','MV','#06b6d4'],['Bangkok','TH','#f59e0b'],['Bali','ID','#ef4444'],
@@ -453,12 +454,12 @@
             ]; @endphp
             @foreach($dests as [$name,$code,$color])
             <a href="{{ route('packages.index', ['search'=>$name]) }}"
-               class="flex flex-col items-center gap-2 p-3 rounded-2xl hover:bg-gray-50 transition group text-center">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white text-lg shadow-sm transition group-hover:scale-110"
+               class="flex flex-col items-center gap-1.5 p-2 sm:p-3 rounded-2xl hover:bg-gray-50 transition group text-center">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-white text-sm sm:text-lg shadow-sm transition group-hover:scale-110"
                      style="background:{{ $color }};">
                     {{ $code }}
                 </div>
-                <span class="text-xs font-semibold text-gray-700 group-hover:text-red-600 transition leading-tight">{{ $name }}</span>
+                <span class="text-[10px] sm:text-xs font-semibold text-gray-700 group-hover:text-red-600 transition leading-tight">{{ $name }}</span>
             </a>
             @endforeach
         </div>
@@ -503,12 +504,12 @@
 {{-- ═══════════════════════════════════════
      VISA SERVICES
 ═══════════════════════════════════════ --}}
-<section class="bg-white py-14">
+<section class="bg-white py-8 sm:py-14">
     <div class="max-w-6xl mx-auto px-4">
-        <div class="flex items-end justify-between mb-8">
+        <div class="flex items-end justify-between mb-5 sm:mb-8">
             <div>
-                <p class="section-eyebrow mb-1.5">184 countries covered</p>
-                <h2 class="text-3xl font-extrabold text-gray-900">Visa Processing Services</h2>
+                <p class="section-eyebrow mb-1">184 countries covered</p>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900">Visa Processing Services</h2>
                 <p class="text-gray-500 mt-1 text-sm">94.2% approval rate · Hassle-free documentation</p>
             </div>
             <a href="{{ route('visas.index') }}" class="hidden md:flex items-center gap-1 text-sm font-semibold text-red-600 hover:text-red-700">
@@ -517,11 +518,11 @@
         </div>
 
         @if(isset($visas) && $visas->count() > 0)
-        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3">
             @foreach($visas->take(12) as $visa)
             <a href="{{ route('visas.show', $visa->slug) }}" class="visa-card group">
-                <div class="text-3xl mb-2 block">{{ $visa->flag_emoji ?? '🌍' }}</div>
-                <p class="text-xs font-bold text-gray-800 group-hover:text-red-600 transition leading-tight">{{ $visa->country }}</p>
+                <div class="text-2xl sm:text-3xl mb-1.5 sm:mb-2 block">{{ $visa->flag_emoji ?? '🌍' }}</div>
+                <p class="text-[10px] sm:text-xs font-bold text-gray-800 group-hover:text-red-600 transition leading-tight">{{ $visa->country }}</p>
                 @if($visa->processing_time)
                 <p class="text-[10px] text-gray-400 mt-1">{{ $visa->processing_time }}</p>
                 @endif
@@ -532,7 +533,7 @@
             @endforeach
         </div>
         @else
-        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3">
             @foreach([['🇲🇾','Malaysia','3-5 days'],['🇹🇭','Thailand','3-5 days'],['🇦🇪','UAE','3-7 days'],['🇸🇬','Singapore','5-7 days'],['🇮🇩','Indonesia','3-5 days'],['🇯🇵','Japan','5-7 days'],['🇰🇷','S. Korea','5-7 days'],['🇬🇧','UK','10-15 days'],['🇺🇸','USA','15-30 days'],['🇨🇦','Canada','20-30 days'],['🇮🇳','India','2-3 days'],['🌍','Schengen','7-15 days']] as [$f,$n,$t])
             <div class="visa-card">
                 <div class="text-3xl mb-2">{{ $f }}</div>
@@ -553,13 +554,13 @@
 {{-- ═══════════════════════════════════════
      WHY CHOOSE US
 ═══════════════════════════════════════ --}}
-<section class="bg-gray-50 py-14">
+<section class="bg-gray-50 py-8 sm:py-14">
     <div class="max-w-6xl mx-auto px-4">
-        <div class="text-center mb-10">
+        <div class="text-center mb-6 sm:mb-10">
             <p class="section-eyebrow mb-2">Why travellers trust us</p>
-            <h2 class="text-3xl font-extrabold text-gray-900">The FlyoverBD Difference</h2>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900">The FlyoverBD Difference</h2>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
             @php $features = [
                 ['bg-red-50','text-red-600','M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z','Best Price Guarantee','We match any lower price you find within 24 hours of booking.'],
                 ['bg-blue-50','text-blue-600','M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2','Visa Experts','Our visa team has a 94.2% approval rate across 184 destinations.'],
@@ -567,12 +568,12 @@
                 ['bg-purple-50','text-purple-600','M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z','24/7 Human Support','Real people on WhatsApp, not bots. Always available, always helpful.'],
             ]; @endphp
             @foreach($features as [$bg,$color,$icon,$title,$desc])
-            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 {{ $bg }} rounded-xl flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 {{ $color }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $icon }}"/></svg>
+            <div class="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 {{ $bg }} rounded-xl flex items-center justify-center mb-3 sm:mb-4">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 {{ $color }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $icon }}"/></svg>
                 </div>
-                <h3 class="font-bold text-gray-900 mb-2">{{ $title }}</h3>
-                <p class="text-sm text-gray-500 leading-relaxed">{!! $desc !!}</p>
+                <h3 class="font-bold text-gray-900 text-sm sm:text-base mb-1.5 sm:mb-2">{{ $title }}</h3>
+                <p class="text-xs sm:text-sm text-gray-500 leading-relaxed hidden sm:block">{!! $desc !!}</p>
             </div>
             @endforeach
         </div>
@@ -594,10 +595,10 @@
                 All articles <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
             @foreach($recentPosts as $post)
             <article class="travel-card group flex flex-col">
-                <a href="{{ route('blog.show', $post->slug) }}" class="block overflow-hidden" style="height:185px;">
+                <a href="{{ route('blog.show', $post->slug) }}" class="block overflow-hidden" style="height:130px;">
                     @if($post->image)
                         <img src="{{ Storage::url($post->image) }}" alt="{{ $post->title }}"
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
@@ -605,9 +606,9 @@
                         <div class="w-full h-full" style="background:linear-gradient(135deg,#667eea,#764ba2);"></div>
                     @endif
                 </a>
-                <div class="p-5 flex flex-col flex-1">
-                    <p class="text-xs text-gray-400 mb-2">{{ $post->published_at ? $post->published_at->format('M d, Y') : '' }}</p>
-                    <h3 class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 mb-2 group-hover:text-red-600 transition flex-1">
+                <div class="p-3 sm:p-5 flex flex-col flex-1">
+                    <p class="text-[10px] sm:text-xs text-gray-400 mb-1 sm:mb-2">{{ $post->published_at ? $post->published_at->format('M d, Y') : '' }}</p>
+                    <h3 class="font-bold text-gray-900 text-xs sm:text-sm leading-snug line-clamp-2 mb-1 sm:mb-2 group-hover:text-red-600 transition flex-1">
                         <a href="{{ route('blog.show', $post->slug) }}">{{ $post->title }}</a>
                     </h3>
                     <a href="{{ route('blog.show', $post->slug) }}" class="inline-flex items-center gap-1 text-xs font-semibold text-red-600 mt-2">
@@ -624,13 +625,13 @@
 {{-- ═══════════════════════════════════════
      CTA BANNER
 ═══════════════════════════════════════ --}}
-<section class="py-16" style="background:linear-gradient(135deg,#1a1a2e 0%,#C8102E 100%);">
+<section class="py-10 sm:py-16" style="background:linear-gradient(135deg,#1a1a2e 0%,#C8102E 100%);">
     <div class="max-w-3xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-extrabold text-white mb-4" style="font-family:'Merriweather',Georgia,serif;">
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white mb-3 sm:mb-4" style="font-family:'Merriweather',Georgia,serif;">
             Ready for your next adventure?
         </h2>
-        <p class="text-white/75 text-lg mb-8">Talk to our travel experts for free. No obligations, no hidden fees.</p>
-        <div class="flex flex-wrap justify-center gap-3">
+        <p class="text-white/75 text-sm sm:text-lg mb-6 sm:mb-8">Talk to our travel experts for free. No obligations, no hidden fees.</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-3">
             <a href="{{ route('packages.index') }}" class="bg-white text-red-600 hover:bg-gray-50 font-bold px-8 py-4 rounded-xl transition shadow-lg text-sm">
                 Browse Packages
             </a>

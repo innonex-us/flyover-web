@@ -303,11 +303,11 @@
         </main>
 
         <!-- Footer -->
-        <footer style="background:#18130E;" class="text-white pt-14 pb-8">
+        <footer style="background:#18130E;" class="text-white pt-8 sm:pt-14 pb-8">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-10 border-b" style="border-color:#2E2720;">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 pb-8 sm:pb-10 border-b" style="border-color:#2E2720;">
                     <!-- Brand -->
-                    <div class="md:col-span-1">
+                    <div class="col-span-2 md:col-span-1">
                         <a href="{{ route('home') }}" class="mb-4 inline-block">
                             <img src="{{ asset('logo.png') }}" alt="FlyoverBD" class="h-10 w-auto">
                         </a>
@@ -374,7 +374,7 @@
     <!-- ═══════════════════════════════════════
          MOBILE BOTTOM NAVIGATION BAR
     ═══════════════════════════════════════ -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-2xl">
+    <nav class="mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-2xl">
         <div class="flex items-stretch h-[68px]">
 
             {{-- Home --}}
@@ -479,7 +479,7 @@
                             <p class="text-xs text-gray-400 truncate">{{ Auth::user()->email }}</p>
                         </div>
                     </div>
-                    @endif
+                    @endauth
                     <div class="grid grid-cols-4 gap-3 mb-4">
                         <a href="{{ route('blog.index') }}" @click="moreOpen=false" class="flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-gray-50 hover:bg-red-50 transition group">
                             <svg class="w-5 h-5 text-gray-500 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
