@@ -333,10 +333,10 @@
 
                 {{-- ── Hotels ── --}}
                 <template x-if="tab==='hotels'">
-                    <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-3">
-                        <div class="flex flex-col gap-2">
+                    <div class="bg-white rounded-3xl shadow-2xl shadow-black/25 p-4 text-left">
+                        <div class="flex flex-col gap-3">
                             {{-- destination --}}
-                            <div class="flex items-center px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                            <div class="flex items-center px-3 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
                                 <svg class="w-4 h-4 text-red-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 <input type="text" x-model="query" @input="fetchSuggestions()" @focus="fetchSuggestions()"
                                        placeholder="Where do you want to stay?"
@@ -345,10 +345,10 @@
                                 <div x-show="loading" class="w-3.5 h-3.5 border-2 border-red-500 border-t-transparent rounded-full animate-spin ml-2 flex-shrink-0"></div>
                             </div>
                             {{-- date row --}}
-                            <div class="grid grid-cols-3 gap-1.5">
+                            <div class="grid grid-cols-3 gap-2">
                                 <button type="button" @click.stop="openCal('checkIn')"
-                                        class="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
-                                        :class="calOpen==='checkIn' ? 'border-red-400 bg-red-50' : 'border-gray-100'">
+                                        class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
+                                        :class="calOpen==='checkIn' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
                                     <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     <div class="min-w-0">
                                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Check-in</p>
@@ -356,15 +356,15 @@
                                     </div>
                                 </button>
                                 <button type="button" @click.stop="openCal('checkOut')"
-                                        class="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
-                                        :class="calOpen==='checkOut' ? 'border-red-400 bg-red-50' : 'border-gray-100'">
+                                        class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
+                                        :class="calOpen==='checkOut' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
                                     <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     <div class="min-w-0">
                                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Check-out</p>
                                         <p class="text-sm font-semibold text-gray-700 truncate" x-text="checkOut ? fmtDateShort(checkOut) : 'Select'"></p>
                                     </div>
                                 </button>
-                                <div class="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border border-gray-100 rounded-xl col-span-1">
+                                <div class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border border-gray-200 rounded-xl col-span-1">
                                     <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Guests</p>
@@ -434,45 +434,44 @@
 
                 {{-- ── Pick & Drop ── --}}
                 <template x-if="tab==='transfers'">
-                    <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-3">
-                        <div class="flex flex-col gap-2">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="flex items-center gap-2 px-3 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Pickup</p>
-                                        <input type="text" name="pickup" x-model="query" placeholder="Dhaka Airport…"
-                                               class="w-full text-gray-800 text-xs font-medium border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent" autocomplete="off">
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2 px-3 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <svg class="w-4 h-4 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Drop-off</p>
-                                        <input type="text" name="drop" placeholder="Cox's Bazar Hotel…"
-                                               class="w-full text-gray-800 text-xs font-medium border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent" autocomplete="off">
-                                    </div>
+                    <div class="bg-white rounded-3xl shadow-2xl shadow-black/25 p-4 text-left">
+                        <div class="flex flex-col gap-3">
+                            {{-- Pickup --}}
+                            <div class="flex items-center px-3 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Pickup</p>
+                                    <input type="text" name="pickup" x-model="query" placeholder="Dhaka Airport, Cox's Bazar…"
+                                           class="w-full text-gray-800 text-sm border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent" autocomplete="off">
                                 </div>
                             </div>
+                            {{-- Drop-off --}}
+                            <div class="flex items-center px-3 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                <svg class="w-4 h-4 text-red-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Drop-off</p>
+                                    <input type="text" name="drop" placeholder="Hotel, destination…"
+                                           class="w-full text-gray-800 text-sm border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent" autocomplete="off">
+                                </div>
+                            </div>
+                            {{-- Date + Passengers --}}
                             <div class="grid grid-cols-2 gap-2">
-                                {{-- Date picker --}}
                                 <button type="button" @click.stop="openCal('travelDate')"
-                                        class="flex items-center gap-1.5 px-2.5 py-2.5 bg-gray-50 border rounded-xl transition-all text-left"
-                                        :class="calOpen==='travelDate' ? 'border-red-400 bg-red-50' : 'border-gray-100'">
+                                        class="flex items-center gap-2 px-3 py-3 bg-gray-50 border rounded-xl transition-all text-left"
+                                        :class="calOpen==='travelDate' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
                                     <svg class="w-4 h-4 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                    <div>
+                                    <div class="min-w-0">
                                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Date</p>
-                                        <p class="text-sm font-semibold text-gray-700" x-text="travelDate ? fmtDateShort(travelDate) : 'Select'"></p>
+                                        <p class="text-sm font-semibold text-gray-700 truncate" x-text="travelDate ? fmtDateShort(travelDate) : 'Select'"></p>
                                     </div>
                                 </button>
-                                {{-- Passengers --}}
-                                <div class="flex items-center gap-2 px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-xl">
+                                <div class="flex items-center gap-2 px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl">
                                     <svg class="w-4 h-4 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Passengers</p>
-                                        <div class="flex items-center gap-1">
+                                        <div class="flex items-center gap-1 mt-0.5">
                                             <button type="button" @click.stop="passengers=Math.max(1,passengers-1)" class="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">−</button>
-                                            <span class="text-sm font-bold text-gray-800 w-4 text-center" x-text="passengers"></span>
+                                            <span class="text-sm font-bold text-gray-800 w-5 text-center" x-text="passengers"></span>
                                             <button type="button" @click.stop="passengers=Math.min(50,passengers+1)" class="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">+</button>
                                         </div>
                                     </div>
