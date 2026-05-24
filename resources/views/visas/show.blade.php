@@ -90,8 +90,13 @@
         </div>
     </section>
 
+    {{-- ── Share Options ─────────────────────── --}}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <x-share-buttons :title="$visa->country . ' Visa - ' . $visa->type" />
+    </div>
+
     {{-- ── Body ─────────────────────────────── --}}
-    <div class="py-10" style="background:#F9F6EF;">
+    <div class="py-2" style="background:#F9F6EF;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             @if(session('success'))

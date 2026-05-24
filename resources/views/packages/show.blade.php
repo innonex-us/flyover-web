@@ -134,8 +134,13 @@
             </div>
         </section>
 
+        {{-- ── Share Options ─────────────────────── --}}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+            <x-share-buttons :title="$package->title" />
+        </div>
+
         {{-- ── Main Content ─────────────────────── --}}
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
 
             @if(session('success'))
             <div class="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-5 py-4 rounded-xl text-sm font-medium mb-6">

@@ -8,6 +8,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Short Link Redirect
+Route::get('/s/{code}', [App\Http\Controllers\ShortLinkController::class, 'redirect'])->name('short-link.redirect');
+
+// Pick & Drop Transfers
+Route::get('/transfers', [App\Http\Controllers\TransferController::class, 'index'])->name('transfers.index');
+Route::post('/transfers', [App\Http\Controllers\TransferController::class, 'store'])->name('transfers.store');
+Route::get('/transfers/{booking}/confirmation', [App\Http\Controllers\TransferController::class, 'confirmation'])->name('transfers.confirmation');
+
+// Hotels
+Route::get('/hotels', [App\Http\Controllers\HotelController::class, 'index'])->name('hotels.index');
+Route::post('/hotels/book', [App\Http\Controllers\HotelController::class, 'book'])->name('hotels.book');
+Route::get('/hotels/bookings/{booking}/confirmation', [App\Http\Controllers\HotelController::class, 'confirmation'])->name('hotels.confirmation');
+Route::get('/hotels/{hotel:slug}', [App\Http\Controllers\HotelController::class, 'show'])->name('hotels.show');
+
 Route::get('/tours', [PackageController::class, 'index'])->name('packages.index');
 Route::get('/plan-my-trip', [PackageController::class, 'showCustomPlanForm'])->name('customize.index');
 Route::get('/tours/{slug}', [PackageController::class, 'show'])->name('packages.show');
@@ -72,6 +86,18 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::resource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy']);
     Route::resource('blog', \App\Http\Controllers\Admin\BlogController::class);
     Route::post('/upload-image', [\App\Http\Controllers\Admin\ImageUploadController::class, 'store'])->name('upload.image');
+
+    // Short Links
+    Route::resource('short-links', \App\Http\Controllers\Admin\ShortLinkController::class)->only(['index', 'create', 'store', 'destroy']);
+
+    // Pick & Drop
+    Route::resource('transfer-routes', \App\Http\Controllers\Admin\TransferRouteController::class);
+    Route::resource('transfer-bookings', \App\Http\Controllers\Admin\TransferBookingController::class)->only(['index', 'show', 'update', 'destroy']);
+
+    // Hotels
+    Route::resource('hotels', \App\Http\Controllers\Admin\HotelController::class);
+    Route::resource('hotels.rooms', \App\Http\Controllers\Admin\HotelRoomController::class);
+    Route::resource('hotel-bookings', \App\Http\Controllers\Admin\HotelBookingController::class)->only(['index', 'show', 'update', 'destroy']);
 });
 
 require __DIR__.'/auth.php';

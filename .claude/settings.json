@@ -6,7 +6,25 @@
       "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Edit Package\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/packages/edit.blade.php)",
       "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Visa Services\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/visas/index.blade.php)",
       "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Add Visa\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/visas/create.blade.php)",
-      "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Edit Visa\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/visas/edit.blade.php)"
+      "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Edit Visa\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/visas/edit.blade.php)",
+      "Bash(php /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/artisan migrate)",
+      "Bash(php /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/artisan migrate:status)",
+      "Bash(php /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/artisan route:list --name=admin.short-links,admin.transfer,admin.hotel,transfers,hotels,short-link)",
+      "Bash(php /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/artisan route:list)",
+      "Bash(php /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/artisan config:clear)",
+      "Bash(php /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/artisan cache:clear)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Http/Controllers/ShortLinkController.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Http/Controllers/Admin/ShortLinkController.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Http/Controllers/TransferController.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Http/Controllers/Admin/TransferRouteController.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Http/Controllers/Admin/TransferBookingController.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Models/ShortLink.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Models/TransferRoute.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Models/TransferBooking.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Models/Hotel.php)",
+      "Bash(php -l /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/app/Models/HotelRoom.php)",
+      "Bash(php /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/artisan view:cache)",
+      "Bash(php /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/artisan view:clear)"
     ]
   }
 }
