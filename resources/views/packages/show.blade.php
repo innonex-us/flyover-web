@@ -51,7 +51,7 @@
     </script>
     @endpush
 
-    <div class="min-h-screen bg-gray-50 pb-12" x-data="{
+    <div class="min-h-screen pb-12" style="background:#F9F6EF;" x-data="{
         openInquiryModal: false,
         activeSection: 'itinerary',
         inquiryForm: {
