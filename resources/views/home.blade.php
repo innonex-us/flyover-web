@@ -117,17 +117,17 @@
                 {{-- Tours --}}
                 <template x-if="tab==='tours'">
                     <form action="{{ route('packages.index') }}" method="GET">
-                        <div class="bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden">
-                            <div class="flex items-center p-2">
-                                <div class="flex-1 flex items-center px-4 py-3">
+                        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-4 md:p-3">
+                            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+                                <div class="w-full flex-1 flex items-center px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
                                     <svg class="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                     <input type="text" name="search" x-model="query"
                                            @input="fetchSuggestions()" @focus="fetchSuggestions()"
                                            placeholder="Where do you want to go?"
-                                           class="flex-1 text-gray-800 text-base outline-none placeholder-gray-400 bg-transparent"
+                                           class="w-full text-gray-800 text-base border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
                                            autocomplete="off">
                                 </div>
-                                <button type="submit" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
+                                <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
                                     Search
                                 </button>
                             </div>
@@ -138,17 +138,17 @@
                 {{-- Visas --}}
                 <template x-if="tab==='visas'">
                     <form action="{{ route('visas.index') }}" method="GET">
-                        <div class="bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden">
-                            <div class="flex items-center p-2">
-                                <div class="flex-1 flex items-center px-4 py-3">
+                        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-4 md:p-3">
+                            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+                                <div class="w-full flex-1 flex items-center px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
                                     <svg class="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     <input type="text" name="search" x-model="query"
                                            @input="fetchSuggestions()" @focus="fetchSuggestions()"
                                            placeholder="Malaysia, Thailand, Schengen…"
-                                           class="flex-1 text-gray-800 text-base outline-none placeholder-gray-400 bg-transparent"
+                                           class="w-full text-gray-800 text-base border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
                                            autocomplete="off">
                                 </div>
-                                <button type="submit" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
+                                <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
                                     Find Visa
                                 </button>
                             </div>
@@ -159,59 +159,59 @@
                 {{-- Hotels --}}
                 <template x-if="tab==='hotels'">
                     <form action="{{ route('hotels.index') }}" method="GET">
-                        <div class="bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden">
-                            <div class="flex items-center p-2 gap-1">
+                        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-4 md:p-3">
+                            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
                                 {{-- Destination --}}
-                                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 border-r border-gray-100">
-                                    <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                                <div class="flex-1 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
                                         <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <span class="text-xs font-semibold text-gray-500 block">Destination</span>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Destination</span>
                                         <input type="text" name="search" x-model="query"
                                                @input="fetchSuggestions()" @focus="fetchSuggestions()"
                                                placeholder="Cox's Bazar, Dhaka…"
-                                               class="w-full text-gray-800 text-sm font-semibold outline-none placeholder-gray-400 bg-transparent"
+                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
                                                autocomplete="off">
                                     </div>
                                 </div>
                                 {{-- Check-in --}}
-                                <div class="flex items-center gap-3 px-3 py-2.5 border-r border-gray-100">
-                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                <div class="w-full md:w-40 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
                                         <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     </div>
-                                    <div>
-                                        <span class="text-xs font-semibold text-gray-500 block">Check-in</span>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Check-in</span>
                                         <input type="date" name="check_in" x-model="checkIn"
                                                :min="new Date().toISOString().split('T')[0]"
-                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent cursor-pointer w-[110px]">
+                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent cursor-pointer">
                                     </div>
                                 </div>
                                 {{-- Check-out --}}
-                                <div class="flex items-center gap-3 px-3 py-2.5 border-r border-gray-100">
-                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                <div class="w-full md:w-40 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
                                         <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     </div>
-                                    <div>
-                                        <span class="text-xs font-semibold text-gray-500 block">Check-out</span>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Check-out</span>
                                         <input type="date" name="check_out" x-model="checkOut"
                                                :min="checkIn || new Date().toISOString().split('T')[0]"
-                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent cursor-pointer w-[110px]">
+                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent cursor-pointer">
                                     </div>
                                 </div>
                                 {{-- Guests --}}
-                                <div class="flex items-center gap-3 px-3 py-2.5">
-                                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                <div class="w-full md:w-32 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
                                         <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                                     </div>
-                                    <div>
-                                        <span class="text-xs font-semibold text-gray-500 block">Guests</span>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Guests</span>
                                         <input type="number" name="persons" x-model="persons" min="1" max="20"
-                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent w-16">
+                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent">
                                     </div>
                                 </div>
                                 {{-- Button --}}
-                                <button type="submit" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-6 py-4 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap flex-shrink-0 ml-1">
+                                <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-4 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
                                     Search
                                 </button>
                             </div>
@@ -222,65 +222,63 @@
                 {{-- Pick & Drop --}}
                 <template x-if="tab==='transfers'">
                     <form action="{{ route('transfers.index') }}" method="GET">
-                        <div class="bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden">
-                            <div class="flex items-center p-2 gap-1">
+                        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-4 md:p-3">
+                            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
                                 {{-- Pickup --}}
-                                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 border-r border-gray-100">
-                                    <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+                                <div class="flex-1 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <div class="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
                                         <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <span class="text-xs font-semibold text-gray-500 block">Pickup</span>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Pickup</span>
                                         <input type="text" name="pickup" x-model="query"
                                                placeholder="Dhaka Airport…"
-                                               class="w-full text-gray-800 text-sm font-semibold outline-none placeholder-gray-400 bg-transparent"
+                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
                                                autocomplete="off">
                                     </div>
                                 </div>
                                 {{-- Drop-off --}}
-                                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 border-r border-gray-100">
-                                    <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                                <div class="flex-1 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
                                         <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <span class="text-xs font-semibold text-gray-500 block">Drop-off</span>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Drop-off</span>
                                         <input type="text" name="drop"
                                                placeholder="Cox's Bazar Hotel…"
-                                               class="w-full text-gray-800 text-sm font-semibold outline-none placeholder-gray-400 bg-transparent"
+                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
                                                autocomplete="off">
                                     </div>
                                 </div>
                                 {{-- Date --}}
-                                <div class="flex items-center gap-3 px-3 py-2.5 border-r border-gray-100">
-                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                <div class="w-full md:w-40 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
                                         <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     </div>
-                                    <div>
-                                        <span class="text-xs font-semibold text-gray-500 block">Date</span>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Date</span>
                                         <input type="date" name="travel_date" x-model="travelDate"
                                                :min="new Date(Date.now()+86400000).toISOString().split('T')[0]"
-                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent cursor-pointer w-[120px]">
+                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent cursor-pointer">
                                     </div>
                                 </div>
                                 {{-- Persons --}}
-                                <div class="flex items-center gap-3 px-3 py-2.5">
-                                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                <div class="w-full md:w-32 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
                                         <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                                     </div>
-                                    <div>
-                                        <span class="text-xs font-semibold text-gray-500 block">Persons</span>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Persons</span>
                                         <input type="number" name="passengers" x-model="passengers" min="1" max="50"
-                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent w-16">
+                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent">
                                     </div>
                                 </div>
                                 {{-- Button --}}
-                                <button type="submit" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-6 py-4 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap flex-shrink-0 ml-1">
+                                <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-4 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
                                     Book
                                 </button>
                             </div>
                         </div>
-                    </form>
-                </template>
 
                 {{-- Autocomplete dropdown --}}
                 <div x-show="show && suggestions.length > 0"
