@@ -1,213 +1,610 @@
-<x-admin-layout pageTitle="Dashboard">
+<x-admin-layout pageTitle="Analytics Dashboard">
 
-    {{-- Welcome bar --}}
-    <div class="flex items-center justify-between mb-6">
-        <p class="text-sm text-gray-500">
-            Good @php
-                $hour = now()->hour;
-                if ($hour < 12) echo 'morning';
-                elseif ($hour < 17) echo 'afternoon';
-                else echo 'evening';
-            @endphp, <span class="font-semibold text-gray-700">{{ auth()->user()->name }}</span>
-        </p>
-        <span class="text-xs text-gray-400">{{ now()->format('l, F j, Y') }}</span>
+@push('styles')
+    <style>
+        .metric-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            border: 1px solid rgb(243 244 246);
+            padding: 1.5rem;
+        }
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: rgb(17 24 39);
+        }
+        .metric-label {
+            font-size: 0.875rem;
+            color: rgb(75 85 99);
+            margin-top: 0.25rem;
+        }
+        .metric-change {
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+        .metric-change.positive {
+            color: rgb(34 197 94);
+        }
+        .metric-change.negative {
+            color: rgb(239 68 68);
+        }
+        .chart-container {
+            height: 16rem;
+            width: 100%;
+        }
+        .chart-container-large {
+            height: 20rem;
+            width: 100%;
+        }
+        .sidebar-nav {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            border: 1px solid rgb(243 244 246);
+            padding: 1rem;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: rgb(55 65 81);
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .nav-item:hover {
+            background-color: rgb(249 250 251);
+        }
+        .nav-item.active {
+            background-color: rgb(239 246 255);
+            color: rgb(37 99 235);
+        }
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        .main-content {
+            grid-column: 1;
+        }
+        .sidebar-content {
+            grid-column: 1;
+        }
+        
+        /* Responsive fixes */
+        @media (min-width: 768px) {
+            .metric-card {
+                padding: 1.25rem;
+            }
+            .metric-value {
+                font-size: 1.75rem;
+            }
+            .chart-container {
+                height: 18rem;
+            }
+            .chart-container-large {
+                height: 22rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .analytics-grid {
+                grid-template-columns: 2fr 1fr;
+                gap: 2rem;
+            }
+            .main-content {
+                grid-column: 1;
+            }
+            .sidebar-content {
+                grid-column: 2;
+            }
+            .metric-card {
+                padding: 1.5rem;
+            }
+            .metric-value {
+                font-size: 2rem;
+            }
+            .chart-container {
+                height: 16rem;
+            }
+            .chart-container-large {
+                height: 20rem;
+            }
+        }
+        
+        /* Header responsive fixes */
+        @media (max-width: 767px) {
+            .space-y-6 > div:first-child {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .space-y-6 > div:first-child > div:last-child {
+                width: 100%;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .space-y-6 > div:first-child select {
+                width: 100%;
+            }
+            .space-y-6 > div:first-child button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* Metric cards responsive grid */
+        @media (max-width: 767px) {
+            .grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.25rem;
+            }
+        }
+        
+        /* Chart container responsive */
+        @media (max-width: 767px) {
+            .chart-container,
+            .chart-container-large {
+                height: 12rem;
+            }
+        }
+        
+        /* Service charts grid */
+        @media (max-width: 767px) {
+            .grid-cols-1.md\\:grid-cols-2 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        /* Table responsive */
+        @media (max-width: 767px) {
+            .overflow-x-auto {
+                margin: 0 -1rem;
+                padding: 0 1rem;
+            }
+        }
+        
+        /* Performance metrics responsive */
+        @media (max-width: 767px) {
+            .space-y-4 > div {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+@endpush
+
+<div x-data="analyticsDashboard()" class="space-y-6">
+    <!-- Header with Period Selector -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
+            <p class="text-gray-600 mt-1">Comprehensive insights for your travel business</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <select x-model="period" @change="refreshData()" class="border border-gray-300 rounded-lg px-4 py-2 text-sm">
+                <option value="7d">Last 7 Days</option>
+                <option value="30d" selected>Last 30 Days</option>
+                <option value="90d">Last 90 Days</option>
+                <option value="1y">Last Year</option>
+            </select>
+            <button @click="refreshData()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                Refresh
+            </button>
+        </div>
     </div>
 
-    {{-- Stats Grid — 4 cols lg, 2 cols sm --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
-
-        {{-- Revenue --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center justify-between">
-            <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Revenue</p>
-                <p class="text-3xl font-extrabold text-gray-900 mt-1">৳{{ number_format($totalRevenue) }}</p>
-                <p class="text-xs text-gray-400 mt-2">{{ $confirmedBookingsCount }} confirmed</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-        </div>
-
-        {{-- Bookings --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center justify-between">
-            <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Bookings</p>
-                <p class="text-3xl font-extrabold text-gray-900 mt-1">{{ number_format($totalBookings) }}</p>
-                <p class="text-xs text-gray-400 mt-2">{{ $newBookingsCount }} pending &middot; {{ $confirmedBookingsCount }} confirmed</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
-                </svg>
-            </div>
-        </div>
-
-        {{-- Packages --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center justify-between">
-            <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Packages</p>
-                <p class="text-3xl font-extrabold text-gray-900 mt-1">{{ $totalPackages }}</p>
-                <p class="text-xs text-gray-400 mt-2">Live tour packages</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-        </div>
-
-        {{-- Visa Services --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center justify-between">
-            <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Visa Services</p>
-                <p class="text-3xl font-extrabold text-gray-900 mt-1">{{ $activeVisas }}</p>
-                <p class="text-xs text-gray-400 mt-2">Active destinations</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                </svg>
-            </div>
-        </div>
-
-    </div>
-
-    {{-- Blog mini-stats row --}}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-4 mb-6 flex items-center gap-6">
-        <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold mr-2">Blog</p>
-        <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span>
-            <span class="text-sm font-semibold text-gray-800">{{ $publishedPostsCount }}</span>
-            <span class="text-xs text-gray-400">Published</span>
-        </div>
-        <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-yellow-400 flex-shrink-0"></span>
-            <span class="text-sm font-semibold text-gray-800">{{ $draftPostsCount }}</span>
-            <span class="text-xs text-gray-400">Drafts</span>
-        </div>
-        <a href="{{ route('admin.blog.index') }}" class="ml-auto text-xs font-semibold text-gray-500 hover:text-gray-800 transition">Manage posts &rarr;</a>
-    </div>
-
-    {{-- Two-column grid --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        {{-- Recent Bookings --}}
-        <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                <h3 class="text-sm font-bold text-gray-800">Recent Bookings</h3>
-                <a href="{{ route('admin.bookings.index') }}" class="text-xs font-semibold text-red-600 hover:text-red-700 transition">View all &rarr;</a>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="border-b border-gray-100">
-                        <tr>
-                            <th class="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Customer</th>
-                            <th class="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Service</th>
-                            <th class="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Amount</th>
-                            <th class="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse($recentBookings as $booking)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-5 py-3.5 text-sm font-medium text-gray-900">
-                                {{ $booking->user ? $booking->user->name : $booking->guest_name }}
-                            </td>
-                            <td class="px-5 py-3.5 text-sm text-gray-600">
-                                {{ $booking->payable->title ?? $booking->payable->country ?? 'N/A' }}
-                            </td>
-                            <td class="px-5 py-3.5 text-sm font-semibold text-gray-900">
-                                ৳{{ number_format($booking->total_amount) }}
-                            </td>
-                            <td class="px-5 py-3.5">
-                                @php
-                                    $badgeClass = match($booking->status) {
-                                        'confirmed' => 'bg-green-100 text-green-700',
-                                        'pending'   => 'bg-yellow-100 text-yellow-700',
-                                        'cancelled' => 'bg-red-100 text-red-700',
-                                        'completed' => 'bg-blue-100 text-blue-700',
-                                        default     => 'bg-gray-100 text-gray-600',
-                                    };
-                                @endphp
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $badgeClass }}">
-                                    {{ ucfirst($booking->status) }}
-                                </span>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="4" class="px-5 py-10 text-center text-sm text-gray-400">No bookings yet.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        {{-- Quick Actions --}}
-        <div class="lg:col-span-1 bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-            <h3 class="text-sm font-bold text-gray-800 mb-4">Quick Actions</h3>
-            <div class="space-y-2.5">
-
-                <a href="{{ route('admin.packages.create') }}" class="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition group">
-                    <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
-                        <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
+    <!-- Key Metrics Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Revenue -->
+        <div class="metric-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="metric-value">৳{{ number_format($totalRevenue) }}</div>
+                    <div class="metric-label">Total Revenue</div>
+                    <div class="metric-change positive">
+                        {{ $performanceMetrics['conversionRate'] }}% conversion rate
                     </div>
-                    <div>
-                        <div class="text-sm font-semibold text-gray-800 group-hover:text-gray-900">Add Tour Package</div>
-                        <div class="text-xs text-gray-400">Create a new tour package</div>
-                    </div>
-                </a>
-
-                <a href="{{ route('admin.visas.create') }}" class="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition group">
-                    <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-sm font-semibold text-gray-800 group-hover:text-gray-900">Add Visa Service</div>
-                        <div class="text-xs text-gray-400">Offer a new visa destination</div>
-                    </div>
-                </a>
-
-                <a href="{{ route('admin.blog.create') }}" class="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition group">
-                    <div class="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0">
-                        <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-sm font-semibold text-gray-800 group-hover:text-gray-900">Write Blog Post</div>
-                        <div class="text-xs text-gray-400">Publish a new article</div>
-                    </div>
-                </a>
-
-            </div>
-
-            @if($recentPosts->count())
-            <div class="mt-5 pt-4 border-t border-gray-100">
-                <div class="flex items-center justify-between mb-3">
-                    <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Recent Posts</h4>
-                    <a href="{{ route('admin.blog.index') }}" class="text-xs text-red-600 hover:text-red-700 font-semibold transition">View all</a>
                 </div>
-                <div class="space-y-1.5">
-                    @foreach($recentPosts as $rp)
-                    <a href="{{ route('admin.blog.edit', $rp) }}" class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-gray-50 transition group">
-                        <span class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ $rp->is_published ? 'bg-green-500' : 'bg-gray-300' }}"></span>
-                        <span class="text-xs text-gray-600 group-hover:text-red-600 truncate transition">{{ $rp->title }}</span>
-                    </a>
+                <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings -->
+        <div class="metric-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="metric-value">{{ number_format($bookingStats['total']) }}</div>
+                    <div class="metric-label">Total Bookings</div>
+                    <div class="metric-change">
+                        {{ $bookingStats['pending'] }} pending &middot; {{ $bookingStats['confirmed'] }} confirmed
+                    </div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visitors -->
+        <div class="metric-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="metric-value">{{ number_format($visitorStats['totalVisitors']) }}</div>
+                    <div class="metric-label">Total Visitors</div>
+                    <div class="metric-change">
+                        {{ $visitorStats['bounceRate'] }}% bounce rate
+                    </div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services -->
+        <div class="metric-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="metric-value">{{ $totalPackages + $activeVisas }}</div>
+                    <div class="metric-label">Active Services</div>
+                    <div class="metric-change">
+                        {{ $totalPackages }} packages &middot; {{ $activeVisas }} visas
+                    </div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Analytics Grid -->
+    <div class="analytics-grid">
+        <!-- Main Content Area -->
+        <div class="main-content space-y-6">
+            <!-- Revenue Chart -->
+            <div class="metric-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Revenue Trends</h3>
+                    <div class="flex gap-2">
+                        <button @click="switchRevenueChart('line')" :class="revenueChartType === 'line' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'" class="px-3 py-1 rounded text-sm">Line</button>
+                        <button @click="switchRevenueChart('bar')" :class="revenueChartType === 'bar' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'" class="px-3 py-1 rounded text-sm">Bar</button>
+                    </div>
+                </div>
+                <div class="chart-container-large">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Bookings vs Visitors Chart -->
+            <div class="metric-card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Bookings vs Visitors</h3>
+                <div class="chart-container-large">
+                    <canvas id="bookingsVisitorsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Service Revenue Breakdown -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="metric-card">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Revenue by Service</h3>
+                    <div class="chart-container">
+                        <canvas id="serviceRevenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Booking Status</h3>
+                    <div class="chart-container">
+                        <canvas id="bookingStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Pages Table -->
+            <div class="metric-card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Pages</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Page</th>
+                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Views</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach($topPages as $page)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-sm">
+                                    <div class="font-medium text-gray-900">{{ $page['title'] ?? $page['path'] }}</div>
+                                    <div class="text-gray-500 text-xs">{{ $page['path'] }}</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-right font-medium">{{ number_format($page['views']) }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar-content space-y-6">
+            <!-- Quick Stats -->
+            <div class="metric-card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Conversion Rate</span>
+                            <span class="font-medium">{{ $performanceMetrics['conversionRate'] }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                            <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $performanceMetrics['conversionRate'] }}%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Avg Booking Value</span>
+                            <span class="font-medium">৳{{ number_format($performanceMetrics['avgBookingValue']) }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Revenue per Visitor</span>
+                            <span class="font-medium">৳{{ number_format($performanceMetrics['revenuePerVisitor']) }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Avg Session Duration</span>
+                            <span class="font-medium">{{ gmdate('i:s', $visitorStats['avgSessionDuration']) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Geography -->
+            <div class="metric-card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Countries</h3>
+                <div class="space-y-3">
+                    @foreach($visitorGeography as $country)
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">{{ $country['country_code'] }}</span>
+                            <span class="text-sm text-gray-600">{{ $country['country'] }}</span>
+                        </div>
+                        <span class="text-sm font-medium">{{ number_format($country['visitors']) }}</span>
+                    </div>
                     @endforeach
                 </div>
             </div>
-            @endif
 
+            <!-- Recent Activity -->
+            <div class="metric-card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Bookings</h3>
+                <div class="space-y-3">
+                    @foreach($recentBookings as $booking)
+                    <div class="text-sm">
+                        <div class="font-medium text-gray-900">{{ $booking->user?->name ?? $booking->guest_name ?? 'Guest' }}</div>
+                        <div class="text-gray-500">{{ $booking->payable_type }} - ৳{{ number_format($booking->total_amount) }}</div>
+                        <div class="text-xs text-gray-400">{{ $booking->created_at->diffForHumans() }}</div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Communication Stats -->
+            <div class="metric-card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Communication</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Contact Messages</span>
+                        <span class="text-sm font-medium">{{ $contactStats['total'] }}</span>
+                    </div>
+                    @if($contactStats['unread'] > 0)
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Unread</span>
+                        <span class="text-sm font-medium text-red-600">{{ $contactStats['unread'] }}</span>
+                    </div>
+                    @endif
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Customization Requests</span>
+                        <span class="text-sm font-medium">{{ $customizationStats['total'] }}</span>
+                    </div>
+                    @if($customizationStats['pending'] > 0)
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Pending</span>
+                        <span class="text-sm font-medium text-orange-600">{{ $customizationStats['pending'] }}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
         </div>
-
     </div>
+</div>
 
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function analyticsDashboard() {
+            return {
+                period: '{{ $period }}',
+                revenueChartType: 'line',
+                charts: {},
+                
+                init() {
+                    this.initCharts();
+                },
+                
+                refreshData() {
+                    window.location.href = `{{ route('admin.dashboard') }}?period=${this.period}`;
+                },
+                
+                switchRevenueChart(type) {
+                    this.revenueChartType = type;
+                    this.updateRevenueChart(type);
+                },
+                
+                initCharts() {
+                    // Revenue Chart
+                    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+                    this.charts.revenue = new Chart(revenueCtx, {
+                        type: 'line',
+                        data: {
+                            labels: @json(array_column($monthlyRevenue, 'month')),
+                            datasets: [{
+                                label: 'Revenue',
+                                data: @json(array_column($monthlyRevenue, 'revenue')),
+                                borderColor: 'rgb(34, 197, 94)',
+                                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return '৳' + value.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Bookings vs Visitors Chart
+                    const bookingsVisitorsCtx = document.getElementById('bookingsVisitorsChart').getContext('2d');
+                    this.charts.bookingsVisitors = new Chart(bookingsVisitorsCtx, {
+                        type: 'line',
+                        data: {
+                            labels: @json(array_column($bookingTrends, 'date')),
+                            datasets: [{
+                                label: 'Bookings',
+                                data: @json(array_column($bookingTrends, 'bookings')),
+                                borderColor: 'rgb(59, 130, 246)',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            }, {
+                                label: 'Visitors',
+                                data: @json(array_column($visitorTrends, 'visitors')),
+                                borderColor: 'rgb(168, 85, 247)',
+                                backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            interaction: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            scales: {
+                                y: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                },
+                                y1: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                    grid: {
+                                        drawOnChartArea: false,
+                                    },
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Service Revenue Chart
+                    const serviceRevenueCtx = document.getElementById('serviceRevenueChart').getContext('2d');
+                    this.charts.serviceRevenue = new Chart(serviceRevenueCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: @json(array_column($revenueByService, 'service_type')),
+                            datasets: [{
+                                data: @json(array_column($revenueByService, 'revenue')),
+                                backgroundColor: [
+                                    'rgb(59, 130, 246)',
+                                    'rgb(34, 197, 94)',
+                                    'rgb(251, 146, 60)'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom' }
+                            }
+                        }
+                    });
+                    
+                    // Booking Status Chart
+                    const bookingStatusCtx = document.getElementById('bookingStatusChart').getContext('2d');
+                    this.charts.bookingStatus = new Chart(bookingStatusCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],
+                            datasets: [{
+                                data: [{{ $bookingStats['pending'] }}, {{ $bookingStats['confirmed'] }}, {{ $bookingStats['completed'] }}, {{ $bookingStats['cancelled'] }}],
+                                backgroundColor: [
+                                    'rgb(251, 191, 36)',
+                                    'rgb(34, 197, 94)',
+                                    'rgb(59, 130, 246)',
+                                    'rgb(239, 68, 68)'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom' }
+                            }
+                        }
+                    });
+                },
+                
+                updateRevenueChart(type) {
+                    this.charts.revenue.config.type = type;
+                    this.charts.revenue.update();
+                }
+            }
+        }
+    </script>
+@endpush
 </x-admin-layout>
