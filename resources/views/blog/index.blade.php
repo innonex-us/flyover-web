@@ -6,12 +6,12 @@
     @push('meta')
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "Blog",
+      "@@context": "https://schema.org",
+      "@@type": "Blog",
       "name": "FlyoverBD Travel Blog",
       "description": "Travel tips, visa guides, and tour insights from Bangladesh",
       "url": "{{ route('blog.index') }}",
-      "publisher": { "@type": "Organization", "name": "FlyoverBD", "logo": { "@type": "ImageObject", "url": "{{ asset('logo.png') }}" } }
+      "publisher": { "@@type": "Organization", "name": "FlyoverBD", "logo": { "@@type": "ImageObject", "url": "{{ asset('logo.png') }}" } }
     }
     </script>
     @endpush
