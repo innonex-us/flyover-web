@@ -57,7 +57,7 @@
                 mobileOpen: false,
                 userOpen: false
             }"
-            {{ request()->routeIs('home') ? '@scroll.window="showNavLinks = (window.scrollY > 500)"' : '' }}
+            {!! request()->routeIs('home') ? '@scroll.window="showNavLinks = (window.scrollY > 500)"' : '' !!}
             class="bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-50"
         >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

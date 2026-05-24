@@ -37,25 +37,191 @@
 {{-- ═══════════════════════════════════════
      HERO  — image slider + search card
 ═══════════════════════════════════════ --}}
-<div class="relative" style="min-height:520px;"
-     x-data="{ s:0, init(){ setInterval(()=>this.s=(this.s+1)%3, 5500) } }">
+<div class="relative" style="min-height:560px;"
+    x-data="{
+        s:0,
+        waterCtx: null,
+        waterCanvas: null,
+        waterFrame: null,
+        pointer: { x: 0, y: 0, tx: 0, ty: 0, active: false, strength: 0 },
+        waves: [],
+        init(){
+            this.$nextTick(() => this.setupWater());
+            setInterval(()=>this.s=(this.s+1)%6, 5500);
+        },
+        setupWater(){
+            this.waterCanvas = this.$refs.waterCanvas;
+            if (!this.waterCanvas) return;
 
-    {{-- Slides --}}
+            const resize = () => {
+                const dpr = window.devicePixelRatio || 1;
+                const canvas = this.waterCanvas;
+                canvas.width = Math.floor(canvas.clientWidth * dpr);
+                canvas.height = Math.floor(canvas.clientHeight * dpr);
+                this.waterCtx = canvas.getContext('2d');
+                if (this.waterCtx) {
+                    this.waterCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                }
+            };
+
+            resize();
+            window.addEventListener('resize', resize, { passive: true });
+
+            this.pointer.x = this.pointer.tx = this.waterCanvas.clientWidth / 2;
+            this.pointer.y = this.pointer.ty = this.waterCanvas.clientHeight / 2;
+
+            const animate = () => {
+                this.drawWater();
+                this.waterFrame = requestAnimationFrame(animate);
+            };
+
+            animate();
+        },
+        trackWater(event){
+            if (!this.waterCanvas) return;
+            const rect = this.waterCanvas.getBoundingClientRect();
+            this.pointer.tx = event.clientX - rect.left;
+            this.pointer.ty = event.clientY - rect.top;
+            this.pointer.active = true;
+
+            const dx = this.pointer.tx - this.pointer.x;
+            const dy = this.pointer.ty - this.pointer.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > 10) {
+                this.waves.push({
+                    x: this.pointer.tx,
+                    y: this.pointer.ty,
+                    radius: 28,
+                    alpha: 0.18,
+                    spread: 0.95,
+                    drift: Math.min(1.6, distance / 140)
+                });
+                if (this.waves.length > 14) this.waves.shift();
+            }
+        },
+        settleWater(){
+            this.pointer.active = false;
+        },
+        drawWater(){
+            if (!this.waterCtx || !this.waterCanvas) return;
+
+            const ctx = this.waterCtx;
+            const width = this.waterCanvas.clientWidth;
+            const height = this.waterCanvas.clientHeight;
+
+            this.pointer.x += (this.pointer.tx - this.pointer.x) * 0.08;
+            this.pointer.y += (this.pointer.ty - this.pointer.y) * 0.08;
+            this.pointer.strength += ((this.pointer.active ? 1 : 0) - this.pointer.strength) * 0.06;
+
+            ctx.clearRect(0, 0, width, height);
+            ctx.globalCompositeOperation = 'screen';
+
+            const washRadius = 180 + this.pointer.strength * 100;
+            const wash = ctx.createRadialGradient(this.pointer.x, this.pointer.y, 0, this.pointer.x, this.pointer.y, washRadius);
+            wash.addColorStop(0, `rgba(255,255,255,${0.16 + this.pointer.strength * 0.05})`);
+            wash.addColorStop(0.3, `rgba(255,255,255,${0.08 + this.pointer.strength * 0.03})`);
+            wash.addColorStop(0.7, 'rgba(255,255,255,0)');
+            ctx.filter = 'blur(24px)';
+            ctx.fillStyle = wash;
+            ctx.beginPath();
+            ctx.arc(this.pointer.x, this.pointer.y, washRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            const bandY = this.pointer.y + Math.sin(Date.now() / 420) * 8;
+            ctx.filter = 'blur(18px)';
+            const band = ctx.createLinearGradient(this.pointer.x - 240, bandY, this.pointer.x + 240, bandY);
+            band.addColorStop(0, 'rgba(255,255,255,0)');
+            band.addColorStop(0.32, `rgba(255,255,255,${0.06 + this.pointer.strength * 0.03})`);
+            band.addColorStop(0.5, `rgba(255,255,255,${0.14 + this.pointer.strength * 0.05})`);
+            band.addColorStop(0.68, `rgba(255,255,255,${0.06 + this.pointer.strength * 0.03})`);
+            band.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = band;
+            ctx.beginPath();
+            ctx.ellipse(this.pointer.x, bandY, 220 + this.pointer.strength * 50, 26 + this.pointer.strength * 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            this.waves = this.waves.filter((wave) => {
+                wave.radius += 0.55 + wave.drift * 0.18;
+                wave.alpha *= 0.972;
+                wave.spread += 0.02;
+
+                if (wave.alpha <= 0.01 || wave.radius > 260) return false;
+
+                const glow = ctx.createRadialGradient(wave.x, wave.y, wave.radius * 0.45, wave.x, wave.y, wave.radius * 1.65);
+                glow.addColorStop(0, `rgba(255,255,255,${wave.alpha * 0.18})`);
+                glow.addColorStop(0.42, `rgba(255,255,255,${wave.alpha * 0.08})`);
+                glow.addColorStop(1, 'rgba(255,255,255,0)');
+
+                ctx.filter = 'blur(20px)';
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.ellipse(wave.x, wave.y, wave.radius, wave.radius * 0.55, 0.2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.filter = 'none';
+
+                return true;
+            });
+
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.filter = 'none';
+        }
+    }"
+    @mousemove.passive="trackWater($event)"
+    @mouseleave="settleWater()">
+
+    {{-- Slides (overflow-hidden keeps scaled images clipped) --}}
+    <div class="absolute inset-0 overflow-hidden">
     <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-         style="background-image:url('{{ asset('banner/hero-banner-1.png') }}')"
-         :class="s===0?'opacity-100':'opacity-0'"></div>
-    <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-         style="background-image:url('{{ asset('banner/helo-banner-2.png') }}')"
+            style="background-image:url('{{ asset('banner/hero-banner-5.jpg') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
          :class="s===1?'opacity-100':'opacity-0'"></div>
     <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-         style="background-image:url('{{ asset('banner/hero-banner-3.png') }}')"
+            style="background-image:url('{{ asset('banner/hero-banner-6.jpg') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
          :class="s===2?'opacity-100':'opacity-0'"></div>
+        <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+            style="background-image:url('{{ asset('banner/hero-banner-1.png') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
+            :class="s===3?'opacity-100':'opacity-0'"></div>
+        <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+            style="background-image:url('{{ asset('banner/helo-banner-2.png') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
+            :class="s===4?'opacity-100':'opacity-0'"></div>
+        <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+            style="background-image:url('{{ asset('banner/hero-banner-3.png') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
+            :class="s===5?'opacity-100':'opacity-0'"></div>
+        <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+            style="background-image:url('{{ asset('banner/hero-banner-4.jpg') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
+            :class="s===0?'opacity-100':'opacity-0'"></div>
+    </div>{{-- /slides overflow-hidden --}}
+
+        <canvas x-ref="waterCanvas" class="absolute inset-0 z-[2] h-full w-full pointer-events-none mix-blend-screen opacity-75"></canvas>
+
+        {{-- Special atmosphere layer --}}
+        <div class="absolute inset-0 pointer-events-none"
+            style="background-image:
+                 radial-gradient(circle at 18% 20%, rgba(255,255,255,.22) 0, rgba(255,255,255,0) 28%),
+                 radial-gradient(circle at 82% 18%, rgba(200,16,46,.34) 0, rgba(200,16,46,0) 24%),
+                 radial-gradient(circle at 50% 82%, rgba(248,184,3,.18) 0, rgba(248,184,3,0) 30%),
+                 linear-gradient(120deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 26%, rgba(255,255,255,0) 74%, rgba(0,0,0,.18) 100%);
+                 mix-blend-mode: screen;
+                 opacity: .72;"></div>
+
+        <div class="absolute inset-0 pointer-events-none"
+            style="background:
+                 radial-gradient(circle at 12% 78%, rgba(200,16,46,.18), transparent 30%),
+                 radial-gradient(circle at 88% 28%, rgba(248,184,3,.16), transparent 24%),
+                 radial-gradient(circle at 52% 48%, rgba(255,255,255,.08), transparent 30%);
+                 filter: blur(52px);
+                 opacity: .68;"></div>
+
+        {{-- Soft grid for depth --}}
+        <div class="absolute inset-0 pointer-events-none opacity-20"
+            style="background-image: linear-gradient(rgba(255,255,255,.10) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.10) 1px, transparent 1px); background-size: 120px 120px; mask-image: linear-gradient(180deg, rgba(0,0,0,.95), rgba(0,0,0,.25) 85%, transparent 100%);"></div>
 
     {{-- Gradient overlay --}}
-    <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.65) 100%);"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(11,16,32,.26) 0%,rgba(0,0,0,.12) 34%,rgba(0,0,0,.34) 100%);"></div>
 
     {{-- Content --}}
-    <div class="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center pt-8 pb-6">
+    <div class="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 py-10 text-center">
         <h1 class="text-white font-extrabold text-3xl sm:text-4xl md:text-6xl leading-tight mb-2 drop-shadow-xl"
             style="font-family:'Merriweather',Georgia,serif;">
             Discover <span class="text-red-400"> Beyond</span>
@@ -63,50 +229,68 @@
         <p class="text-white/80 text-sm sm:text-base md:text-lg mb-6 max-w-xl">Tours · Visa · Hotels · Airport Transfers. All in one trusted place.</p>
 
         {{-- ── Search Widget ── --}}
-        <div class="w-full max-w-3xl"
+        <div class="mx-auto w-full max-w-3xl"
              x-data="{
-                 tab:'tours',
-                 query:'', suggestions:[], show:false, loading:false, timer:null,
-                 checkIn:'', checkOut:'', persons:1,
-                 travelDate:'', passengers:1,
-                 fetchSuggestions() {
+                 tab: 'tours',
+                 query: '', suggestions: [], show: false, loading: false, timer: null,
+                 checkIn: null, checkOut: null, persons: 1,
+                 travelDate: null, passengers: 1,
+                 calOpen: '', calYear: new Date().getFullYear(), calMonth: new Date().getMonth(),
+                 months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+                 days: ['Su','Mo','Tu','We','Th','Fr','Sa'],
+                 today: new Date(new Date().toDateString()),
+                 get calLabel(){ return this.months[this.calMonth] + ' ' + this.calYear; },
+                 calPrev(){ if(this.calMonth===0){this.calMonth=11;this.calYear--;}else{this.calMonth--;} },
+                 calNext(){ if(this.calMonth===11){this.calMonth=0;this.calYear++;}else{this.calMonth++;} },
+                 calDays(){
+                     let d=[], first=new Date(this.calYear,this.calMonth,1).getDay(), daysIn=new Date(this.calYear,this.calMonth+1,0).getDate();
+                     for(let i=0;i<first;i++) d.push(null);
+                     for(let i=1;i<=daysIn;i++) d.push(new Date(this.calYear,this.calMonth,i));
+                     return d;
+                 },
+                 fmtDate(d){ if(!d) return ''; return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); },
+                 fmtDateShort(d){ if(!d) return ''; return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); },
+                 fmtISO(d){ if(!d) return ''; let m=(d.getMonth()+1).toString().padStart(2,'0'),dd=d.getDate().toString().padStart(2,'0'); return d.getFullYear()+'-'+m+'-'+dd; },
+                 pickDate(d){
+                     if(!d || d < this.today) return;
+                     if(this.calOpen==='checkIn'||this.calOpen==='travelDate'){ this[this.calOpen]=d; this.calOpen=''; }
+                     else if(this.calOpen==='checkOut'){ if(this.checkIn && d<=this.checkIn){ this.checkIn=d; }else{ this.checkOut=d; this.calOpen=''; } }
+                 },
+                 isSelected(d,field){ return d && this[field] && this[field].toDateString()===d.toDateString(); },
+                 isInRange(d){ return d && this.checkIn && this.checkOut && d>this.checkIn && d<this.checkOut; },
+                 isPast(d){ return d && d < this.today; },
+                 openCal(field){ this.calOpen=this.calOpen===field?'':field; this.calYear=new Date().getFullYear(); this.calMonth=new Date().getMonth(); },
+                 fetchSuggestions(){
                      if(this.tab==='transfers'){ return; }
                      this.loading=true; clearTimeout(this.timer);
                      this.timer=setTimeout(()=>{
                          window.fetch(`{{ route('search.suggestions') }}?type=${this.tab}&query=${encodeURIComponent(this.query)}`)
                              .then(r=>r.json()).then(d=>{ this.suggestions=d; this.show=d.length>0; this.loading=false; })
                              .catch(()=>this.loading=false);
-                     },280);
+                     }, 180);
                  },
                  go(url){ window.location.href=url; },
-                 reset(t){ this.tab=t; this.query=''; this.suggestions=[]; this.show=false; }
+                 reset(t){ this.tab=t; this.query=''; this.suggestions=[]; this.show=false; this.calOpen=''; }
              }"
-             @click.away="show=false">
+             @keydown.escape.window="show=false; calOpen=''"
+             @click.outside="calOpen=''; show=false">
 
-            {{-- Modern Tabs --}}
+            {{-- Tabs --}}
             <div class="flex justify-center gap-1 mb-4 bg-white/10 backdrop-blur-md rounded-2xl p-1 w-full sm:w-fit mx-auto overflow-x-auto scrollbar-hide">
-                <button @click="reset('tours')"
-                        class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5"
-                        :class="tab==='tours' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
-                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='tours' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <button @click="reset('tours')" class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5" :class="tab==='tours' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='tours'?'text-red-600':'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     Tours
                 </button>
-                <button @click="reset('visas')"
-                        class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5"
-                        :class="tab==='visas' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
-                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='visas' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0H6"/></svg>
+                <button @click="reset('visas')" class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5" :class="tab==='visas' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='visas'?'text-red-600':'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0H6"/></svg>
                     Visa
                 </button>
-                <button @click="reset('hotels')"
-                        class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5"
-                        :class="tab==='hotels' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
-                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='hotels' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <button @click="reset('hotels')" class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5" :class="tab==='hotels' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='hotels'?'text-red-600':'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     Hotels
                 </button>
-                <button @click="reset('transfers')"
-                        class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5"
-                        :class="tab==='transfers' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
-                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='transfers' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                <button @click="reset('transfers')" class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5" :class="tab==='transfers' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='transfers'?'text-red-600':'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
                     Pick &amp; Drop
                 </button>
             </div>
@@ -114,198 +298,265 @@
             {{-- Search card --}}
             <div class="relative">
 
-                {{-- Tours --}}
+                {{-- ── Tours ── --}}
                 <template x-if="tab==='tours'">
-                    <form action="{{ route('packages.index') }}" method="GET">
-                        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-4 md:p-3">
-                            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-                                <div class="w-full flex-1 flex items-center px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <svg class="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                                    <input type="text" name="search" x-model="query"
-                                           @input="fetchSuggestions()" @focus="fetchSuggestions()"
-                                           placeholder="Where do you want to go?"
-                                           class="w-full text-gray-800 text-base border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
-                                           autocomplete="off">
-                                </div>
-                                <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
-                                    Search
-                                </button>
+                    <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-3">
+                        <div class="flex flex-col sm:flex-row items-stretch gap-2">
+                            <div class="flex-1 flex items-center px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                <svg class="w-4 h-4 text-gray-400 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                <input type="text" x-model="query" @input="fetchSuggestions()" @focus="fetchSuggestions()"
+                                       placeholder="Where do you want to go?"
+                                       class="w-full text-gray-800 text-sm border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
+                                       autocomplete="off">
+                                <div x-show="loading" class="w-3.5 h-3.5 border-2 border-red-500 border-t-transparent rounded-full animate-spin ml-2 flex-shrink-0"></div>
                             </div>
+                            <button @click="if(suggestions.length){ go(suggestions[0].url) }else{ window.location='{{ route('packages.index') }}?search='+encodeURIComponent(query) }"
+                                    class="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-7 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                Search
+                            </button>
                         </div>
-                    </form>
+                    </div>
                 </template>
 
-                {{-- Visas --}}
+                {{-- ── Visas ── --}}
                 <template x-if="tab==='visas'">
-                    <form action="{{ route('visas.index') }}" method="GET">
-                        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-4 md:p-3">
-                            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-                                <div class="w-full flex-1 flex items-center px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <svg class="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    <input type="text" name="search" x-model="query"
-                                           @input="fetchSuggestions()" @focus="fetchSuggestions()"
-                                           placeholder="Malaysia, Thailand, Schengen…"
-                                           class="w-full text-gray-800 text-base border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
-                                           autocomplete="off">
-                                </div>
-                                <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
-                                    Find Visa
-                                </button>
+                    <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-3">
+                        <div class="flex flex-col sm:flex-row items-stretch gap-2">
+                            <div class="flex-1 flex items-center px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                <svg class="w-4 h-4 text-gray-400 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <input type="text" x-model="query" @input="fetchSuggestions()" @focus="fetchSuggestions()"
+                                       placeholder="Malaysia, Thailand, Schengen…"
+                                       class="w-full text-gray-800 text-sm border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
+                                       autocomplete="off">
+                                <div x-show="loading" class="w-3.5 h-3.5 border-2 border-red-500 border-t-transparent rounded-full animate-spin ml-2 flex-shrink-0"></div>
                             </div>
+                            <button @click="window.location='{{ route('visas.index') }}?search='+encodeURIComponent(query)"
+                                    class="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-7 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                Find Visa
+                            </button>
                         </div>
-                    </form>
+                    </div>
                 </template>
 
-                {{-- Hotels --}}
+                {{-- ── Hotels ── --}}
                 <template x-if="tab==='hotels'">
-                    <form action="{{ route('hotels.index') }}" method="GET">
-                        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-4 md:p-3">
-                            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-                                {{-- Destination --}}
-                                <div class="flex-1 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                                    </div>
-                                    <div class="flex-1 min-w-0 text-left">
-                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Destination</span>
-                                        <input type="text" name="search" x-model="query"
-                                               @input="fetchSuggestions()" @focus="fetchSuggestions()"
-                                               placeholder="Cox's Bazar, Dhaka…"
-                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
-                                               autocomplete="off">
-                                    </div>
-                                </div>
-                                {{-- Check-in --}}
-                                <div class="w-full md:w-40 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                    </div>
-                                    <div class="flex-1 min-w-0 text-left">
-                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Check-in</span>
-                                        <input type="date" name="check_in" x-model="checkIn"
-                                               :min="new Date().toISOString().split('T')[0]"
-                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent cursor-pointer">
-                                    </div>
-                                </div>
-                                {{-- Check-out --}}
-                                <div class="w-full md:w-40 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                    </div>
-                                    <div class="flex-1 min-w-0 text-left">
-                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Check-out</span>
-                                        <input type="date" name="check_out" x-model="checkOut"
-                                               :min="checkIn || new Date().toISOString().split('T')[0]"
-                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent cursor-pointer">
-                                    </div>
-                                </div>
-                                {{-- Guests --}}
-                                <div class="w-full md:w-32 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                    </div>
-                                    <div class="flex-1 min-w-0 text-left">
-                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Guests</span>
-                                        <input type="number" name="persons" x-model="persons" min="1" max="20"
-                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent">
-                                    </div>
-                                </div>
-                                {{-- Button --}}
-                                <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-4 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
-                                    Search
-                                </button>
+                    <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-3">
+                        <div class="flex flex-col gap-2">
+                            {{-- destination --}}
+                            <div class="flex items-center px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                <svg class="w-4 h-4 text-red-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <input type="text" x-model="query" @input="fetchSuggestions()" @focus="fetchSuggestions()"
+                                       placeholder="Where do you want to stay?"
+                                       class="w-full text-gray-800 text-sm border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
+                                       autocomplete="off">
+                                <div x-show="loading" class="w-3.5 h-3.5 border-2 border-red-500 border-t-transparent rounded-full animate-spin ml-2 flex-shrink-0"></div>
                             </div>
+                            {{-- date row --}}
+                            <div class="grid grid-cols-3 gap-1.5">
+                                <button type="button" @click.stop="openCal('checkIn')"
+                                        class="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
+                                        :class="calOpen==='checkIn' ? 'border-red-400 bg-red-50' : 'border-gray-100'">
+                                    <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <div class="min-w-0">
+                                        <p class="text-[8px] font-bold text-gray-400 uppercase">Check-in</p>
+                                        <p class="text-[11px] font-semibold text-gray-700 truncate" x-text="checkIn ? fmtDateShort(checkIn) : 'Select'"></p>
+                                    </div>
+                                </button>
+                                <button type="button" @click.stop="openCal('checkOut')"
+                                        class="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
+                                        :class="calOpen==='checkOut' ? 'border-red-400 bg-red-50' : 'border-gray-100'">
+                                    <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <div class="min-w-0">
+                                        <p class="text-[8px] font-bold text-gray-400 uppercase">Check-out</p>
+                                        <p class="text-[11px] font-semibold text-gray-700 truncate" x-text="checkOut ? fmtDateShort(checkOut) : 'Select'"></p>
+                                    </div>
+                                </button>
+                                <div class="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border border-gray-100 rounded-xl col-span-1">
+                                    <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[8px] font-bold text-gray-400 uppercase">Guests</p>
+                                        <div class="flex items-center gap-0.5">
+                                            <button type="button" @click.stop="persons=Math.max(1,persons-1)" class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-sm leading-none">−</button>
+                                            <span class="text-[11px] font-bold text-gray-800 w-3 text-center" x-text="persons"></span>
+                                            <button type="button" @click.stop="persons=Math.min(20,persons+1)" class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-sm leading-none">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- inline calendar --}}
+                            <div x-show="calOpen==='checkIn' || calOpen==='checkOut'"
+                                 x-transition:enter="transition ease-out duration-150"
+                                 x-transition:enter-start="opacity-0 scale-95"
+                                 x-transition:enter-end="opacity-100 scale-100"
+                                 style="display:none;"
+                                 class="bg-white border border-gray-200 rounded-2xl shadow-lg p-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <button type="button" @click.stop="calPrev()" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                                    </button>
+                                    <span class="text-sm font-bold text-gray-800" x-text="calLabel"></span>
+                                    <button type="button" @click.stop="calNext()" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-7 mb-1">
+                                    <template x-for="d in days" :key="d">
+                                        <div class="text-center text-xs font-semibold text-gray-400 py-0.5" x-text="d"></div>
+                                    </template>
+                                </div>
+                                <div class="grid grid-cols-7">
+                                    <template x-for="(d,i) in calDays()" :key="i">
+                                        <div class="flex items-center justify-center py-0.5">
+                                            <button x-show="d!==null" type="button" @click.stop="pickDate(d)" :disabled="isPast(d)"
+                                                    :class="{
+                                                        'bg-red-600 text-white font-bold': (calOpen==='checkIn'&&isSelected(d,'checkIn'))||(calOpen==='checkOut'&&isSelected(d,'checkOut')),
+                                                        'bg-red-100 text-red-600 font-medium': isInRange(d),
+                                                        'text-gray-300 cursor-not-allowed': isPast(d),
+                                                        'hover:bg-red-50 hover:text-red-600 text-gray-700': !isPast(d)&&!isSelected(d,'checkIn')&&!isSelected(d,'checkOut'),
+                                                        'ring-2 ring-red-400 font-bold text-red-600': d&&d.toDateString()===today.toDateString()&&!isSelected(d,'checkIn')&&!isSelected(d,'checkOut')
+                                                    }"
+                                                    class="w-8 h-8 text-xs rounded-full transition-all"
+                                                    x-text="d?d.getDate():''"></button>
+                                        </div>
+                                    </template>
+                                </div>
+                                <div x-show="checkIn||checkOut" class="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between">
+                                    <span class="text-xs text-gray-500">
+                                        <span class="font-semibold text-gray-800" x-text="checkIn?fmtDateShort(checkIn):'—'"></span>
+                                        <span class="mx-1 text-gray-300">→</span>
+                                        <span class="font-semibold text-gray-800" x-text="checkOut?fmtDateShort(checkOut):'—'"></span>
+                                    </span>
+                                    <button type="button" @click.stop="checkIn=null;checkOut=null" class="text-xs text-red-500 font-semibold hover:text-red-700">Clear</button>
+                                </div>
+                            </div>
+                            {{-- search --}}
+                            <button @click="window.location='{{ route('hotels.index') }}?search='+encodeURIComponent(query)+'&check_in='+fmtISO(checkIn)+'&check_out='+fmtISO(checkOut)+'&persons='+persons"
+                                    class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                Search Hotels
+                            </button>
                         </div>
-                    </form>
+                    </div>
                 </template>
 
-                {{-- Pick & Drop --}}
+                {{-- ── Pick & Drop ── --}}
                 <template x-if="tab==='transfers'">
-                    <form action="{{ route('transfers.index') }}" method="GET">
-                        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-4 md:p-3">
-                            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-                                {{-- Pickup --}}
-                                <div class="flex-1 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <div class="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                                    </div>
-                                    <div class="flex-1 min-w-0 text-left">
-                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Pickup</span>
-                                        <input type="text" name="pickup" x-model="query"
-                                               placeholder="Dhaka Airport…"
-                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
-                                               autocomplete="off">
+                    <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/25 p-3">
+                        <div class="flex flex-col gap-2">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex items-center gap-2 px-3 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Pickup</p>
+                                        <input type="text" name="pickup" x-model="query" placeholder="Dhaka Airport…"
+                                               class="w-full text-gray-800 text-xs font-medium border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent" autocomplete="off">
                                     </div>
                                 </div>
-                                {{-- Drop-off --}}
-                                <div class="flex-1 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                                    </div>
-                                    <div class="flex-1 min-w-0 text-left">
-                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Drop-off</span>
-                                        <input type="text" name="drop"
-                                               placeholder="Cox's Bazar Hotel…"
-                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent"
-                                               autocomplete="off">
+                                <div class="flex items-center gap-2 px-3 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                                    <svg class="w-4 h-4 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Drop-off</p>
+                                        <input type="text" name="drop" placeholder="Cox's Bazar Hotel…"
+                                               class="w-full text-gray-800 text-xs font-medium border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent" autocomplete="off">
                                     </div>
                                 </div>
-                                {{-- Date --}}
-                                <div class="w-full md:w-40 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                    </div>
-                                    <div class="flex-1 min-w-0 text-left">
-                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Date</span>
-                                        <input type="date" name="travel_date" x-model="travelDate"
-                                               :min="new Date(Date.now()+86400000).toISOString().split('T')[0]"
-                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent cursor-pointer">
-                                    </div>
-                                </div>
-                                {{-- Persons --}}
-                                <div class="w-full md:w-32 flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl focus-within:border-red-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                    <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                    </div>
-                                    <div class="flex-1 min-w-0 text-left">
-                                        <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wide">Persons</span>
-                                        <input type="number" name="passengers" x-model="passengers" min="1" max="50"
-                                               class="w-full text-gray-800 text-sm font-semibold border-0 p-0 focus:ring-0 outline-none bg-transparent">
-                                    </div>
-                                </div>
-                                {{-- Button --}}
-                                <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-4 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
-                                    Book
-                                </button>
                             </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                {{-- Date picker --}}
+                                <button type="button" @click.stop="openCal('travelDate')"
+                                        class="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border rounded-xl transition-all text-left"
+                                        :class="calOpen==='travelDate' ? 'border-red-400 bg-red-50' : 'border-gray-100'">
+                                    <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <div>
+                                        <p class="text-[8px] font-bold text-gray-400 uppercase">Date</p>
+                                        <p class="text-[11px] font-semibold text-gray-700" x-text="travelDate ? fmtDateShort(travelDate) : 'Select'"></p>
+                                    </div>
+                                </button>
+                                {{-- Persons --}}
+                                <div class="flex items-center gap-2 px-3 py-3 bg-gray-50 border border-gray-100 rounded-2xl">
+                                    <svg class="w-4 h-4 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <div class="flex-1">
+                                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Passengers</p>
+                                        <div class="flex items-center gap-1">
+                                            <button type="button" @click="passengers=Math.max(1,passengers-1)" class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">−</button>
+                                            <span class="text-xs font-bold text-gray-800 w-4 text-center" x-text="passengers"></span>
+                                            <button type="button" @click="passengers=Math.min(50,passengers+1)" class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- inline calendar for transfer --}}
+                            <div x-show="calOpen==='travelDate'"
+                                 x-transition:enter="transition ease-out duration-150"
+                                 x-transition:enter-start="opacity-0 scale-95"
+                                 x-transition:enter-end="opacity-100 scale-100"
+                                 style="display:none;"
+                                 class="bg-white border border-gray-200 rounded-2xl shadow-lg p-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <button type="button" @click.stop="calPrev()" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg></button>
+                                    <span class="text-sm font-bold text-gray-800" x-text="calLabel"></span>
+                                    <button type="button" @click.stop="calNext()" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></button>
+                                </div>
+                                <div class="grid grid-cols-7 mb-1">
+                                    <template x-for="d in days" :key="d">
+                                        <div class="text-center text-xs font-semibold text-gray-400 py-0.5" x-text="d"></div>
+                                    </template>
+                                </div>
+                                <div class="grid grid-cols-7">
+                                    <template x-for="(d,i) in calDays()" :key="i">
+                                        <div class="flex items-center justify-center py-0.5">
+                                            <button x-show="d!==null" type="button" @click.stop="pickDate(d)" :disabled="isPast(d)"
+                                                    :class="{
+                                                        'bg-red-600 text-white font-bold': isSelected(d,'travelDate'),
+                                                        'text-gray-300 cursor-not-allowed': isPast(d),
+                                                        'hover:bg-red-50 hover:text-red-600 text-gray-700': !isPast(d)&&!isSelected(d,'travelDate'),
+                                                        'ring-2 ring-red-400 font-bold text-red-600': d&&d.toDateString()===today.toDateString()&&!isSelected(d,'travelDate')
+                                                    }"
+                                                    class="w-8 h-8 text-xs rounded-full transition-all"
+                                                    x-text="d?d.getDate():''"></button>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <button @click="window.location='{{ route('transfers.index') }}?pickup='+encodeURIComponent(query)+'&travel_date='+fmtISO(travelDate)+'&passengers='+passengers"
+                                    class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                Book Transfer
+                            </button>
                         </div>
-                    </form>
+                    </div>
                 </template>
 
-                {{-- Autocomplete dropdown --}}
-                <div x-show="show && suggestions.length > 0"
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 translate-y-2 scale-95"
-                     x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-                     class="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-2xl shadow-black/20 border border-gray-100 overflow-hidden z-50"
+
+
+                {{-- ── Real-time suggestions dropdown ── --}}
+                <div x-show="show && suggestions.length > 0 && calOpen === ''"
+                     x-transition:enter="transition ease-out duration-150"
+                     x-transition:enter-start="opacity-0 translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     @click.outside="show=false"
+                     class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl shadow-black/20 border border-gray-100 overflow-hidden z-50"
                      style="display:none;">
                     <div class="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-b border-gray-100">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest" x-text="query ? 'Search results' : 'Popular'"></span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest" x-text="query ? 'Results for &quot;' + query + '&quot;' : 'Popular'"></span>
                         <div x-show="loading" class="w-3 h-3 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                     </div>
-                    <ul class="max-h-72 overflow-y-auto">
+                    <ul class="max-h-64 overflow-y-auto">
                         <template x-for="item in suggestions" :key="item.url">
-                            <li @click="go(item.url)" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 cursor-pointer transition group">
-                                <img :src="item.image" alt="" class="w-11 h-11 object-cover rounded-xl flex-shrink-0 bg-gray-100">
+                            <li @click="go(item.url)" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 cursor-pointer transition-all group border-b border-gray-50 last:border-0">
+                                <img :src="item.image" alt="" class="w-10 h-10 object-cover rounded-xl flex-shrink-0 bg-gray-100">
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800 truncate group-hover:text-red-600" x-text="item.text"></p>
-                                    <p class="text-xs text-gray-500 truncate" x-text="item.subtext"></p>
+                                    <p class="text-xs text-gray-400 truncate" x-text="item.subtext"></p>
                                 </div>
-                                <svg class="w-4 h-4 text-gray-300 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                <svg class="w-4 h-4 text-gray-300 group-hover:text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </li>
                         </template>
                     </ul>
                 </div>
+
             </div>
 
         </div>
