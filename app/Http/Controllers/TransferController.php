@@ -10,9 +10,20 @@ use Illuminate\Http\Request;
 
 class TransferController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $routes = TransferRoute::active()->get();
+        $routes = TransferRoute::active()
+            ->when($request->filled('pickup') || $request->filled('drop'), function ($q) use ($request) {
+                $q->where(function ($sub) use ($request) {
+                    if ($request->filled('pickup')) {
+                        $sub->orWhere('pickup_location', 'like', '%' . $request->pickup . '%');
+                    }
+                    if ($request->filled('drop')) {
+                        $sub->orWhere('drop_location', 'like', '%' . $request->drop . '%');
+                    }
+                });
+            })
+            ->get();
         return view('transfers.index', compact('routes'));
     }
 

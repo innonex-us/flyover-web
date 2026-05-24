@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Hotel;
 use App\Models\Package;
+use App\Models\TransferRoute;
 use App\Models\Visa;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class SearchController extends Controller
     public function suggestions(Request $request)
     {
         $request->validate([
-            'type' => 'required|in:tours,visas,hotels',
+            'type' => 'required|in:tours,visas,hotels,transfers',
             'query' => 'nullable|string',
         ]);
 
@@ -57,6 +58,26 @@ class SearchController extends Controller
                         'subtext' => 'Visa Service',
                         'url' => route('visas.show', $visa->slug),
                         'image' => $visa->thumbnail ? \Storage::url($visa->thumbnail) : 'https://via.placeholder.com/100x100?text=Visa',
+                    ];
+                });
+        } elseif ($type === 'transfers') {
+            $suggestions = TransferRoute::where('is_active', true)
+                ->when($query, function ($q) use ($query) {
+                    $q->where(function ($sub) use ($query) {
+                        $sub->where('name', 'like', "%{$query}%")
+                            ->orWhere('pickup_location', 'like', "%{$query}%")
+                            ->orWhere('drop_location', 'like', "%{$query}%");
+                    });
+                })
+                ->latest()
+                ->limit(5)
+                ->get(['id', 'name', 'pickup_location', 'drop_location', 'thumbnail'])
+                ->map(function ($route) {
+                    return [
+                        'text'    => $route->name,
+                        'subtext' => $route->pickup_location . ' → ' . $route->drop_location,
+                        'url'     => route('transfers.index'),
+                        'image'   => $route->thumbnail ? \Storage::url($route->thumbnail) : null,
                     ];
                 });
         } elseif ($type === 'hotels') {

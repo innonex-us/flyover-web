@@ -3,7 +3,7 @@
 {{-- ═══════════════════════════════════════
      HERO  — image slider + search card
 ═══════════════════════════════════════ --}}
-<div class="relative" style="height:580px;"
+<div class="relative" style="height:640px;"
      x-data="{ s:0, init(){ setInterval(()=>this.s=(this.s+1)%3, 5500) } }">
 
     {{-- Slides --}}
@@ -29,10 +29,14 @@
         <p class="text-white/80 text-lg mb-10 max-w-xl">Tours · Visa · Hotels · Airport Transfers. All in one trusted place.</p>
 
         {{-- ── Search Widget ── --}}
-        <div class="w-full max-w-2xl"
+        <div class="w-full max-w-3xl"
              x-data="{
-                 tab:'tours', query:'', suggestions:[], show:false, loading:false, timer:null,
+                 tab:'tours',
+                 query:'', suggestions:[], show:false, loading:false, timer:null,
+                 checkIn:'', checkOut:'', persons:1,
+                 travelDate:'', passengers:1,
                  fetch() {
+                     if(this.tab==='transfers'){ return; }
                      this.loading=true; clearTimeout(this.timer);
                      this.timer=setTimeout(()=>{
                          window.fetch(`{{ route('search.suggestions') }}?type=${this.tab}&query=${encodeURIComponent(this.query)}`)
@@ -46,29 +50,35 @@
              @click.away="show=false">
 
             {{-- Tab row --}}
-            <div class="flex justify-center gap-2 mb-3">
+            <div class="flex flex-wrap justify-center gap-2 mb-3">
                 <button @click="reset('tours')"
-                        class="px-5 py-2 rounded-full text-sm font-semibold transition-all"
+                        class="px-4 py-2 rounded-full text-sm font-semibold transition-all"
                         :class="tab==='tours'?'bg-red-600 text-white shadow-lg':'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'">
-                    ✈ Tour Packages
+                    ✈ Tours
                 </button>
                 <button @click="reset('visas')"
-                        class="px-5 py-2 rounded-full text-sm font-semibold transition-all"
+                        class="px-4 py-2 rounded-full text-sm font-semibold transition-all"
                         :class="tab==='visas'?'bg-red-600 text-white shadow-lg':'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'">
-                    🛂 Visa Services
+                    🛂 Visa
                 </button>
                 <button @click="reset('hotels')"
-                        class="px-5 py-2 rounded-full text-sm font-semibold transition-all"
+                        class="px-4 py-2 rounded-full text-sm font-semibold transition-all"
                         :class="tab==='hotels'?'bg-red-600 text-white shadow-lg':'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'">
                     🏨 Hotels
+                </button>
+                <button @click="reset('transfers')"
+                        class="px-4 py-2 rounded-full text-sm font-semibold transition-all"
+                        :class="tab==='transfers'?'bg-red-600 text-white shadow-lg':'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'">
+                    🚗 Pick &amp; Drop
                 </button>
             </div>
 
             {{-- Search box --}}
-            <div class="bg-white rounded-2xl shadow-2xl p-2 flex gap-2 items-center relative">
+            <div class="bg-white rounded-2xl shadow-2xl p-2 relative">
+
                 {{-- Tours --}}
                 <template x-if="tab==='tours'">
-                    <form action="{{ route('packages.index') }}" method="GET" class="flex gap-2 w-full">
+                    <form action="{{ route('packages.index') }}" method="GET" class="flex gap-2 w-full items-center">
                         <div class="flex-1 relative">
                             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                             <input type="text" name="search" x-model="query" @input="fetch()" @focus="fetch()"
@@ -81,9 +91,10 @@
                         </button>
                     </form>
                 </template>
+
                 {{-- Visas --}}
                 <template x-if="tab==='visas'">
-                    <form action="{{ route('visas.index') }}" method="GET" class="flex gap-2 w-full">
+                    <form action="{{ route('visas.index') }}" method="GET" class="flex gap-2 w-full items-center">
                         <div class="flex-1 relative">
                             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             <input type="text" name="search" x-model="query" @input="fetch()" @focus="fetch()"
@@ -96,24 +107,88 @@
                         </button>
                     </form>
                 </template>
-                {{-- Hotels --}}
+
+                {{-- Hotels (with check-in / check-out / persons) --}}
                 <template x-if="tab==='hotels'">
-                    <form action="{{ route('hotels.index') }}" method="GET" class="flex gap-2 w-full">
-                        <div class="flex-1 relative">
-                            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                            <input type="text" name="search" x-model="query" @input="fetch()" @focus="fetch()"
-                                   placeholder="Cox's Bazar, Dhaka, Sylhet…"
-                                   class="w-full pl-11 pr-4 py-3.5 text-gray-800 text-sm outline-none rounded-xl"
-                                   autocomplete="off">
+                    <form action="{{ route('hotels.index') }}" method="GET" class="w-full">
+                        <div class="flex flex-wrap gap-2 items-center">
+                            {{-- Destination --}}
+                            <div class="flex-1 min-w-[160px] relative">
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                <input type="text" name="search" x-model="query" @input="fetch()" @focus="fetch()"
+                                       placeholder="Where? Cox's Bazar…"
+                                       class="w-full pl-9 pr-3 py-3 text-gray-800 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300"
+                                       autocomplete="off">
+                            </div>
+                            {{-- Check-in --}}
+                            <div class="relative min-w-[130px]">
+                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Check-in</label>
+                                <input type="date" name="check_in" x-model="checkIn"
+                                       :min="new Date().toISOString().split('T')[0]"
+                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300">
+                            </div>
+                            {{-- Check-out --}}
+                            <div class="relative min-w-[130px]">
+                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Check-out</label>
+                                <input type="date" name="check_out" x-model="checkOut"
+                                       :min="checkIn || new Date().toISOString().split('T')[0]"
+                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300">
+                            </div>
+                            {{-- Persons --}}
+                            <div class="relative w-20">
+                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Guests</label>
+                                <input type="number" name="persons" x-model="persons" min="1" max="20"
+                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300 text-center">
+                            </div>
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-3 rounded-xl text-sm transition whitespace-nowrap">
+                                Search
+                            </button>
                         </div>
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition whitespace-nowrap">
-                            Find Hotel
-                        </button>
                     </form>
                 </template>
 
-                {{-- Autocomplete dropdown (outside form so it overlays) --}}
-                <div x-show="show && suggestions.length > 0"
+                {{-- Pick & Drop (with date + passengers) --}}
+                <template x-if="tab==='transfers'">
+                    <form action="{{ route('transfers.index') }}" method="GET" class="w-full">
+                        <div class="flex flex-wrap gap-2 items-center">
+                            {{-- Pickup --}}
+                            <div class="flex-1 min-w-[140px] relative">
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                <input type="text" name="pickup" x-model="query"
+                                       placeholder="Pickup location…"
+                                       class="w-full pl-9 pr-3 py-3 text-gray-800 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300"
+                                       autocomplete="off">
+                            </div>
+                            {{-- Drop --}}
+                            <div class="flex-1 min-w-[140px] relative">
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
+                                <input type="text" name="drop"
+                                       placeholder="Drop location…"
+                                       class="w-full pl-9 pr-3 py-3 text-gray-800 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300"
+                                       autocomplete="off">
+                            </div>
+                            {{-- Travel date --}}
+                            <div class="relative min-w-[130px]">
+                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Date</label>
+                                <input type="date" name="travel_date" x-model="travelDate"
+                                       :min="new Date(Date.now()+86400000).toISOString().split('T')[0]"
+                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300">
+                            </div>
+                            {{-- Passengers --}}
+                            <div class="relative w-24">
+                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Persons</label>
+                                <input type="number" name="passengers" x-model="passengers" min="1" max="50"
+                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300 text-center">
+                            </div>
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-3 rounded-xl text-sm transition whitespace-nowrap">
+                                Book Transfer
+                            </button>
+                        </div>
+                    </form>
+                </template>
+
+                {{-- Autocomplete dropdown --}}
+                <div x-show="show && suggestions.length > 0 && tab !== 'transfers'"
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
@@ -124,7 +199,7 @@
                         <div x-show="loading" class="w-3 h-3 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                     <ul class="max-h-72 overflow-y-auto">
-                        <template x-for="item in suggestions" :key="item.slug">
+                        <template x-for="item in suggestions" :key="item.url">
                             <li @click="go(item.url)" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 cursor-pointer transition group">
                                 <img :src="item.image" alt="" class="w-11 h-11 object-cover rounded-xl flex-shrink-0 bg-gray-100">
                                 <div class="flex-1 min-w-0">
