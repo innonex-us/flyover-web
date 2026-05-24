@@ -1,9 +1,9 @@
 <x-guest-layout>
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-
-        <div class="mb-7 text-center">
-            <p class="section-eyebrow mb-2">Welcome back</p>
-            <h1 class="font-extrabold text-2xl text-gray-900" style="font-family:'Merriweather',Georgia,serif;">Sign in to FlyoverBD</h1>
+    <div>
+        <div class="mb-8">
+            <p class="fb-eyebrow mb-2">Welcome back</p>
+            <h1 class="font-display text-3xl text-gray-900">Sign in to FlyoverBD</h1>
+            <p class="mt-3 text-sm leading-6 text-gray-500">Access your bookings, content, and admin tools from one secure place.</p>
         </div>
 
         <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -14,7 +14,7 @@
             <div>
                 <label for="email" class="fb-field-label mb-1.5">Email Address</label>
                 <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
-                       class="fb-input @error('email') !border-red-500 @enderror">
+                       class="fb-input @error('email') !border-red-500 @enderror" placeholder="name@example.com">
                 @error('email')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
             </div>
 
@@ -36,7 +36,7 @@
                 <label for="remember_me" class="text-sm text-gray-600">Remember me</label>
             </div>
 
-            <button type="submit" class="btn-primary w-full py-3.5 text-base mt-2">
+            <button type="submit" class="btn-primary w-full py-3.5 text-base mt-2 shadow-lg shadow-[#C8102E]/20">
                 Sign In
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </button>
@@ -45,7 +45,7 @@
         @if (Route::has('register'))
         <p class="mt-6 text-center text-sm text-gray-500">
             Don't have an account?
-            <a href="{{ route('register') }}" class="font-semibold text-red-600 hover:text-red-700">Create one</a>
+            <a href="{{ route('register') }}" class="font-semibold text-[#C8102E] hover:underline">Create one</a>
         </p>
         @endif
     </div>

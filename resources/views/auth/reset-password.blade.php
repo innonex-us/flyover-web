@@ -1,9 +1,9 @@
 <x-guest-layout>
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-
-        <div class="mb-7 text-center">
-            <p class="section-eyebrow mb-2">Password Reset</p>
-            <h1 class="font-extrabold text-2xl text-gray-900" style="font-family:'Merriweather',Georgia,serif;">Set new password</h1>
+    <div>
+        <div class="mb-8">
+            <p class="fb-eyebrow mb-2">Password reset</p>
+            <h1 class="font-display text-3xl text-gray-900">Set new password</h1>
+            <p class="mt-3 text-sm leading-6 text-gray-500">Choose a stronger password to secure your account again.</p>
         </div>
 
         <form method="POST" action="{{ route('password.store') }}" class="space-y-4">
@@ -31,7 +31,7 @@
                 @error('password_confirmation')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
             </div>
 
-            <button type="submit" class="btn-primary w-full py-3.5 text-base">
+            <button type="submit" class="btn-primary w-full py-3.5 text-base shadow-lg shadow-[#C8102E]/20">
                 Reset Password
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
             </button>
