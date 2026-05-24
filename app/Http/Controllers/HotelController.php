@@ -72,6 +72,8 @@ class HotelController extends Controller
             'guest_phone'     => auth()->check() ? null : $request->guest_phone,
             'special_request' => $request->special_request,
             'status'          => 'pending',
+            'payment_status'  => 'unpaid',
+            'payment_method'  => 'bkash',
         ]);
 
         $booking->load('room.hotel', 'user');
@@ -81,7 +83,14 @@ class HotelController extends Controller
             $admin->notify(new NewHotelBookingNotification($booking));
         }
 
-        return redirect()->route('hotels.confirmation', $booking)->with('success', 'Booking submitted successfully!');
+        $payment = $booking->payments()->create([
+            'gateway' => 'bkash',
+            'amount' => $booking->total_amount,
+            'currency' => config('services.bkash.currency', 'BDT'),
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('payments.bkash.start', $payment)->with('success', 'Booking submitted successfully!');
     }
 
     public function confirmation(HotelBooking $booking)

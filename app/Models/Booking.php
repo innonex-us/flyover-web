@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPayments;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPayments;
 
     protected $fillable = [
         'user_id',
@@ -18,6 +19,8 @@ class Booking extends Model
         'payable_id',
         'status',
         'payment_status',
+        'payment_method',
+        'payment_reference',
         'quantity',
         'total_amount',
         'booking_date',

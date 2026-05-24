@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPayments;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TransferBooking extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPayments;
 
     protected $fillable = [
         'route_id',
@@ -24,6 +25,9 @@ class TransferBooking extends Model
         'special_request',
         'status',
         'total_amount',
+        'payment_status',
+        'payment_method',
+        'payment_reference',
     ];
 
     protected $casts = [

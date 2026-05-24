@@ -61,6 +61,8 @@ class TransferController extends Controller
             'guest_email'     => auth()->check() ? null : $request->guest_email,
             'guest_phone'     => auth()->check() ? null : $request->guest_phone,
             'status'          => 'pending',
+            'payment_status'  => 'unpaid',
+            'payment_method'  => $isCustom ? null : 'bkash',
         ];
 
         if (!$isCustom) {
@@ -84,6 +86,17 @@ class TransferController extends Controller
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(new NewTransferBookingNotification($booking));
+        }
+
+        if ((float) $booking->total_amount > 0) {
+            $payment = $booking->payments()->create([
+                'gateway' => 'bkash',
+                'amount' => $booking->total_amount,
+                'currency' => config('services.bkash.currency', 'BDT'),
+                'status' => 'pending',
+            ]);
+
+            return redirect()->route('payments.bkash.start', $payment)->with('success', 'Transfer booking submitted successfully!');
         }
 
         return redirect()->route('transfers.confirmation', $booking)->with('success', 'Transfer booking submitted successfully!');

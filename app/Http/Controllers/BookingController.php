@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Package;
+use App\Models\Payment;
 use App\Models\Visa;
 use App\Models\User;
 use App\Notifications\NewBookingNotification;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Gate;
+use App\Services\BkashPaymentService;
 
 class BookingController extends Controller
 {
@@ -86,7 +88,14 @@ class BookingController extends Controller
             $admin->notify(new NewBookingNotification($booking));
         }
 
-        return redirect()->to(URL::signedRoute('bookings.confirmation', $booking))->with('success', 'Booking request submitted successfully!');
+        $payment = $booking->payments()->create([
+            'gateway' => 'bkash',
+            'amount' => $booking->total_amount,
+            'currency' => config('services.bkash.currency', 'BDT'),
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('payments.bkash.start', $payment)->with('success', 'Booking request submitted successfully!');
     }
 
     public function confirmation(Request $request, Booking $booking)

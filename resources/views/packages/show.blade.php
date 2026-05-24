@@ -159,19 +159,12 @@
                             @endif
                         </div>
                     </div>
-                    <div class="text-center md:text-right flex-shrink-0">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Starting from</p>
-                        <p class="text-4xl font-extrabold" style="color:#C8102E;">৳{{ number_format($package->price) }}</p>
-                        <p class="text-xs text-gray-400">per person</p>
-                    </div>
+                    <!-- Price block removed from UI per request -->
                 </div>
             </div>
         </section>
 
-        {{-- ── Share Options ─────────────────────── --}}
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-            <x-share-buttons :title="$package->title" />
-        </div>
+        {{-- Share options moved below the main post for better flow on mobile/desktops --}}
 
         {{-- ── Main Content ─────────────────────── --}}
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
@@ -192,17 +185,17 @@
                     @php $showPhotoGallery = count($galleryImages) > 1; @endphp
                     <div id="tour-gallery-wrap" class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                         @if($showPhotoGallery)
-                        <div class="flex flex-row gap-3 sm:gap-4 p-3 sm:p-4 items-start">
-                            <figure class="relative m-0 min-w-0 flex-1 aspect-video bg-gray-100 rounded-xl overflow-hidden">
+                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 p-2 sm:p-4 items-start">
+                            <figure class="relative m-0 min-w-0 flex-1 aspect-video bg-gray-100 rounded-xl overflow-hidden order-1">
                                 <img id="main-tour-image" src="{{ $mainImage }}" alt="{{ $package->title }}"
                                      class="w-full h-full object-cover" fetchpriority="high" decoding="async"
                                      sizes="(min-width: 1024px) 720px, calc(100vw - 8rem)">
                             </figure>
-                            <aside class="flex w-[5.25rem] sm:w-24 md:w-28 shrink-0 flex-col gap-3">
-                                <div class="flex flex-col gap-2 overflow-y-auto max-h-[min(28rem,60vh)] pl-0.5 [scrollbar-width:thin]" role="list">
+                            <aside class="order-2 w-full sm:w-[5.25rem] md:w-28 flex-none gap-3 sm:flex-col overflow-x-auto sm:overflow-y-auto mt-3 sm:mt-0">
+                                <div class="flex flex-row sm:flex-col gap-2 overflow-x-auto sm:overflow-y-auto max-h-[min(28rem,60vh)] pl-0.5 [scrollbar-width:thin]" role="list">
                                     @foreach($galleryImages as $index => $gImg)
                                     <button type="button" role="listitem" data-tour-image="{{ e($gImg) }}"
-                                            class="tour-gallery-thumb group block w-full aspect-[4/3] shrink-0 rounded-lg overflow-hidden bg-gray-100 border-2 {{ $index === 0 ? 'border-red-500 ring-2 ring-red-500 ring-offset-1 ring-offset-white' : 'border-gray-200' }} hover:border-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1 transition-colors text-left"
+                                            class="tour-gallery-thumb group block flex-none w-24 h-16 sm:w-full sm:aspect-[4/3] rounded-lg overflow-hidden bg-gray-100 border-2 {{ $index === 0 ? 'border-red-500 ring-2 ring-red-500 ring-offset-1 ring-offset-white' : 'border-gray-200' }} hover:border-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1 transition-colors text-left"
                                             aria-label="Show image {{ $index + 1 }}" aria-pressed="{{ $index === 0 ? 'true' : 'false' }}">
                                         <img src="{{ $gImg }}" alt="" class="w-full h-full object-cover pointer-events-none group-hover:opacity-95 transition-opacity" loading="lazy" decoding="async">
                                     </button>
@@ -501,6 +494,10 @@
             {{-- Related Packages --}}
             @if(isset($relatedPackages) && count($relatedPackages) > 0)
             <div class="mt-14">
+                {{-- Moved share buttons here so they appear under the main post --}}
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 mb-6">
+                    <x-share-buttons :title="$package->title" />
+                </div>
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-xl font-extrabold text-gray-900">Recommended Tours</h2>
                     <a href="{{ route('packages.index') }}" class="text-sm font-semibold text-red-600 hover:text-red-700 flex items-center gap-1">

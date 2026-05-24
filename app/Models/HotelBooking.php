@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPayments;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class HotelBooking extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPayments;
 
     protected $fillable = [
         'room_id',
@@ -22,6 +23,9 @@ class HotelBooking extends Model
         'guest_phone',
         'special_request',
         'status',
+        'payment_status',
+        'payment_method',
+        'payment_reference',
     ];
 
     protected $casts = [

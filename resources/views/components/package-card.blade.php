@@ -41,12 +41,7 @@
             {{ $package->description }}
         </p>
 
-        <div class="flex items-center justify-between pt-4 border-t border-gray-50">
-            <div>
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Starting from</p>
-                <p class="text-xl font-black text-red-600">৳{{ number_format($package->price) }}</p>
-            </div>
-            
+        <div class="flex items-center justify-end pt-4 border-t border-gray-50">
             <div class="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
