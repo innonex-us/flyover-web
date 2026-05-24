@@ -1,42 +1,39 @@
 <x-guest-layout>
-    <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-800">Two-Factor Authentication</h2>
-        <p class="text-sm text-gray-500 mt-2">Please confirm access to your account by entering the authentication code provided by your authenticator application.</p>
-    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
 
-    <form method="POST" action="{{ route('2fa.verify') }}">
-        @csrf
-
-        <div class="mb-6">
-            <x-input-label for="code" :value="__('Authentication Code')" class="sr-only" />
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                </div>
-                <input id="code" class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-lg tracking-widest text-center" 
-                    type="text" 
-                    name="code" 
-                    required 
-                    autofocus 
-                    autocomplete="one-time-code"
-                    placeholder="000 000" />
+        <div class="mb-7 text-center">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background:#FFF1F2;">
+                <svg class="w-7 h-7" style="color:#C8102E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
             </div>
-            <x-input-error :messages="$errors->get('code')" class="mt-2 text-center" />
+            <p class="section-eyebrow mb-2">Security Check</p>
+            <h1 class="font-extrabold text-2xl text-gray-900 mb-2" style="font-family:'Merriweather',Georgia,serif;">Two-Factor Authentication</h1>
+            <p class="text-sm text-gray-500">Enter the code from your authenticator app.</p>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-             <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg shadow transition">
-                {{ __('Verify') }}
+        <form method="POST" action="{{ route('2fa.verify') }}" class="space-y-5">
+            @csrf
+
+            <div>
+                <label for="code" class="fb-field-label mb-1.5">Authentication Code</label>
+                <input id="code" type="text" name="code" required autofocus autocomplete="one-time-code"
+                       placeholder="000 000"
+                       class="fb-input text-center text-2xl font-bold tracking-[0.4em] @error('code') !border-red-500 @enderror">
+                @error('code')<p class="mt-1 text-xs text-red-500 text-center">{{ $message }}</p>@enderror
+            </div>
+
+            <button type="submit" class="btn-primary w-full py-3.5 text-base">
+                Verify
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
             </button>
-        </div>
-        
+        </form>
+
         <div class="mt-6 text-center">
-             <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="text-sm text-gray-500 hover:text-gray-700 underline">
-                    {{ __('Cancel and logout') }}
-                </button>
+                <button type="submit" class="text-sm text-gray-400 hover:text-gray-600 transition">Cancel and sign out</button>
             </form>
         </div>
-    </form>
+    </div>
 </x-guest-layout>
