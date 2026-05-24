@@ -2,19 +2,34 @@
     $postAuthor = $post->custom_author ?? ($post->author->name ?? 'FlyoverBD');
     $wordCount  = str_word_count(strip_tags($post->content ?? ''));
     $readTime   = max(1, (int) ceil($wordCount / 200));
+
+    // Generate SEO meta
+    $blogDescription = $post->excerpt
+        ? \Illuminate\Support\Str::limit(strip_tags($post->excerpt), 160)
+        : \Illuminate\Support\Str::limit(strip_tags($post->content), 160);
+
+    $defaultImage = asset('banner/hero-banner-1.png');
+    $blogImage = $post->featured_image
+        ? (\Illuminate\Support\Str::startsWith($post->featured_image, 'http') ? $post->featured_image : Storage::url($post->featured_image))
+        : $defaultImage;
 @endphp
 
-<x-app-layout>
+<x-app-layout
+    :title="$post->title . ' | Blog | FlyoverBD'"
+    :meta_description="$blogDescription"
+    :meta_image="$blogImage"
+    :og_type="'article'"
+>
     @push('meta')
     <script type="application/ld+json">
     {
       "@@context": "https://schema.org/",
-      "@@type": "Article",
+      "@type": "Article",
       "headline": {!! Illuminate\Support\Js::from($post->title) !!},
-      "description": {!! Illuminate\Support\Js::from($meta_description) !!},
-      "image": "{{ $meta_image }}",
-      "author": { "@@type": "Person", "name": {!! Illuminate\Support\Js::from($postAuthor) !!} },
-      "publisher": { "@@type": "Organization", "name": "FlyoverBD", "logo": { "@@type": "ImageObject", "url": "{{ asset('logo.png') }}" } },
+      "description": {!! Illuminate\Support\Js::from($blogDescription) !!},
+      "image": {{ Illuminate\Support\Js::from($blogImage) }},
+      "author": { "@type": "Person", "name": {!! Illuminate\Support\Js::from($postAuthor) !!} },
+      "publisher": { "@type": "Organization", "name": "FlyoverBD", "logo": { "@type": "ImageObject", "url": "{{ asset('logo.png') }}" } },
       "datePublished": "{{ $post->published_at ? $post->published_at->toIso8601String() : $post->created_at->toIso8601String() }}",
       "dateModified": "{{ $post->updated_at->toIso8601String() }}"
     }

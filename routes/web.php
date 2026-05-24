@@ -11,6 +11,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Short Link Redirect
 Route::get('/s/{code}', [App\Http\Controllers\ShortLinkController::class, 'redirect'])->name('short-link.redirect');
 
+// Short Link API
+Route::post('/api/short-link', [App\Http\Controllers\ShortLinkController::class, 'generate'])->name('short-link.generate');
+
 // Pick & Drop Transfers
 Route::get('/transfers', [App\Http\Controllers\TransferController::class, 'index'])->name('transfers.index');
 Route::post('/transfers', [App\Http\Controllers\TransferController::class, 'store'])->name('transfers.store');

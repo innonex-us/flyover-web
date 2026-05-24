@@ -1,8 +1,53 @@
+@php
+    $defaultImage = asset('banner/hero-banner-1.png');
+    $visaImage = $visa->thumbnail
+        ? (\Illuminate\Support\Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : Storage::url($visa->thumbnail))
+        : $defaultImage;
+
+    // Generate SEO meta description
+    $visaDescription = $visa->description
+        ? \Illuminate\Support\Str::limit(strip_tags($visa->description), 160)
+        : 'Apply for ' . $visa->country . ' ' . $visa->type . ' visa with FlyoverBD. Price: ৳' . number_format($visa->price) . '. Fast processing, hassle-free documentation.';
+@endphp
+
 <x-app-layout
-    :title="$title ?? $visa->country . ' Visa Processing | FlyoverBD'"
-    :meta_description="$meta_description ?? ''"
-    :meta_image="$meta_image ?? ''"
+    :title="$visa->country . ' ' . $visa->type . ' Visa | Apply Online | FlyoverBD'"
+    :meta_description="$visaDescription"
+    :meta_image="$visaImage"
+    :og_type="'product'"
 >
+    @push('meta')
+    {{-- JSON-LD Structured Data for Visa Service --}}
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@type": "Service",
+        "name": {{ Illuminate\Support\Js::from($visa->country . ' ' . $visa->type . ' Visa') }},
+        "description": {{ Illuminate\Support\Js::from(strip_tags($visa->description)) }},
+        "image": {{ Illuminate\Support\Js::from($visaImage) }},
+        "url": {{ Illuminate\Support\Js::from(route('visas.show', $visa->slug)) }},
+        "provider": {
+            "@type": "TravelAgency",
+            "name": "FlyoverBD",
+            "url": {{ Illuminate\Support\Js::from(config('app.url')) }},
+            "logo": {
+                "@type": "ImageObject",
+                "url": {{ Illuminate\Support\Js::from(asset('logo.png')) }}
+            }
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "{{ $visa->price }}",
+            "priceCurrency": "BDT"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": {{ Illuminate\Support\Js::from($visa->country) }}
+        }
+    }
+    </script>
+    @endpush
+
     @push('scripts')
     <script src="https://www.google.com/recaptcha/api.js?render={{ env('RECAPTCHA_SITE_KEY') }}"></script>
     <script>

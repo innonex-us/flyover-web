@@ -1,35 +1,69 @@
+@php
+    $defaultImage = asset('banner/hero-banner-1.png');
+    $mainImage = $package->thumbnail
+        ? (\Illuminate\Support\Str::startsWith($package->thumbnail, 'http') ? $package->thumbnail : Storage::url($package->thumbnail))
+        : $defaultImage;
+
+    // Generate SEO meta description from package description
+    $metaDescription = $package->description
+        ? \Illuminate\Support\Str::limit(strip_tags($package->description), 160)
+        : 'Book ' . $package->title . ' with FlyoverBD. ' . ($package->duration_days ? $package->duration_days . ' days tour package' : 'Tour package') . ' starting from ৳' . number_format($package->price) . ' per person.';
+
+    $galleryImages = [];
+    $pushGallery = function (string $url) use (&$galleryImages) {
+        if ($url !== '' && !in_array($url, $galleryImages, true)) {
+            $galleryImages[] = $url;
+        }
+    };
+    $pushGallery($mainImage);
+    if (!empty($package->images) && is_array($package->images)) {
+        foreach ($package->images as $img) {
+            $resolved = \Illuminate\Support\Str::startsWith($img, 'http') ? $img : Storage::url($img);
+            $pushGallery($resolved);
+        }
+    }
+    if ($galleryImages === []) {
+        $galleryImages = [$defaultImage];
+        $mainImage = $defaultImage;
+    }
+@endphp
+
 <x-app-layout
-    :title="$title ?? $package->title . ' | FlyoverBD'"
-    :meta_description="$meta_description ?? ''"
-    :meta_image="$meta_image ?? ''"
+    :title="$package->title . ' | Tour Package | FlyoverBD'"
+    :meta_description="$metaDescription"
+    :meta_image="$mainImage"
+    :og_type="'product'"
 >
-    @php
-        $defaultImage = asset('banner/hero-banner-1.png');
-        $mainImage = $package->thumbnail
-            ? (\Illuminate\Support\Str::startsWith($package->thumbnail, 'http') ? $package->thumbnail : Storage::url($package->thumbnail))
-            : $defaultImage;
-
-        $galleryImages = [];
-        $pushGallery = function (string $url) use (&$galleryImages) {
-            if ($url !== '' && !in_array($url, $galleryImages, true)) {
-                $galleryImages[] = $url;
-            }
-        };
-        $pushGallery($mainImage);
-        if (!empty($package->images) && is_array($package->images)) {
-            foreach ($package->images as $img) {
-                $resolved = \Illuminate\Support\Str::startsWith($img, 'http') ? $img : Storage::url($img);
-                $pushGallery($resolved);
-            }
-        }
-        if ($galleryImages === []) {
-            $galleryImages = [$defaultImage];
-            $mainImage = $defaultImage;
-        }
-    @endphp
-
     @push('meta')
     <link rel="preload" href="{{ $mainImage }}" as="image">
+
+    {{-- JSON-LD Structured Data for Tour/Product --}}
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@type": "TouristAttraction",
+        "name": {{ Illuminate\Support\Js::from($package->title) }},
+        "description": {{ Illuminate\Support\Js::from(strip_tags($package->description)) }},
+        "image": {{ Illuminate\Support\Js::from($mainImage) }},
+        "url": {{ Illuminate\Support\Js::from(route('packages.show', $package->slug)) }},
+        "touristType": ["Tourism", "Sightseeing"],
+        "offers": {
+            "@type": "Offer",
+            "price": "{{ $package->price }}",
+            "priceCurrency": "BDT",
+            "availability": "https://schema.org/InStock"
+        },
+        "provider": {
+            "@type": "TravelAgency",
+            "name": "FlyoverBD",
+            "url": {{ Illuminate\Support\Js::from(config('app.url')) }},
+            "logo": {
+                "@type": "ImageObject",
+                "url": {{ Illuminate\Support\Js::from(asset('logo.png')) }}
+            }
+        }
+    }
+    </script>
     @endpush
 
     @push('scripts')
@@ -381,7 +415,7 @@
                                 <div>
                                     <label class="fb-field-label mb-1.5">Travel Date</label>
                                     <input type="date" name="booking_date" x-model="bookingDate" required min="{{ date('Y-m-d') }}"
-                                           class="fb-input @error('booking_date') !border-red-500 @enderror">
+                                           class="fb-input {{ $errors->has('booking_date') ? '!border-red-500' : '' }}">
                                 </div>
 
                                 <div>
@@ -409,12 +443,12 @@
                                 <div class="space-y-2.5 pt-1">
                                     <p class="fb-field-label">Guest Info</p>
                                     <input type="text" name="guest_name" required value="{{ old('guest_name') }}"
-                                           class="fb-input @error('guest_name') !border-red-500 @enderror" placeholder="Full Name">
+                                           class="fb-input {{ $errors->has('guest_name') ? '!border-red-500' : '' }}" placeholder="Full Name">
                                     <div class="grid grid-cols-2 gap-2">
                                         <input type="email" name="guest_email" required value="{{ old('guest_email') }}"
-                                               class="fb-input @error('guest_email') !border-red-500 @enderror" placeholder="Email">
+                                               class="fb-input {{ $errors->has('guest_email') ? '!border-red-500' : '' }}" placeholder="Email">
                                         <input type="text" name="guest_phone" required value="{{ old('guest_phone') }}"
-                                               class="fb-input @error('guest_phone') !border-red-500 @enderror" placeholder="Phone">
+                                               class="fb-input {{ $errors->has('guest_phone') ? '!border-red-500' : '' }}" placeholder="Phone">
                                     </div>
                                 </div>
                                 @endguest

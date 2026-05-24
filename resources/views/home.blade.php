@@ -1,9 +1,43 @@
-<x-app-layout>
+@php
+    $metaImage = asset('banner/hero-banner-1.png');
+@endphp
+<x-app-layout
+    title="FlyoverBD | Tours, Visa & Travel Packages Bangladesh"
+    meta_description="Bangladesh's trusted travel agency for tour packages, visa processing, hotel bookings & airport transfers. Book your dream vacation with FlyoverBD."
+    :meta_image="$metaImage"
+>
+    @push('meta')
+    {{-- Organization Structured Data --}}
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@type": "TravelAgency",
+        "name": "FlyoverBD",
+        "alternateName": "FlyoverBD Travel Agency",
+        "url": {{ Illuminate\Support\Js::from(config('app.url')) }},
+        "logo": {{ Illuminate\Support\Js::from(asset('logo.png')) }},
+        "image": {{ Illuminate\Support\Js::from(asset('banner/hero-banner-1.png')) }},
+        "description": "Bangladesh's trusted travel agency for tour packages, visa processing, and holiday packages.",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "House 45, Road 13, Block D, Banani",
+            "addressLocality": "Dhaka",
+            "addressCountry": "BD"
+        },
+        "telephone": "+8809611677989",
+        "email": "info@flyoverbd.net",
+        "sameAs": [
+            "https://www.facebook.com/flyoverbd",
+            "https://twitter.com/flyoverbd"
+        ]
+    }
+    </script>
+    @endpush
 
 {{-- ═══════════════════════════════════════
      HERO  — image slider + search card
 ═══════════════════════════════════════ --}}
-<div class="relative" style="height:640px;"
+<div class="relative" style="min-height:680px;"
      x-data="{ s:0, init(){ setInterval(()=>this.s=(this.s+1)%3, 5500) } }">
 
     {{-- Slides --}}
@@ -35,12 +69,12 @@
                  query:'', suggestions:[], show:false, loading:false, timer:null,
                  checkIn:'', checkOut:'', persons:1,
                  travelDate:'', passengers:1,
-                 fetch() {
+                 fetchSuggestions() {
                      if(this.tab==='transfers'){ return; }
                      this.loading=true; clearTimeout(this.timer);
                      this.timer=setTimeout(()=>{
                          window.fetch(`{{ route('search.suggestions') }}?type=${this.tab}&query=${encodeURIComponent(this.query)}`)
-                             .then(r=>r.json()).then(d=>{ this.suggestions=d; this.show=true; this.loading=false; })
+                             .then(r=>r.json()).then(d=>{ this.suggestions=d; this.show=d.length>0; this.loading=false; })
                              .catch(()=>this.loading=false);
                      },280);
                  },
@@ -49,153 +83,214 @@
              }"
              @click.away="show=false">
 
-            {{-- Tab row --}}
-            <div class="flex flex-wrap justify-center gap-2 mb-3">
+            {{-- Modern Tabs --}}
+            <div class="flex flex-wrap justify-center gap-1 mb-6 bg-white/10 backdrop-blur-md rounded-2xl p-1.5 w-fit mx-auto">
                 <button @click="reset('tours')"
-                        class="px-4 py-2 rounded-full text-sm font-semibold transition-all"
-                        :class="tab==='tours'?'bg-red-600 text-white shadow-lg':'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'">
-                    ✈ Tours
+                        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+                        :class="tab==='tours' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
+                    <svg class="w-4 h-4" :class="tab==='tours' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Tours
                 </button>
                 <button @click="reset('visas')"
-                        class="px-4 py-2 rounded-full text-sm font-semibold transition-all"
-                        :class="tab==='visas'?'bg-red-600 text-white shadow-lg':'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'">
-                    🛂 Visa
+                        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+                        :class="tab==='visas' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
+                    <svg class="w-4 h-4" :class="tab==='visas' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0H6"/></svg>
+                    Visa
                 </button>
                 <button @click="reset('hotels')"
-                        class="px-4 py-2 rounded-full text-sm font-semibold transition-all"
-                        :class="tab==='hotels'?'bg-red-600 text-white shadow-lg':'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'">
-                    🏨 Hotels
+                        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+                        :class="tab==='hotels' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
+                    <svg class="w-4 h-4" :class="tab==='hotels' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    Hotels
                 </button>
                 <button @click="reset('transfers')"
-                        class="px-4 py-2 rounded-full text-sm font-semibold transition-all"
-                        :class="tab==='transfers'?'bg-red-600 text-white shadow-lg':'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'">
-                    🚗 Pick &amp; Drop
+                        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+                        :class="tab==='transfers' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
+                    <svg class="w-4 h-4" :class="tab==='transfers' ? 'text-red-600' : 'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                    Pick &amp; Drop
                 </button>
             </div>
 
-            {{-- Search box --}}
-            <div class="bg-white rounded-2xl shadow-2xl p-2 relative">
+            {{-- Search card --}}
+            <div class="relative">
 
                 {{-- Tours --}}
                 <template x-if="tab==='tours'">
-                    <form action="{{ route('packages.index') }}" method="GET" class="flex gap-2 w-full items-center">
-                        <div class="flex-1 relative">
-                            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                            <input type="text" name="search" x-model="query" @input="fetch()" @focus="fetch()"
-                                   placeholder="Search tour packages, destinations…"
-                                   class="w-full pl-11 pr-4 py-3.5 text-gray-800 text-sm outline-none rounded-xl"
-                                   autocomplete="off">
+                    <form action="{{ route('packages.index') }}" method="GET">
+                        <div class="bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden">
+                            <div class="flex items-center p-2">
+                                <div class="flex-1 flex items-center px-4 py-3">
+                                    <svg class="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                    <input type="text" name="search" x-model="query"
+                                           @input="fetchSuggestions()" @focus="fetchSuggestions()"
+                                           placeholder="Where do you want to go?"
+                                           class="flex-1 text-gray-800 text-base outline-none placeholder-gray-400 bg-transparent"
+                                           autocomplete="off">
+                                </div>
+                                <button type="submit" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
+                                    Search
+                                </button>
+                            </div>
                         </div>
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition whitespace-nowrap">
-                            Search
-                        </button>
                     </form>
                 </template>
 
                 {{-- Visas --}}
                 <template x-if="tab==='visas'">
-                    <form action="{{ route('visas.index') }}" method="GET" class="flex gap-2 w-full items-center">
-                        <div class="flex-1 relative">
-                            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <input type="text" name="search" x-model="query" @input="fetch()" @focus="fetch()"
-                                   placeholder="Malaysia, Thailand, Schengen…"
-                                   class="w-full pl-11 pr-4 py-3.5 text-gray-800 text-sm outline-none rounded-xl"
-                                   autocomplete="off">
+                    <form action="{{ route('visas.index') }}" method="GET">
+                        <div class="bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden">
+                            <div class="flex items-center p-2">
+                                <div class="flex-1 flex items-center px-4 py-3">
+                                    <svg class="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <input type="text" name="search" x-model="query"
+                                           @input="fetchSuggestions()" @focus="fetchSuggestions()"
+                                           placeholder="Malaysia, Thailand, Schengen…"
+                                           class="flex-1 text-gray-800 text-base outline-none placeholder-gray-400 bg-transparent"
+                                           autocomplete="off">
+                                </div>
+                                <button type="submit" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap">
+                                    Find Visa
+                                </button>
+                            </div>
                         </div>
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition whitespace-nowrap">
-                            Find Visa
-                        </button>
                     </form>
                 </template>
 
-                {{-- Hotels (with check-in / check-out / persons) --}}
+                {{-- Hotels --}}
                 <template x-if="tab==='hotels'">
-                    <form action="{{ route('hotels.index') }}" method="GET" class="w-full">
-                        <div class="flex flex-wrap gap-2 items-center">
-                            {{-- Destination --}}
-                            <div class="flex-1 min-w-[160px] relative">
-                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                                <input type="text" name="search" x-model="query" @input="fetch()" @focus="fetch()"
-                                       placeholder="Where? Cox's Bazar…"
-                                       class="w-full pl-9 pr-3 py-3 text-gray-800 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300"
-                                       autocomplete="off">
+                    <form action="{{ route('hotels.index') }}" method="GET">
+                        <div class="bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden">
+                            <div class="flex items-center p-2 gap-1">
+                                {{-- Destination --}}
+                                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 border-r border-gray-100">
+                                    <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <span class="text-xs font-semibold text-gray-500 block">Destination</span>
+                                        <input type="text" name="search" x-model="query"
+                                               @input="fetchSuggestions()" @focus="fetchSuggestions()"
+                                               placeholder="Cox's Bazar, Dhaka…"
+                                               class="w-full text-gray-800 text-sm font-semibold outline-none placeholder-gray-400 bg-transparent"
+                                               autocomplete="off">
+                                    </div>
+                                </div>
+                                {{-- Check-in --}}
+                                <div class="flex items-center gap-3 px-3 py-2.5 border-r border-gray-100">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-semibold text-gray-500 block">Check-in</span>
+                                        <input type="date" name="check_in" x-model="checkIn"
+                                               :min="new Date().toISOString().split('T')[0]"
+                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent cursor-pointer w-[110px]">
+                                    </div>
+                                </div>
+                                {{-- Check-out --}}
+                                <div class="flex items-center gap-3 px-3 py-2.5 border-r border-gray-100">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-semibold text-gray-500 block">Check-out</span>
+                                        <input type="date" name="check_out" x-model="checkOut"
+                                               :min="checkIn || new Date().toISOString().split('T')[0]"
+                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent cursor-pointer w-[110px]">
+                                    </div>
+                                </div>
+                                {{-- Guests --}}
+                                <div class="flex items-center gap-3 px-3 py-2.5">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-semibold text-gray-500 block">Guests</span>
+                                        <input type="number" name="persons" x-model="persons" min="1" max="20"
+                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent w-16">
+                                    </div>
+                                </div>
+                                {{-- Button --}}
+                                <button type="submit" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-6 py-4 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap flex-shrink-0 ml-1">
+                                    Search
+                                </button>
                             </div>
-                            {{-- Check-in --}}
-                            <div class="relative min-w-[130px]">
-                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Check-in</label>
-                                <input type="date" name="check_in" x-model="checkIn"
-                                       :min="new Date().toISOString().split('T')[0]"
-                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300">
-                            </div>
-                            {{-- Check-out --}}
-                            <div class="relative min-w-[130px]">
-                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Check-out</label>
-                                <input type="date" name="check_out" x-model="checkOut"
-                                       :min="checkIn || new Date().toISOString().split('T')[0]"
-                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300">
-                            </div>
-                            {{-- Persons --}}
-                            <div class="relative w-20">
-                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Guests</label>
-                                <input type="number" name="persons" x-model="persons" min="1" max="20"
-                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300 text-center">
-                            </div>
-                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-3 rounded-xl text-sm transition whitespace-nowrap">
-                                Search
-                            </button>
                         </div>
                     </form>
                 </template>
 
-                {{-- Pick & Drop (with date + passengers) --}}
+                {{-- Pick & Drop --}}
                 <template x-if="tab==='transfers'">
-                    <form action="{{ route('transfers.index') }}" method="GET" class="w-full">
-                        <div class="flex flex-wrap gap-2 items-center">
-                            {{-- Pickup --}}
-                            <div class="flex-1 min-w-[140px] relative">
-                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                                <input type="text" name="pickup" x-model="query"
-                                       placeholder="Pickup location…"
-                                       class="w-full pl-9 pr-3 py-3 text-gray-800 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300"
-                                       autocomplete="off">
+                    <form action="{{ route('transfers.index') }}" method="GET">
+                        <div class="bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden">
+                            <div class="flex items-center p-2 gap-1">
+                                {{-- Pickup --}}
+                                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 border-r border-gray-100">
+                                    <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <span class="text-xs font-semibold text-gray-500 block">Pickup</span>
+                                        <input type="text" name="pickup" x-model="query"
+                                               placeholder="Dhaka Airport…"
+                                               class="w-full text-gray-800 text-sm font-semibold outline-none placeholder-gray-400 bg-transparent"
+                                               autocomplete="off">
+                                    </div>
+                                </div>
+                                {{-- Drop-off --}}
+                                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 border-r border-gray-100">
+                                    <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <span class="text-xs font-semibold text-gray-500 block">Drop-off</span>
+                                        <input type="text" name="drop"
+                                               placeholder="Cox's Bazar Hotel…"
+                                               class="w-full text-gray-800 text-sm font-semibold outline-none placeholder-gray-400 bg-transparent"
+                                               autocomplete="off">
+                                    </div>
+                                </div>
+                                {{-- Date --}}
+                                <div class="flex items-center gap-3 px-3 py-2.5 border-r border-gray-100">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-semibold text-gray-500 block">Date</span>
+                                        <input type="date" name="travel_date" x-model="travelDate"
+                                               :min="new Date(Date.now()+86400000).toISOString().split('T')[0]"
+                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent cursor-pointer w-[120px]">
+                                    </div>
+                                </div>
+                                {{-- Persons --}}
+                                <div class="flex items-center gap-3 px-3 py-2.5">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-semibold text-gray-500 block">Persons</span>
+                                        <input type="number" name="passengers" x-model="passengers" min="1" max="50"
+                                               class="text-gray-800 text-sm font-semibold outline-none bg-transparent w-16">
+                                    </div>
+                                </div>
+                                {{-- Button --}}
+                                <button type="submit" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-6 py-4 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 whitespace-nowrap flex-shrink-0 ml-1">
+                                    Book
+                                </button>
                             </div>
-                            {{-- Drop --}}
-                            <div class="flex-1 min-w-[140px] relative">
-                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
-                                <input type="text" name="drop"
-                                       placeholder="Drop location…"
-                                       class="w-full pl-9 pr-3 py-3 text-gray-800 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300"
-                                       autocomplete="off">
-                            </div>
-                            {{-- Travel date --}}
-                            <div class="relative min-w-[130px]">
-                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Date</label>
-                                <input type="date" name="travel_date" x-model="travelDate"
-                                       :min="new Date(Date.now()+86400000).toISOString().split('T')[0]"
-                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300">
-                            </div>
-                            {{-- Passengers --}}
-                            <div class="relative w-24">
-                                <label class="absolute -top-2 left-3 bg-white text-[10px] font-bold text-gray-400 px-1 uppercase tracking-wide">Persons</label>
-                                <input type="number" name="passengers" x-model="passengers" min="1" max="50"
-                                       class="w-full py-3 px-3 text-gray-700 text-sm outline-none rounded-xl border border-gray-100 focus:border-red-300 text-center">
-                            </div>
-                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-3 rounded-xl text-sm transition whitespace-nowrap">
-                                Book Transfer
-                            </button>
                         </div>
                     </form>
                 </template>
 
                 {{-- Autocomplete dropdown --}}
-                <div x-show="show && suggestions.length > 0 && tab !== 'transfers'"
-                     x-transition:enter="transition ease-out duration-150"
-                     x-transition:enter-start="opacity-0 translate-y-1"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50"
+                <div x-show="show && suggestions.length > 0"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                     x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                     class="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-2xl shadow-black/20 border border-gray-100 overflow-hidden z-50"
                      style="display:none;">
                     <div class="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-b border-gray-100">
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" x-text="query?'Search results':'Popular'"></span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest" x-text="query ? 'Search results' : 'Popular'"></span>
                         <div x-show="loading" class="w-3 h-3 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                     <ul class="max-h-72 overflow-y-auto">
@@ -204,7 +299,7 @@
                                 <img :src="item.image" alt="" class="w-11 h-11 object-cover rounded-xl flex-shrink-0 bg-gray-100">
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800 truncate group-hover:text-red-600" x-text="item.text"></p>
-                                    <p class="text-xs text-gray-400 truncate" x-text="item.subtext"></p>
+                                    <p class="text-xs text-gray-500 truncate" x-text="item.subtext"></p>
                                 </div>
                                 <svg class="w-4 h-4 text-gray-300 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </li>
@@ -213,15 +308,6 @@
                 </div>
             </div>
 
-            {{-- Quick links --}}
-            <div class="flex flex-wrap justify-center gap-2 mt-4">
-                @foreach(["Cox's Bazar",'Maldives','Thailand','Malaysia','Schengen Visa','Dubai Visa'] as $q)
-                <a href="{{ route('packages.index', ['search'=>$q]) }}"
-                   class="text-xs text-white/80 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full transition">
-                    {{ $q }}
-                </a>
-                @endforeach
-            </div>
         </div>
     </div>
 
