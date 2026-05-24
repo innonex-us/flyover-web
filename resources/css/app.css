@@ -1,122 +1,94 @@
+/* Google Fonts — must be FIRST */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,700;1,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 [x-cloak] { display: none !important; }
 
-/* ── Fonts ──────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* ── Base ─────────────────────────────── */
+body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background:#fff; }
 
-/* ── Design tokens ──────────────────────────────────── */
-:root {
-  --red:   #C8102E;
-  --cream: #FAF6EE;
-  --ink:   #18130E;
-  --ink2:  #3A332B;
-  --mute:  #7A7166;
-  --rule:  #E4DCC9;
-  --soft:  #F9F6EF;
+/* ── Utility helpers ──────────────────── */
+.scrollbar-hide { -ms-overflow-style:none; scrollbar-width:none; }
+.scrollbar-hide::-webkit-scrollbar { display:none; }
+
+/* ── Serif display font ───────────────── */
+.font-display { font-family: 'Merriweather', Georgia, serif; }
+
+/* ── Common button styles ─────────────── */
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all;
+  background: #C8102E;
+}
+.btn-primary:hover { background: #a80d24; }
+
+.btn-outline {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all;
+  border: 1.5px solid #C8102E;
+  color: #C8102E;
+}
+.btn-outline:hover { background: #C8102E; color: #fff; }
+
+.btn-dark {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all;
+  background: #1a1a1a;
+}
+.btn-dark:hover { background: #111; }
+
+/* ── Travel card ──────────────────────── */
+.travel-card {
+  @apply bg-white rounded-2xl overflow-hidden border border-gray-100 transition-all duration-200;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.travel-card:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,.12);
+  transform: translateY(-3px);
 }
 
-/* ── Base typography ────────────────────────────────── */
-body { font-family: 'Geist', system-ui, sans-serif; }
-.fb-serif  { font-family: 'Instrument Serif', Georgia, serif; }
-.fb-mono   { font-family: 'JetBrains Mono', monospace; }
-
-/* ── Eyebrow label ──────────────────────────────────── */
-.fb-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--red);
+/* ── Section heading ──────────────────── */
+.section-eyebrow {
+  @apply text-xs font-bold uppercase tracking-widest;
+  color: #C8102E;
 }
 
-/* ── OTA buttons ────────────────────────────────────── */
-.ota-btn-primary {
-  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition;
-  background: var(--red);
-  color: #fff;
-}
-.ota-btn-primary:hover { opacity: .88; }
-
-.ota-btn-ghost {
-  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition;
-  border: 1.5px solid var(--red);
-  color: var(--red);
-  background: transparent;
-}
-.ota-btn-ghost:hover { background: var(--red); color: #fff; }
-
-.ota-btn-dark {
-  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition;
-  background: var(--ink);
-  color: var(--cream);
-}
-.ota-btn-dark:hover { opacity: .88; }
-
-/* ── Cards ──────────────────────────────────────────── */
-.ota-card {
+/* ── Search widget field ──────────────── */
+.search-field {
+  @apply w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none transition-all;
   background: #fff;
-  border: 1px solid #EBEBEB;
-  border-radius: 12px;
-  transition: box-shadow 0.2s, transform 0.2s;
 }
-.ota-card:hover {
-  box-shadow: 0 8px 32px rgba(0,0,0,.10);
-  transform: translateY(-2px);
+.search-field:focus { border-color: #C8102E; box-shadow: 0 0 0 3px rgba(200,16,46,.1); }
+.search-field::placeholder { color: #9CA3AF; }
+
+/* ── Destination tile ─────────────────── */
+.dest-tile {
+  @apply relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-200;
 }
+.dest-tile:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
 
-.fb-card {
-  background: #fff;
-  border: 1px solid var(--rule);
-  border-radius: 14px;
-}
-
-/* ── Tags / badges ──────────────────────────────────── */
-.ota-tag-red  { @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold; background:#FFE9EC; color:#C8102E; }
-.ota-tag-soft { @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold; background:#F3F4F6; color:#374151; }
-.ota-tag-green{ @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold; background:#D1FAE5; color:#065F46; }
-.ota-tag-amber{ @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold; background:#FEF3C7; color:#92400E; }
-
-.rating-badge {
-  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold;
-  background: var(--ink);
-  color: #FAF6EE;
+/* ── Visa country card ────────────────── */
+.visa-card {
+  @apply bg-white border border-gray-100 rounded-xl p-4 text-center transition-all hover:border-red-200 hover:shadow-md cursor-pointer;
 }
 
-/* ── Form fields ────────────────────────────────────── */
-.fb-field { @apply flex flex-col gap-1.5; }
-
-.fb-field-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--mute);
-}
-
-.fb-input {
-  @apply w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition;
-  border-color: #DDDBD6;
-  background: #fff;
-  color: var(--ink);
-}
-.fb-input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(200,16,46,.08); }
-.fb-input::placeholder { color: #B0AA9F; }
-
-.fb-chip {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  background: var(--soft);
-  color: var(--ink2);
-  border: 1px solid var(--rule);
-}
-
-.fb-divider { border-top: 1px solid var(--rule); }
-
-/* ── Admin helpers ──────────────────────────────────── */
+/* ── Admin helpers (unchanged) ────────── */
 .adm-card  { @apply bg-white rounded-xl border p-5; border-color: #E6E8EC; }
 .adm-pill  { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold; }
 .adm-btn   { @apply inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition; }
+.ota-tag-red   { @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold; background:#FFE9EC; color:#C8102E; }
+.ota-tag-soft  { @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold; background:#F3F4F6; color:#374151; }
+.ota-tag-green { @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold; background:#D1FAE5; color:#065F46; }
+.ota-tag-amber { @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold; background:#FEF3C7; color:#92400E; }
+.rating-badge  { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold; background:#1a1a1a; color:#FAF6EE; }
+.ota-card { @apply bg-white rounded-2xl overflow-hidden border border-gray-100 transition-all; }
+.ota-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,.1); transform: translateY(-2px); }
+.ota-btn-primary { @apply btn-primary; }
+.ota-btn-ghost { @apply btn-outline; }
+.ota-btn-dark { @apply btn-dark; }
+.fb-serif { font-family: 'Merriweather', Georgia, serif; }
+.fb-mono { font-family: monospace; }
+.fb-eyebrow { @apply section-eyebrow; }
+.fb-field-label { @apply block text-xs font-bold uppercase tracking-widest text-gray-500; }
+.fb-input { @apply search-field; }
+.fb-chip { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700; border: 1px solid #E5E7EB; }
