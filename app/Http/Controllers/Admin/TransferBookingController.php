@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TransferBooking;
+use App\Notifications\BookingStatusUpdatedNotification;
 use Illuminate\Http\Request;
 
 class TransferBookingController extends Controller
@@ -45,7 +46,20 @@ class TransferBookingController extends Controller
             'status' => 'required|in:pending,confirmed,cancelled,completed',
         ]);
 
+        $oldStatus = $transferBooking->status;
         $transferBooking->update(['status' => $request->status]);
+
+        if ($transferBooking->user_id && $oldStatus !== $transferBooking->status) {
+            $transferBooking->load('user');
+            $route = $transferBooking->pickup_location . ' → ' . $transferBooking->drop_location;
+            $transferBooking->user->notify(new BookingStatusUpdatedNotification(
+                bookingType: 'transfer',
+                bookingId:   $transferBooking->id,
+                serviceName: $route,
+                status:      $transferBooking->status,
+                url:         route('transfers.confirmation', $transferBooking),
+            ));
+        }
 
         return redirect()->back()->with('success', 'Booking status updated successfully.');
     }

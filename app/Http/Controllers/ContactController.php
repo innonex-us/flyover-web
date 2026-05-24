@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ContactMessage;
+use App\Models\User;
+use App\Notifications\NewContactMessageNotification;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -18,7 +20,12 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
 
-        ContactMessage::create($validated);
+        $message = ContactMessage::create($validated);
+
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new NewContactMessageNotification($message));
+        }
 
         return back()->with('success', 'Thank you for your message! We will get back to you shortly.');
     }

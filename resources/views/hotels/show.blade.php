@@ -1,23 +1,49 @@
-<x-app-layout>
-    <x-slot name="title">{{ $hotel->name }} — FlyoverBD</x-slot>
+<x-app-layout
+    :title="$hotel->name . ' | FlyoverBD'"
+    :meta_description="Str::limit($hotel->description ?? 'Book your stay at ' . $hotel->name . ' in ' . $hotel->location . '. FlyoverBD curated hotels.', 155)"
+>
 
-    {{-- Hotel Header --}}
-    <section class="bg-white border-b border-gray-100">
-        @if($hotel->thumbnail)
-        <div class="w-full h-72 md:h-96 overflow-hidden">
-            <img src="{{ Storage::url($hotel->thumbnail) }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover">
+    {{-- Hotel Hero --}}
+    @if($hotel->thumbnail)
+    <div class="w-full h-72 md:h-[420px] overflow-hidden relative">
+        <img src="{{ Storage::url($hotel->thumbnail) }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover">
+        <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);"></div>
+        <div class="absolute bottom-0 left-0 right-0 px-4 sm:px-6 lg:px-8 pb-8 max-w-5xl mx-auto">
+            <a href="{{ route('hotels.index') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-white/80 hover:text-white mb-4 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                All Hotels
+            </a>
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div>
+                    <span class="text-lg text-amber-400 font-bold block mb-1">@for($i = 1; $i <= 5; $i++){{ $i <= $hotel->star_rating ? '★' : '☆' }}@endfor</span>
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2" style="font-family:'Merriweather',Georgia,serif;">{{ $hotel->name }}</h1>
+                    <div class="flex items-center gap-2 text-white/80 text-sm">
+                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                        {{ $hotel->location }}
+                    </div>
+                </div>
+                @if($hotel->rooms->count())
+                @php $minPrice = $hotel->rooms->min('price_per_night'); @endphp
+                <div class="flex-shrink-0 bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 text-white border border-white/20">
+                    <p class="text-xs text-white/60 font-semibold uppercase tracking-wide">Starting from</p>
+                    <p class="text-3xl font-extrabold">৳{{ number_format($minPrice) }}</p>
+                    <p class="text-xs text-white/60">per night</p>
+                </div>
+                @endif
+            </div>
         </div>
-        @endif
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    </div>
+    @else
+    <section style="background:#F9F6EF;border-bottom:1px solid #E4DCC9;" class="px-4 py-12">
+        <div class="max-w-5xl mx-auto">
+            <a href="{{ route('hotels.index') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-gray-800 mb-4 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                All Hotels
+            </a>
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-xl text-amber-400 font-bold">
-                            @for($i = 1; $i <= 5; $i++){{ $i <= $hotel->star_rating ? '★' : '☆' }}@endfor
-                        </span>
-                        <span class="text-sm text-gray-400 font-medium">{{ number_format($hotel->star_rating, 1) }}-star hotel</span>
-                    </div>
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">{{ $hotel->name }}</h1>
+                    <span class="text-xl text-amber-400 font-bold block mb-1">@for($i = 1; $i <= 5; $i++){{ $i <= $hotel->star_rating ? '★' : '☆' }}@endfor</span>
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2" style="font-family:'Merriweather',Georgia,serif;">{{ $hotel->name }}</h1>
                     <div class="flex items-center gap-2 text-gray-500 text-sm">
                         <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
                         {{ $hotel->location }}
@@ -34,6 +60,7 @@
             </div>
         </div>
     </section>
+    @endif
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 

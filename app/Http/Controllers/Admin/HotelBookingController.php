@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\HotelBooking;
+use App\Notifications\BookingStatusUpdatedNotification;
 use Illuminate\Http\Request;
 
 class HotelBookingController extends Controller
@@ -45,7 +46,20 @@ class HotelBookingController extends Controller
             'status' => 'required|in:pending,confirmed,cancelled,completed',
         ]);
 
+        $oldStatus = $hotelBooking->status;
         $hotelBooking->update(['status' => $request->status]);
+
+        if ($hotelBooking->user_id && $oldStatus !== $hotelBooking->status) {
+            $hotelBooking->load('room.hotel', 'user');
+            $hotelName = $hotelBooking->room?->hotel?->name ?? "Hotel Booking #{$hotelBooking->id}";
+            $hotelBooking->user->notify(new BookingStatusUpdatedNotification(
+                bookingType: 'hotel',
+                bookingId:   $hotelBooking->id,
+                serviceName: $hotelName,
+                status:      $hotelBooking->status,
+                url:         route('hotels.confirmation', $hotelBooking),
+            ));
+        }
 
         return redirect()->back()->with('success', 'Booking status updated successfully.');
     }

@@ -58,10 +58,12 @@
                     <!-- Desktop Nav Links -->
                     <div class="hidden md:flex items-center space-x-1" x-cloak>
                         @foreach([
-                            ['Tours',   'packages.index', 'packages.*', 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064'],
-                            ['Visa',    'visas.index',    'visas.*',    'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2'],
-                            ['Blog',    'blog.index',     'blog.*',     'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z'],
-                            ['About',   'about',          'about',      'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                            ['Tours',      'packages.index',  'packages.*',  'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064'],
+                            ['Visa',       'visas.index',     'visas.*',     'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2'],
+                            ['Hotels',     'hotels.index',    'hotels.*',    'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
+                            ['Transfers',  'transfers.index', 'transfers.*', 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
+                            ['Blog',       'blog.index',      'blog.*',      'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z'],
+                            ['About',      'about',           'about',       'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                         ] as [$label, $route, $match, $icon])
                         <a href="{{ route($route) }}"
                             x-show="showNavLinks"
@@ -84,6 +86,80 @@
                         {{-- Auth: Desktop --}}
                         <div class="hidden md:flex items-center gap-2">
                             @auth
+                            {{-- Notification Bell (frontend) --}}
+                            @php $userUnreadCount = auth()->user()->unreadNotifications()->count(); @endphp
+                            <div class="relative" x-data="{ notifOpen: false }">
+                                <button @click="notifOpen = !notifOpen" @keydown.escape.window="notifOpen = false"
+                                        class="relative p-2 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                                    </svg>
+                                    @if($userUnreadCount > 0)
+                                    <span class="absolute top-1 right-1 w-4 h-4 rounded-full text-[10px] font-bold text-white flex items-center justify-center" style="background:#C8102E;">
+                                        {{ $userUnreadCount > 9 ? '9+' : $userUnreadCount }}
+                                    </span>
+                                    @endif
+                                </button>
+                                <div x-show="notifOpen" @click.outside="notifOpen = false"
+                                     x-transition:enter="transition ease-out duration-100"
+                                     x-transition:enter-start="opacity-0 scale-95"
+                                     x-transition:enter-end="opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-75"
+                                     x-transition:leave-start="opacity-100 scale-100"
+                                     x-transition:leave-end="opacity-0 scale-95"
+                                     style="display:none;"
+                                     class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 origin-top-right overflow-hidden">
+                                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                                        <p class="text-sm font-bold text-gray-900">My Notifications</p>
+                                        @if($userUnreadCount > 0)
+                                        <form method="POST" action="{{ route('user.notifications.read-all') }}">
+                                            @csrf
+                                            <button type="submit" class="text-xs font-semibold hover:underline" style="color:#C8102E;">Mark all read</button>
+                                        </form>
+                                        @endif
+                                    </div>
+                                    <div class="max-h-80 overflow-y-auto divide-y divide-gray-50">
+                                        @forelse(auth()->user()->notifications()->latest()->take(8)->get() as $notif)
+                                        @php
+                                            $nd    = $notif->data;
+                                            $nColor = match($nd['color'] ?? 'gray') {
+                                                'green'  => ['bg' => 'bg-green-100',  'text' => 'text-green-600'],
+                                                'red'    => ['bg' => 'bg-red-100',    'text' => 'text-red-600'],
+                                                'blue'   => ['bg' => 'bg-blue-100',   'text' => 'text-blue-600'],
+                                                'yellow' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-600'],
+                                                default  => ['bg' => 'bg-gray-100',   'text' => 'text-gray-600'],
+                                            };
+                                        @endphp
+                                        <div class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition {{ $notif->read_at ? 'opacity-60' : '' }}">
+                                            <div class="w-8 h-8 rounded-xl {{ $nColor['bg'] }} flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                <svg class="w-3.5 h-3.5 {{ $nColor['text'] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-xs font-bold text-gray-900">{{ $nd['title'] ?? 'Update' }}</p>
+                                                <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ $nd['message'] ?? '' }}</p>
+                                                <p class="text-[10px] text-gray-400 mt-1">{{ $notif->created_at->diffForHumans() }}</p>
+                                            </div>
+                                            @if(!empty($nd['url']))
+                                            <form method="POST" action="{{ route('user.notifications.read', $notif->id) }}" class="flex-shrink-0">
+                                                @csrf
+                                                <button type="submit" class="text-gray-300 hover:text-red-500 transition mt-1" title="View">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                                </button>
+                                            </form>
+                                            @endif
+                                        </div>
+                                        @empty
+                                        <div class="px-4 py-8 text-center">
+                                            <svg class="w-7 h-7 text-gray-200 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                                            <p class="text-xs text-gray-400">No notifications yet</p>
+                                        </div>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="relative" x-data="{ userOpen: false }">
                                 <button @click="userOpen = !userOpen" @keydown.escape.window="userOpen = false"
                                         class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-gray-200 hover:border-red-200 hover:bg-red-50 transition text-sm font-semibold text-gray-700">
@@ -159,10 +235,12 @@
                  style="display:none;"
                  class="md:hidden border-t border-gray-100 bg-white px-4 pt-3 pb-5 space-y-1">
                 @foreach([
-                    ['Tours',   'packages.index', 'packages.*', 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064'],
-                    ['Visa',    'visas.index',    'visas.*',    'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2'],
-                    ['Blog',    'blog.index',     'blog.*',     'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z'],
-                    ['About',   'about',          'about',      'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                    ['Tours',      'packages.index',  'packages.*',  'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064'],
+                    ['Visa',       'visas.index',     'visas.*',     'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2'],
+                    ['Hotels',     'hotels.index',    'hotels.*',    'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
+                    ['Transfers',  'transfers.index', 'transfers.*', 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
+                    ['Blog',       'blog.index',      'blog.*',      'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z'],
+                    ['About',      'about',           'about',       'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                 ] as [$label, $route, $match, $icon])
                 <a href="{{ route($route) }}" @click="mobileOpen = false"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition

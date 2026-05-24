@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hotel;
 use App\Models\Package;
 use App\Models\Visa;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class SearchController extends Controller
     public function suggestions(Request $request)
     {
         $request->validate([
-            'type' => 'required|in:tours,visas',
+            'type' => 'required|in:tours,visas,hotels',
             'query' => 'nullable|string',
         ]);
 
@@ -56,6 +57,25 @@ class SearchController extends Controller
                         'subtext' => 'Visa Service',
                         'url' => route('visas.show', $visa->slug),
                         'image' => $visa->thumbnail ? \Storage::url($visa->thumbnail) : 'https://via.placeholder.com/100x100?text=Visa',
+                    ];
+                });
+        } elseif ($type === 'hotels') {
+            $suggestions = Hotel::where('is_active', true)
+                ->when($query, function ($q) use ($query) {
+                    $q->where(function ($sub) use ($query) {
+                        $sub->where('name', 'like', "%{$query}%")
+                            ->orWhere('location', 'like', "%{$query}%");
+                    });
+                })
+                ->latest()
+                ->limit(5)
+                ->get(['id', 'name', 'slug', 'location', 'thumbnail'])
+                ->map(function ($hotel) {
+                    return [
+                        'text'    => $hotel->name,
+                        'subtext' => $hotel->location,
+                        'url'     => route('hotels.show', $hotel->slug),
+                        'image'   => $hotel->thumbnail ? \Storage::url($hotel->thumbnail) : null,
                     ];
                 });
         }

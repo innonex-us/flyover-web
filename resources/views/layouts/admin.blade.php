@@ -210,13 +210,100 @@
                 </div>
             </div>
 
-            {{-- Right: view site + user --}}
+            {{-- Right: view site + notifications + user --}}
             <div class="flex items-center gap-3">
                 <a href="{{ route('home') }}" target="_blank"
                    class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-gray-800 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     View Site
                 </a>
+
+                {{-- Notification Bell --}}
+                @php $unreadCount = auth()->user()->unreadNotifications()->count(); @endphp
+                <div class="relative" x-data="{ notifOpen: false }">
+                    <button @click="notifOpen = !notifOpen" @keydown.escape.window="notifOpen = false"
+                            class="relative p-2 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        @if($unreadCount > 0)
+                        <span class="absolute top-1 right-1 w-4 h-4 rounded-full text-[10px] font-bold text-white flex items-center justify-center" style="background:#C8102E;">
+                            {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                        </span>
+                        @endif
+                    </button>
+
+                    <div x-show="notifOpen" @click.outside="notifOpen = false"
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="opacity-100 scale-100"
+                         x-transition:leave-end="opacity-0 scale-95"
+                         style="display:none;"
+                         class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 origin-top-right overflow-hidden">
+                        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                            <p class="text-sm font-bold text-gray-900">Notifications</p>
+                            @if($unreadCount > 0)
+                            <form method="POST" action="{{ route('admin.notifications.read-all') }}">
+                                @csrf
+                                <button type="submit" class="text-xs font-semibold text-red-600 hover:text-red-700 transition">Mark all read</button>
+                            </form>
+                            @endif
+                        </div>
+
+                        <div class="max-h-96 overflow-y-auto divide-y divide-gray-50">
+                            @forelse(auth()->user()->notifications()->latest()->take(10)->get() as $notification)
+                            @php
+                                $data  = $notification->data;
+                                $color = match($data['color'] ?? 'gray') {
+                                    'blue'   => ['bg' => 'bg-blue-100',   'text' => 'text-blue-600'],
+                                    'purple' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-600'],
+                                    'green'  => ['bg' => 'bg-green-100',  'text' => 'text-green-600'],
+                                    'yellow' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-600'],
+                                    'red'    => ['bg' => 'bg-red-100',    'text' => 'text-red-600'],
+                                    default  => ['bg' => 'bg-gray-100',   'text' => 'text-gray-600'],
+                                };
+                                $iconPath = match($data['icon'] ?? 'bell') {
+                                    'calendar' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+                                    'car'      => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
+                                    'building' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+                                    'document' => 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z',
+                                    'mail'     => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+                                    default    => 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9',
+                                };
+                            @endphp
+                            <div class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition {{ $notification->read_at ? 'opacity-60' : '' }}">
+                                <div class="w-9 h-9 rounded-xl {{ $color['bg'] }} flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <svg class="w-4 h-4 {{ $color['text'] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $iconPath }}"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs font-bold text-gray-900">{{ $data['title'] ?? 'Notification' }}</p>
+                                    <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ $data['message'] ?? '' }}</p>
+                                    <p class="text-[10px] text-gray-400 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
+                                </div>
+                                <form method="POST" action="{{ route('admin.notifications.read', $notification->id) }}" class="flex-shrink-0">
+                                    @csrf
+                                    <button type="submit" title="Mark as read &amp; go" class="text-gray-300 hover:text-red-500 transition mt-1">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                    </button>
+                                </form>
+                            </div>
+                            @empty
+                            <div class="px-4 py-8 text-center">
+                                <svg class="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                                <p class="text-xs text-gray-400">No notifications</p>
+                            </div>
+                            @endforelse
+                        </div>
+
+                        <div class="border-t border-gray-100 px-4 py-2.5">
+                            <a href="{{ route('admin.notifications.index') }}" class="text-xs font-semibold text-red-600 hover:text-red-700 transition">View all notifications &rarr;</a>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="relative" x-data="{ userOpen: false }">
                     <button @click="userOpen = !userOpen" @keydown.escape.window="userOpen = false"

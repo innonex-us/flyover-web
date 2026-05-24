@@ -1,24 +1,55 @@
-<x-app-layout>
-    <x-slot name="title">Pick & Drop Transfer Service — FlyoverBD</x-slot>
+<x-app-layout
+    title="Pick & Drop Transfer Service | FlyoverBD"
+    meta_description="Book hassle-free airport transfers and pick & drop services across Bangladesh. Fixed pricing, preset routes, or custom locations."
+>
 
     {{-- Hero --}}
-    <section class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-red-900 text-white py-20 px-4">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 bg-red-600/20 border border-red-500/30 text-red-300 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+    <section style="background:#F9F6EF;border-bottom:1px solid #E4DCC9;" class="px-4 py-14 text-center">
+        <p class="section-eyebrow mb-2">Airport & City Transfers</p>
+        <h1 class="font-extrabold text-4xl md:text-5xl text-gray-900 mb-3" style="font-family:'Merriweather',Georgia,serif;">
+            Pick &amp; Drop Service
+        </h1>
+        <p class="text-gray-500 max-w-md mx-auto mb-6">Comfortable transfers between airports, hotels, and destinations — fixed pricing, no surprises.</p>
+
+        {{-- Trust badges --}}
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-700 bg-green-50 border border-green-200 rounded-full px-3 py-1">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                Fixed Pricing
+            </span>
+            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-3 py-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                Any Group Size
+            </span>
+            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 rounded-full px-3 py-1">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                Pick & Drop Transfer
-            </div>
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">Comfortable <span class="text-red-400">Transfers</span></h1>
-            <p class="text-lg text-gray-300 max-w-xl mx-auto">Book hassle-free transfers between airports, hotels, and tourist destinations across Bangladesh.</p>
+                Custom Routes
+            </span>
+        </div>
+
+        {{-- Quick-jump chips --}}
+        <div class="flex flex-wrap justify-center gap-2">
+            <a href="#booking-form" onclick="document.getElementById('booking-form').scrollIntoView({behavior:'smooth'}); return false;"
+               class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-red-600 text-white transition hover:bg-red-700">
+                Book Now
+            </a>
+            @foreach(['Dhaka Airport', "Cox's Bazar", 'Chittagong', 'Sylhet Airport', 'Custom Route'] as $loc)
+            <a href="{{ $loc === 'Custom Route' ? '#booking-form' : '#booking-form' }}"
+               onclick="document.getElementById('booking-form').scrollIntoView({behavior:'smooth'}); {{ $loc === 'Custom Route' ? "document.querySelector('[x-data]').dispatchEvent(new CustomEvent('set-custom'))" : '' }} return false;"
+               class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 hover:border-red-300 hover:text-red-600 transition">
+                {{ $loc }}
+            </a>
+            @endforeach
         </div>
     </section>
 
     {{-- Preset Routes --}}
     @if($routes->count())
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="mb-10">
-            <h2 class="text-2xl font-extrabold text-gray-900 mb-2">Available Routes</h2>
-            <p class="text-gray-500">Choose from our preset transfer routes with fixed pricing.</p>
+    <section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-8">
+            <h2 class="text-2xl font-extrabold text-gray-900 mb-1" style="font-family:'Merriweather',Georgia,serif;">Available Routes</h2>
+            <p class="text-gray-500">Choose from preset transfer routes with fixed pricing.</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($routes as $route)
@@ -53,14 +84,15 @@
             </div>
             @endforeach
         </div>
+    </div>
     </section>
     @endif
 
     {{-- Booking Form --}}
-    <section id="booking-form" class="bg-gray-50 py-16 px-4">
+    <section id="booking-form" style="background:#F9F6EF;border-top:1px solid #E4DCC9;" class="py-16 px-4">
         <div class="max-w-2xl mx-auto">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl font-extrabold text-gray-900 mb-2">Book a Transfer</h2>
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-extrabold text-gray-900 mb-2" style="font-family:'Merriweather',Georgia,serif;">Book a Transfer</h2>
                 <p class="text-gray-500">Fill in your details and we'll arrange your transfer.</p>
             </div>
 

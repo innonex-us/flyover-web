@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Notifications\BookingStatusUpdatedNotification;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -64,7 +65,20 @@ class BookingController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        $oldStatus = $booking->status;
         $booking->update($validated);
+
+        if ($booking->user_id && $oldStatus !== $booking->status) {
+            $booking->load('payable', 'user');
+            $serviceName = $booking->payable?->title ?? $booking->payable?->country ?? "Booking #{$booking->id}";
+            $booking->user->notify(new BookingStatusUpdatedNotification(
+                bookingType: 'tour_visa',
+                bookingId:   $booking->id,
+                serviceName: $serviceName,
+                status:      $booking->status,
+                url:         route('bookings.confirmation', $booking),
+            ));
+        }
 
         return redirect()->route('admin.bookings.show', $booking)->with('success', 'Booking updated successfully.');
     }

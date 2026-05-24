@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\TransferBooking;
 use App\Models\TransferRoute;
+use App\Models\User;
+use App\Notifications\NewTransferBookingNotification;
 use Illuminate\Http\Request;
 
 class TransferController extends Controller
@@ -66,6 +68,12 @@ class TransferController extends Controller
         }
 
         $booking = TransferBooking::create($data);
+        $booking->load('user');
+
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new NewTransferBookingNotification($booking));
+        }
 
         return redirect()->route('transfers.confirmation', $booking)->with('success', 'Transfer booking submitted successfully!');
     }

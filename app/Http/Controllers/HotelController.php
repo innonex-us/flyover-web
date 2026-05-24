@@ -5,13 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Hotel;
 use App\Models\HotelBooking;
 use App\Models\HotelRoom;
+use App\Models\User;
+use App\Notifications\NewHotelBookingNotification;
 use Illuminate\Http\Request;
 
 class HotelController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $hotels = Hotel::active()->withCount('rooms')->paginate(12);
+        $query = Hotel::active()->with(['rooms' => fn($q) => $q->where('is_active', true)]);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        $hotels = $query->latest()->paginate(12)->withQueryString();
         return view('hotels.index', compact('hotels'));
     }
 
@@ -61,6 +73,13 @@ class HotelController extends Controller
             'special_request' => $request->special_request,
             'status'          => 'pending',
         ]);
+
+        $booking->load('room.hotel', 'user');
+
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new NewHotelBookingNotification($booking));
+        }
 
         return redirect()->route('hotels.confirmation', $booking)->with('success', 'Booking submitted successfully!');
     }

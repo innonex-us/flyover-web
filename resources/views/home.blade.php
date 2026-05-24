@@ -98,16 +98,18 @@
                 </template>
                 {{-- Hotels --}}
                 <template x-if="tab==='hotels'">
-                    <div class="flex gap-2 w-full">
+                    <form action="{{ route('hotels.index') }}" method="GET" class="flex gap-2 w-full">
                         <div class="flex-1 relative">
                             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                            <input type="text" placeholder="Where are you going?"
-                                   class="w-full pl-11 pr-4 py-3.5 text-gray-800 text-sm outline-none rounded-xl">
+                            <input type="text" name="search" x-model="query" @input="fetch()" @focus="fetch()"
+                                   placeholder="Cox's Bazar, Dhaka, Sylhet…"
+                                   class="w-full pl-11 pr-4 py-3.5 text-gray-800 text-sm outline-none rounded-xl"
+                                   autocomplete="off">
                         </div>
-                        <a href="{{ route('packages.index') }}" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition whitespace-nowrap flex items-center">
-                            Search
-                        </a>
-                    </div>
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition whitespace-nowrap">
+                            Find Hotel
+                        </button>
+                    </form>
                 </template>
 
                 {{-- Autocomplete dropdown (outside form so it overlays) --}}

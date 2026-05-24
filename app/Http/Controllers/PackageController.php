@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Package;
+use App\Models\User;
+use App\Notifications\NewCustomizationRequestNotification;
+use Illuminate\Http\Request;
 
 class PackageController extends Controller
 {
@@ -74,7 +76,7 @@ class PackageController extends Controller
             'destinations' => 'nullable|array',
         ]);
 
-        \App\Models\CustomizationRequest::create([
+        $customization = \App\Models\CustomizationRequest::create([
             'package_id' => $package?->id,
             'name' => $request->name,
             'email' => $request->email,
@@ -89,6 +91,11 @@ class PackageController extends Controller
                 'destinations' => $request->destinations,
             ],
         ]);
+
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new NewCustomizationRequestNotification($customization));
+        }
 
         return back()->with('success', 'Your customization request has been sent! We will contact you shortly.');
     }

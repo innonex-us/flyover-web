@@ -62,6 +62,10 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth', 'two-factor'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    // User Notifications
+    Route::post('/my/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markRead'])->name('user.notifications.read');
+    Route::post('/my/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('user.notifications.read-all');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
@@ -98,6 +102,12 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::resource('hotels', \App\Http\Controllers\Admin\HotelController::class);
     Route::resource('hotels.rooms', \App\Http\Controllers\Admin\HotelRoomController::class);
     Route::resource('hotel-bookings', \App\Http\Controllers\Admin\HotelBookingController::class)->only(['index', 'show', 'update', 'destroy']);
+
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::delete('/notifications/{id}', [\App\Http\Controllers\Admin\NotificationController::class, 'destroy'])->name('notifications.destroy');
 });
 
 require __DIR__.'/auth.php';

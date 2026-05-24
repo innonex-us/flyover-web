@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Package;
 use App\Models\Visa;
+use App\Models\User;
+use App\Notifications\NewBookingNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
@@ -77,6 +79,12 @@ class BookingController extends Controller
         $bookingData['total_amount'] = $payable->price * $bookingData['quantity'];
 
         $booking = Booking::create($bookingData);
+        $booking->load('payable', 'user');
+
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new NewBookingNotification($booking));
+        }
 
         return redirect()->to(URL::signedRoute('bookings.confirmation', $booking))->with('success', 'Booking request submitted successfully!');
     }
