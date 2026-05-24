@@ -47,7 +47,7 @@
         waves: [],
         init(){
             this.$nextTick(() => this.setupWater());
-            setInterval(()=>this.s=(this.s+1)%6, 5500);
+            setInterval(()=>this.s=(this.s+1)%3, 5500);
         },
         setupWater(){
             this.waterCanvas = this.$refs.waterCanvas;
@@ -175,22 +175,13 @@
     <div class="absolute inset-0 overflow-hidden">
     <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
             style="background-image:url('{{ asset('banner/hero-banner-5.jpg') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
-         :class="s===1?'opacity-100':'opacity-0'"></div>
+         :class="s===0?'opacity-100':'opacity-0'"></div>
     <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-            style="background-image:url('{{ asset('banner/hero-banner-6.jpg') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
-         :class="s===2?'opacity-100':'opacity-0'"></div>
+            style="background-image:url('{{ asset('banner/hero-banner-4.jpg') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
+         :class="s===1?'opacity-100':'opacity-0'"></div>
         <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
             style="background-image:url('{{ asset('banner/hero-banner-1.png') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
-            :class="s===3?'opacity-100':'opacity-0'"></div>
-        <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-            style="background-image:url('{{ asset('banner/helo-banner-2.png') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
-            :class="s===4?'opacity-100':'opacity-0'"></div>
-        <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-            style="background-image:url('{{ asset('banner/hero-banner-3.png') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
-            :class="s===5?'opacity-100':'opacity-0'"></div>
-        <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-            style="background-image:url('{{ asset('banner/hero-banner-4.jpg') }}'); filter: blur(.45px) saturate(1.08) brightness(1.01); transform: scale(1.025);"
-            :class="s===0?'opacity-100':'opacity-0'"></div>
+            :class="s===2?'opacity-100':'opacity-0'"></div>
     </div>{{-- /slides overflow-hidden --}}
 
         <canvas x-ref="waterCanvas" class="absolute inset-0 z-[2] h-full w-full pointer-events-none mix-blend-screen opacity-75"></canvas>
@@ -360,8 +351,8 @@
                                         :class="calOpen==='checkIn' ? 'border-red-400 bg-red-50' : 'border-gray-100'">
                                     <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     <div class="min-w-0">
-                                        <p class="text-[8px] font-bold text-gray-400 uppercase">Check-in</p>
-                                        <p class="text-[11px] font-semibold text-gray-700 truncate" x-text="checkIn ? fmtDateShort(checkIn) : 'Select'"></p>
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Check-in</p>
+                                        <p class="text-sm font-semibold text-gray-700 truncate" x-text="checkIn ? fmtDateShort(checkIn) : 'Select'"></p>
                                     </div>
                                 </button>
                                 <button type="button" @click.stop="openCal('checkOut')"
@@ -369,18 +360,18 @@
                                         :class="calOpen==='checkOut' ? 'border-red-400 bg-red-50' : 'border-gray-100'">
                                     <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     <div class="min-w-0">
-                                        <p class="text-[8px] font-bold text-gray-400 uppercase">Check-out</p>
-                                        <p class="text-[11px] font-semibold text-gray-700 truncate" x-text="checkOut ? fmtDateShort(checkOut) : 'Select'"></p>
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Check-out</p>
+                                        <p class="text-sm font-semibold text-gray-700 truncate" x-text="checkOut ? fmtDateShort(checkOut) : 'Select'"></p>
                                     </div>
                                 </button>
                                 <div class="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border border-gray-100 rounded-xl col-span-1">
                                     <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-[8px] font-bold text-gray-400 uppercase">Guests</p>
-                                        <div class="flex items-center gap-0.5">
-                                            <button type="button" @click.stop="persons=Math.max(1,persons-1)" class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-sm leading-none">−</button>
-                                            <span class="text-[11px] font-bold text-gray-800 w-3 text-center" x-text="persons"></span>
-                                            <button type="button" @click.stop="persons=Math.min(20,persons+1)" class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-sm leading-none">+</button>
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Guests</p>
+                                        <div class="flex items-center gap-1">
+                                            <button type="button" @click.stop="persons=Math.max(1,persons-1)" class="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">−</button>
+                                            <span class="text-sm font-bold text-gray-800 w-4 text-center" x-text="persons"></span>
+                                            <button type="button" @click.stop="persons=Math.min(20,persons+1)" class="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">+</button>
                                         </div>
                                     </div>
                                 </div>
@@ -466,23 +457,23 @@
                             <div class="grid grid-cols-2 gap-2">
                                 {{-- Date picker --}}
                                 <button type="button" @click.stop="openCal('travelDate')"
-                                        class="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border rounded-xl transition-all text-left"
+                                        class="flex items-center gap-1.5 px-2.5 py-2.5 bg-gray-50 border rounded-xl transition-all text-left"
                                         :class="calOpen==='travelDate' ? 'border-red-400 bg-red-50' : 'border-gray-100'">
-                                    <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <svg class="w-4 h-4 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     <div>
-                                        <p class="text-[8px] font-bold text-gray-400 uppercase">Date</p>
-                                        <p class="text-[11px] font-semibold text-gray-700" x-text="travelDate ? fmtDateShort(travelDate) : 'Select'"></p>
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Date</p>
+                                        <p class="text-sm font-semibold text-gray-700" x-text="travelDate ? fmtDateShort(travelDate) : 'Select'"></p>
                                     </div>
                                 </button>
-                                {{-- Persons --}}
-                                <div class="flex items-center gap-2 px-3 py-3 bg-gray-50 border border-gray-100 rounded-2xl">
+                                {{-- Passengers --}}
+                                <div class="flex items-center gap-2 px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-xl">
                                     <svg class="w-4 h-4 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                    <div class="flex-1">
-                                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Passengers</p>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Passengers</p>
                                         <div class="flex items-center gap-1">
-                                            <button type="button" @click="passengers=Math.max(1,passengers-1)" class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">−</button>
-                                            <span class="text-xs font-bold text-gray-800 w-4 text-center" x-text="passengers"></span>
-                                            <button type="button" @click="passengers=Math.min(50,passengers+1)" class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">+</button>
+                                            <button type="button" @click.stop="passengers=Math.max(1,passengers-1)" class="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">−</button>
+                                            <span class="text-sm font-bold text-gray-800 w-4 text-center" x-text="passengers"></span>
+                                            <button type="button" @click.stop="passengers=Math.min(50,passengers+1)" class="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">+</button>
                                         </div>
                                     </div>
                                 </div>
