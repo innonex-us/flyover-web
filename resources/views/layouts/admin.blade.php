@@ -52,30 +52,116 @@
         {{-- Nav --}}
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
             @php
-                $navItems = [
-                    ['label' => 'Dashboard',       'route' => 'admin.dashboard',           'match' => 'admin.dashboard',          'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z'],
-                    ['label' => 'Packages',         'route' => 'admin.packages.index',      'match' => 'admin.packages.*',         'icon' => 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064'],
-                    ['label' => 'Visa Services',    'route' => 'admin.visas.index',         'match' => 'admin.visas.*',            'icon' => 'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0'],
-                    ['label' => 'Bookings',         'route' => 'admin.bookings.index',      'match' => 'admin.bookings.*',         'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
-                    ['label' => 'Custom Requests',  'route' => 'admin.customizations.index','match' => 'admin.customizations.*',   'icon' => 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'],
-                    ['label' => 'Messages',         'route' => 'admin.contact-messages.index','match' => 'admin.contact-messages.*','icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
-                    ['label' => 'Blog',             'route' => 'admin.blog.index',          'match' => 'admin.blog.*',             'icon' => 'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z'],
-                    ['label' => 'Short Links',      'route' => 'admin.short-links.index',   'match' => 'admin.short-links.*',      'icon' => 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'],
-                    ['label' => 'Pick & Drop Routes','route' => 'admin.transfer-routes.index','match' => 'admin.transfer-routes.*', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
-                    ['label' => 'Pick & Drop Bookings','route' => 'admin.transfer-bookings.index','match' => 'admin.transfer-bookings.*','icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'],
-                    ['label' => 'Hotels',           'route' => 'admin.hotels.index',        'match' => 'admin.hotels.*',           'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
-                    ['label' => 'Hotel Bookings',   'route' => 'admin.hotel-bookings.index','match' => 'admin.hotel-bookings.*',   'icon' => 'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z'],
+                $bookingsActive = request()->routeIs('admin.bookings.*')
+                    || request()->routeIs('admin.transfer-bookings.*')
+                    || request()->routeIs('admin.hotel-bookings.*');
+
+                $servicesActive = request()->routeIs('admin.packages.*')
+                    || request()->routeIs('admin.visas.*')
+                    || request()->routeIs('admin.transfer-routes.*')
+                    || request()->routeIs('admin.hotels.*');
+
+                $flatItems = [
+                    ['label' => 'Dashboard',        'route' => 'admin.dashboard',              'match' => 'admin.dashboard',           'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z'],
+                    ['label' => 'Custom Requests',  'route' => 'admin.customizations.index',   'match' => 'admin.customizations.*',    'icon' => 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'],
+                    ['label' => 'Messages',         'route' => 'admin.contact-messages.index', 'match' => 'admin.contact-messages.*', 'icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
+                    ['label' => 'Blog',             'route' => 'admin.blog.index',             'match' => 'admin.blog.*',             'icon' => 'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z'],
+                    ['label' => 'Short Links',      'route' => 'admin.short-links.index',      'match' => 'admin.short-links.*',      'icon' => 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'],
+                ];
+
+                $serviceItems = [
+                    ['label' => 'Tour Packages',    'route' => 'admin.packages.index',         'match' => 'admin.packages.*',         'icon' => 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064'],
+                    ['label' => 'Visa Services',    'route' => 'admin.visas.index',            'match' => 'admin.visas.*',            'icon' => 'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0'],
+                    ['label' => 'Pick & Drop',      'route' => 'admin.transfer-routes.index',  'match' => 'admin.transfer-routes.*',  'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
+                    ['label' => 'Hotels',           'route' => 'admin.hotels.index',           'match' => 'admin.hotels.*',           'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
+                ];
+
+                $bookingItems = [
+                    ['label' => 'Tours & Visas',    'route' => 'admin.bookings.index',         'match' => 'admin.bookings.*',         'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
+                    ['label' => 'Pick & Drop',      'route' => 'admin.transfer-bookings.index','match' => 'admin.transfer-bookings.*','icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
+                    ['label' => 'Hotels',           'route' => 'admin.hotel-bookings.index',   'match' => 'admin.hotel-bookings.*',   'icon' => 'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z'],
                 ];
             @endphp
 
-            @foreach($navItems as $item)
+            {{-- Dashboard --}}
+            @php $item = $flatItems[0]; $active = request()->routeIs($item['match']); @endphp
+            <a href="{{ route($item['route']) }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition group {{ $active ? 'text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}"
+               @if($active) style="background:#C8102E;" @endif>
+                <svg class="w-[18px] h-[18px] shrink-0 {{ $active ? 'text-white' : 'text-gray-500 group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/>
+                </svg>
+                {{ $item['label'] }}
+            </a>
+
+            {{-- Section label --}}
+            <p class="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-widest text-gray-600">Services</p>
+
+            {{-- Services accordion --}}
+            <div x-data="{ open: {{ $servicesActive ? 'true' : 'false' }} }">
+                <button @click="open = !open"
+                        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition group {{ $servicesActive ? 'text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}"
+                        @if($servicesActive) style="background:rgba(200,16,46,0.25);" @endif>
+                    <svg class="w-[18px] h-[18px] shrink-0 {{ $servicesActive ? 'text-red-400' : 'text-gray-500 group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                    <span class="flex-1 text-left">Services</span>
+                    <svg class="w-3.5 h-3.5 text-gray-500 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div x-show="open" x-cloak class="mt-0.5 ml-4 pl-3 space-y-0.5" style="border-left:1px solid rgba(255,255,255,0.08);">
+                    @foreach($serviceItems as $item)
+                    @php $active = request()->routeIs($item['match']); @endphp
+                    <a href="{{ route($item['route']) }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition group {{ $active ? 'text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}"
+                       @if($active) style="background:#C8102E;" @endif>
+                        <svg class="w-[16px] h-[16px] shrink-0 {{ $active ? 'text-white' : 'text-gray-600 group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/>
+                        </svg>
+                        {{ $item['label'] }}
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Bookings accordion --}}
+            <div x-data="{ open: {{ $bookingsActive ? 'true' : 'false' }} }">
+                <button @click="open = !open"
+                        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition group {{ $bookingsActive ? 'text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}"
+                        @if($bookingsActive) style="background:rgba(200,16,46,0.25);" @endif>
+                    <svg class="w-[18px] h-[18px] shrink-0 {{ $bookingsActive ? 'text-red-400' : 'text-gray-500 group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                    </svg>
+                    <span class="flex-1 text-left">Bookings</span>
+                    <svg class="w-3.5 h-3.5 text-gray-500 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div x-show="open" x-cloak class="mt-0.5 ml-4 pl-3 space-y-0.5" style="border-left:1px solid rgba(255,255,255,0.08);">
+                    @foreach($bookingItems as $item)
+                    @php $active = request()->routeIs($item['match']); @endphp
+                    <a href="{{ route($item['route']) }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition group {{ $active ? 'text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}"
+                       @if($active) style="background:#C8102E;" @endif>
+                        <svg class="w-[16px] h-[16px] shrink-0 {{ $active ? 'text-white' : 'text-gray-600 group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/>
+                        </svg>
+                        {{ $item['label'] }}
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+
+            <p class="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-widest text-gray-600">Content</p>
+
+            {{-- Remaining flat items --}}
+            @foreach(array_slice($flatItems, 1) as $item)
             @php $active = request()->routeIs($item['match']); @endphp
             <a href="{{ route($item['route']) }}"
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition group
-                   {{ $active ? 'text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition group {{ $active ? 'text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}"
                @if($active) style="background:#C8102E;" @endif>
-                <svg class="w-4.5 h-4.5 w-[18px] h-[18px] shrink-0 {{ $active ? 'text-white' : 'text-gray-500 group-hover:text-gray-300' }}"
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-[18px] h-[18px] shrink-0 {{ $active ? 'text-white' : 'text-gray-500 group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/>
                 </svg>
                 {{ $item['label'] }}
