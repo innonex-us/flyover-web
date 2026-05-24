@@ -63,6 +63,16 @@ Route::prefix('payments/bkash')->name('payments.bkash.')->group(function () {
 
 Route::get('/search/suggestions', [App\Http\Controllers\SearchController::class, 'suggestions'])->name('search.suggestions');
 
+// Analytics API Routes
+Route::prefix('api/analytics')->name('analytics.')->group(function () {
+    Route::post('/page-view', [App\Http\Controllers\AnalyticsController::class, 'pageView'])->name('page-view');
+    Route::post('/event', [App\Http\Controllers\AnalyticsController::class, 'event'])->name('event');
+    Route::post('/page-view-update', [App\Http\Controllers\AnalyticsController::class, 'pageViewUpdate'])->name('page-view-update');
+    Route::post('/visitor-update', [App\Http\Controllers\AnalyticsController::class, 'visitorUpdate'])->name('visitor-update');
+    Route::post('/session-activity', [App\Http\Controllers\AnalyticsController::class, 'sessionActivity'])->name('session-activity');
+    Route::post('/consent', [App\Http\Controllers\AnalyticsController::class, 'consent'])->name('consent');
+});
+
 
 // Static Pages
 Route::view('/about', 'pages.about')->name('about');
@@ -97,6 +107,10 @@ Route::post('/2fa/challenge', [App\Http\Controllers\TwoFactorController::class, 
 Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    
+    // Analytics
+    Route::get('/analytics', [\App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
+    Route::get('/analytics/export', [\App\Http\Controllers\Admin\AnalyticsController::class, 'export'])->name('analytics.export');
 
     Route::resource('packages', \App\Http\Controllers\Admin\PackageController::class);
     Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);

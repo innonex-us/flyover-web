@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'two-factor' => \App\Http\Middleware\TwoFactorMiddleware::class,
             'api.token' => \App\Http\Middleware\ApiTokenMiddleware::class,
         ]);
+        
+        $middleware->web(\App\Http\Middleware\VisitorTracking::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
