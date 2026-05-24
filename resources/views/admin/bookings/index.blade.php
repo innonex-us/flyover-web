@@ -48,6 +48,7 @@
                         <th class="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Service</th>
                         <th class="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">User / Guest</th>
                         <th class="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Date</th>
+                        <th class="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-gray-400">Amount</th>
                         <th class="px-5 py-3 text-center text-[10px] font-bold uppercase tracking-widest text-gray-400">Status</th>
                         <th class="px-5 py-3 text-center text-[10px] font-bold uppercase tracking-widest text-gray-400">Actions</th>
                     </tr>
@@ -81,6 +82,7 @@
                             @endif
                         </td>
                         <td class="px-5 py-3.5 text-sm text-gray-600">{{ $booking->booking_date->format('M d, Y') }}</td>
+                        <td class="px-5 py-3.5 text-right text-sm font-semibold text-gray-900">৳{{ number_format($booking->total_amount) }}</td>
                         <td class="px-5 py-3.5 text-center">
                             @php
                                 $badgeClass = match($booking->status) {
@@ -103,7 +105,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-5 py-12 text-center text-sm text-gray-400">No bookings found yet.</td>
+                        <td colspan="7" class="px-5 py-12 text-center text-sm text-gray-400">No bookings found yet.</td>
                     </tr>
                     @endforelse
                 </tbody>

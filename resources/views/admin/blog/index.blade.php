@@ -1,24 +1,39 @@
 <x-admin-layout pageTitle="Blog Posts">
 
-    <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-2">
-            <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-gray-100 text-gray-500">{{ $posts->total() }}</span>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-5">
+        {{-- Filter tabs --}}
+        @php $statusFilter = request('status', ''); @endphp
+        <div class="inline-flex gap-1">
+            @foreach([''=>'All', 'published'=>'Published', 'draft'=>'Drafts'] as $val => $label)
+                <a href="{{ request()->fullUrlWithQuery(['status' => $val, 'search' => request('search')]) }}"
+                   class="px-4 py-1.5 rounded-full text-xs font-semibold transition {{ $statusFilter === $val ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
+                    {{ $label }}
+                </a>
+            @endforeach
         </div>
-        <a href="{{ route('admin.blog.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition shadow-sm hover:shadow-md">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            New Post
-        </a>
-    </div>
 
-    {{-- Filter tabs --}}
-    @php $statusFilter = request('status', ''); @endphp
-    <div class="flex gap-1 mb-5">
-        @foreach([''=>'All', 'published'=>'Published', 'draft'=>'Drafts'] as $val => $label)
-            <a href="{{ request()->fullUrlWithQuery(['status' => $val]) }}"
-               class="px-4 py-1.5 rounded-full text-xs font-semibold transition {{ $statusFilter === $val ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
-                {{ $label }}
+        <div class="flex items-center gap-2 w-full md:w-auto">
+            {{-- Search --}}
+            <form action="{{ route('admin.blog.index') }}" method="GET" class="flex gap-2 w-full md:w-auto">
+                @if(request('status')) <input type="hidden" name="status" value="{{ request('status') }}"> @endif
+                <div class="relative flex-1 md:flex-none">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search title, author..."
+                           class="w-full md:w-60 pl-9 pr-4 py-2 text-sm border-gray-200 focus:border-red-500 focus:ring-red-200 rounded-lg shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                </div>
+                <button type="submit" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm font-semibold transition">Search</button>
+                @if(request('search'))
+                    <a href="{{ route('admin.blog.index', array_filter(['status' => request('status')])) }}" class="text-gray-400 hover:text-gray-600 px-2 py-2 rounded-lg text-sm transition">✕</a>
+                @endif
+            </form>
+
+            <a href="{{ route('admin.blog.create') }}" class="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition shadow-sm whitespace-nowrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                New Post
             </a>
-        @endforeach
+        </div>
     </div>
 
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">

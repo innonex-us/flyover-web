@@ -68,6 +68,7 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'show', 'update', 'destroy']);
     Route::resource('customizations', \App\Http\Controllers\Admin\CustomizationController::class)->only(['index', 'show', 'update']);
+    Route::post('/contact-messages/mark-all-read', [\App\Http\Controllers\Admin\ContactMessageController::class, 'markAllRead'])->name('contact-messages.markAllRead');
     Route::resource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy']);
     Route::resource('blog', \App\Http\Controllers\Admin\BlogController::class);
     Route::post('/upload-image', [\App\Http\Controllers\Admin\ImageUploadController::class, 'store'])->name('upload.image');

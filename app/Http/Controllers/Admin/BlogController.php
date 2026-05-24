@@ -13,9 +13,25 @@ class BlogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('author')->latest()->paginate(10);
+        $query = Post::with('author')->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('custom_author', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->status === 'published') {
+            $query->where('is_published', true);
+        } elseif ($request->status === 'draft') {
+            $query->where('is_published', false);
+        }
+
+        $posts = $query->paginate(10)->withQueryString();
         return view('admin.blog.index', compact('posts'));
     }
 
