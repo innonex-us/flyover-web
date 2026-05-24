@@ -46,6 +46,8 @@ return [
         'app_secret' => env('BKASH_APP_SECRET'),
         'callback_url' => env('BKASH_CALLBACK_URL'),
         'currency' => env('BKASH_CURRENCY', 'BDT'),
+        'webhook_secret' => env('BKASH_WEBHOOK_SECRET'),
+        'allowed_ips' => array_filter(array_map('trim', explode(',', env('BKASH_ALLOWED_IPS', '')))),
     ],
 
 ];

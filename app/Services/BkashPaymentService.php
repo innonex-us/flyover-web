@@ -102,6 +102,61 @@ class BkashPaymentService
         return $payment;
     }
 
+    /**
+     * Query bKash for the given paymentID and return the response array.
+     */
+    public function verifyTransaction(string $paymentId): array
+    {
+        $token = $this->grantToken();
+
+        $response = Http::baseUrl(config('services.bkash.base_url'))
+            ->withHeaders([
+                'accept' => 'application/json',
+                'content-type' => 'application/json',
+                'authorization' => $token,
+                'x-app-key' => config('services.bkash.app_key'),
+            ])
+            ->post('/tokenized/checkout/query', ['paymentID' => $paymentId])
+            ->throw()
+            ->json();
+
+        return $response;
+    }
+
+    /**
+     * Verify transaction from bKash response and update local Payment and payable state.
+     */
+    public function verifyAndSync(string $paymentId): Payment
+    {
+        $payment = Payment::where('gateway', 'bkash')
+            ->where('gateway_payment_id', $paymentId)
+            ->firstOrFail();
+
+        $response = $this->verifyTransaction($paymentId);
+
+        // If transaction already present on response, treat as paid
+        $trx = Arr::get($response, 'trxID') ?: Arr::get($response, 'transactionID');
+
+        if ($trx) {
+            $payment->update([
+                'status' => 'paid',
+                'gateway_transaction_id' => $trx,
+                'response_payload' => array_merge($payment->response_payload ?? [], $response),
+                'completed_at' => now(),
+            ]);
+
+            $this->syncPayableState($payment, 'paid', $trx);
+            return $payment;
+        }
+
+        // Not paid yet
+        $payment->update([
+            'response_payload' => array_merge($payment->response_payload ?? [], $response),
+        ]);
+
+        return $payment;
+    }
+
     public function createFor(Model $payable, float $amount): Payment
     {
         return $payable->payments()->create([

@@ -42,9 +42,14 @@ class PaymentController extends Controller
         }
 
         try {
-            $payment = $bkashPaymentService->complete($paymentId);
+            // Use server-side verification rather than assuming the frontend completed the flow.
+            $payment = $bkashPaymentService->verifyAndSync($paymentId);
 
-            return redirect()->to($this->confirmationUrl($payment))->with('success', 'Payment completed successfully.');
+            if ($payment->status === 'paid') {
+                return redirect()->to($this->confirmationUrl($payment))->with('success', 'Payment completed successfully.');
+            }
+
+            return redirect()->route('home')->with('error', 'We could not verify the bKash payment.');
         } catch (\Throwable $throwable) {
             report($throwable);
 
@@ -77,6 +82,45 @@ class PaymentController extends Controller
         }
 
         return redirect()->route('home')->with('error', $message);
+    }
+
+    /**
+     * Endpoint for server-to-server webhook notifications from bKash.
+     * Expects middleware to verify signature and optional IP allowlist.
+     */
+    public function webhook(Request $request, BkashPaymentService $bkashPaymentService)
+    {
+        $payload = $request->all();
+        $paymentId = $payload['paymentID'] ?? $payload['payment_id'] ?? $request->input('paymentID');
+
+        if (blank($paymentId)) {
+            return response()->json(['error' => 'missing payment id'], 400);
+        }
+
+        // Find Payment
+        $payment = Payment::where('gateway', 'bkash')
+            ->where('gateway_payment_id', $paymentId)
+            ->first();
+
+        if (!$payment) {
+            // unknown payment — log and return 404 to caller
+            report(new \RuntimeException("bkash webhook for unknown payment: {$paymentId}"));
+            return response()->json(['error' => 'unknown payment'], 404);
+        }
+
+        // Idempotency: if already paid, acknowledge
+        if ($payment->status === 'paid') {
+            return response()->json(['status' => 'ok'], 200);
+        }
+
+        try {
+            $payment = $bkashPaymentService->verifyAndSync($paymentId);
+
+            return response()->json(['status' => 'ok'], 200);
+        } catch (\Throwable $throwable) {
+            report($throwable);
+            return response()->json(['error' => 'verification failed'], 500);
+        }
     }
 
     protected function confirmationUrl(Payment $payment): string

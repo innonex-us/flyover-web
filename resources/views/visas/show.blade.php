@@ -136,6 +136,23 @@
     </section>
 
     {{-- ── Share Options ─────────────────────── --}}
+    {{-- Visa gallery (responsive thumbnails under main image on mobile) --}}
+    @php
+        $visaDefault = asset('banner/hero-banner-1.png');
+        $visaGallery = [];
+        if ($visa->thumbnail) {
+            $visaGallery[] = \Illuminate\Support\Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : Storage::url($visa->thumbnail);
+        }
+        if (!empty($visa->images) && is_array($visa->images)) {
+            foreach ($visa->images as $img) {
+                $visaGallery[] = \Illuminate\Support\Str::startsWith($img, 'http') ? $img : Storage::url($img);
+            }
+        }
+        if ($visaGallery === []) $visaGallery = [$visaDefault];
+    @endphp
+
+    @include('components.photo-gallery', ['images' => $visaGallery, 'alt' => $visa->country . ' Visa'])
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <x-share-buttons :title="$visa->country . ' Visa - ' . $visa->type" />
     </div>

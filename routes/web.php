@@ -54,6 +54,11 @@ Route::prefix('payments/bkash')->name('payments.bkash.')->group(function () {
     Route::get('/success', [PaymentController::class, 'success'])->name('success');
     Route::get('/fail', [PaymentController::class, 'fail'])->name('fail');
     Route::get('/cancel', [PaymentController::class, 'cancel'])->name('cancel');
+    // Server-to-server webhook for bKash notifications
+    Route::post('/webhook', [PaymentController::class, 'webhook'])
+        ->withoutMiddleware([])
+        ->middleware([\App\Http\Middleware\VerifyBkashWebhook::class, 'throttle:30,1'])
+        ->name('webhook');
 });
 
 Route::get('/search/suggestions', [App\Http\Controllers\SearchController::class, 'suggestions'])->name('search.suggestions');

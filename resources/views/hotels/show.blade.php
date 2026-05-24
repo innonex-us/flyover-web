@@ -64,6 +64,23 @@
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 
+        {{-- Hotel gallery (responsive thumbnails under main image on mobile) --}}
+        @php
+            $hotelDefault = asset('banner/hero-banner-1.png');
+            $hotelGallery = [];
+            if ($hotel->thumbnail) {
+                $hotelGallery[] = \Illuminate\Support\Str::startsWith($hotel->thumbnail, 'http') ? $hotel->thumbnail : Storage::url($hotel->thumbnail);
+            }
+            if (!empty($hotel->images) && is_array($hotel->images)) {
+                foreach ($hotel->images as $img) {
+                    $hotelGallery[] = \Illuminate\Support\Str::startsWith($img, 'http') ? $img : Storage::url($img);
+                }
+            }
+            if ($hotelGallery === []) $hotelGallery = [$hotelDefault];
+        @endphp
+
+        @include('components.photo-gallery', ['images' => $hotelGallery, 'alt' => $hotel->name])
+
         {{-- Description --}}
         @if($hotel->description)
         <section>
