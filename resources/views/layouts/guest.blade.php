@@ -9,6 +9,17 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
+    @php
+        $authHeroImages = [
+            asset('banner/hero-banner-1.png'),
+            asset('banner/helo-banner-2.png'),
+            asset('banner/hero-banner-3.png'),
+            asset('banner/hero-banner-4.jpg'),
+            asset('banner/hero-banner-5.jpg'),
+        ];
+
+        $authHeroImage = $authHeroImages[array_rand($authHeroImages)];
+    @endphp
     <body class="font-sans antialiased text-gray-900 bg-gray-50 pb-[72px] md:pb-0">
         <div class="min-h-screen flex flex-col">
             <nav
@@ -63,27 +74,29 @@
             <main class="flex-grow">
                 <div class="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
                     <div class="w-full max-w-5xl overflow-hidden rounded-[2.5rem] border border-white/80 bg-white/90 shadow-[0_30px_100px_rgba(15,23,42,0.10)] lg:grid lg:grid-cols-[1.05fr_0.95fr]">
-                        <div class="relative min-h-[230px] overflow-hidden bg-cover bg-center lg:min-h-[620px]" style="background-image:url('{{ asset('banner/hero-banner-5.jpg') }}');">
-                            <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,16,32,0.08)_0%,rgba(11,16,32,0.35)_100%)]"></div>
-                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.34),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(200,16,46,0.20),transparent_35%)]"></div>
+                        <div class="relative min-h-[230px] overflow-hidden lg:min-h-[620px]">
+                            <div class="absolute inset-0 bg-cover bg-center scale-[1.02]" style="background-image:url('{{ $authHeroImage }}'); filter: blur(.55px) saturate(1.02) brightness(.95);"></div>
+                            <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,16,32,0.10)_0%,rgba(11,16,32,0.48)_100%)]"></div>
+                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.26),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(200,16,46,0.16),transparent_35%)]"></div>
+                            <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0)_28%,rgba(0,0,0,0.12)_100%)]"></div>
 
                             <div class="relative z-10 flex h-full flex-col justify-between p-6 sm:p-8 lg:p-10 text-white">
-                                <div class="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.35em] backdrop-blur-sm">
+                                <div class="inline-flex w-fit items-center gap-2 rounded-full border border-white/18 bg-white/12 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.35em] backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.18)]">
                                     <span class="h-2 w-2 rounded-full bg-red-400"></span>
                                     FlyoverBD Travel
                                 </div>
 
                                 <div class="max-w-md">
-                                    <p class="text-xs font-bold uppercase tracking-[0.35em] text-white/80">Discover Beyond</p>
-                                    <h2 class="mt-3 font-display text-3xl leading-tight sm:text-4xl">Plan your next trip with the same calm, polished feel as the public site.</h2>
-                                    <p class="mt-3 text-sm leading-6 text-white/80">Access your account, bookings, and travel updates from one secure place.</p>
+                                    <p class="text-xs font-bold uppercase tracking-[0.35em] text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]">Discover Beyond</p>
+                                    <h2 class="mt-3 font-display text-3xl leading-tight sm:text-4xl text-white drop-shadow-[0_3px_16px_rgba(0,0,0,0.45)]">Plan your next trip with the same calm, polished feel as the public site.</h2>
+                                    <p class="mt-3 text-sm leading-6 text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)]">Access your account, bookings, and travel updates from one secure place.</p>
                                 </div>
 
-                                <div class="flex flex-wrap gap-2 text-xs font-semibold text-white/85">
-                                    <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-sm">Tours</span>
-                                    <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-sm">Visa</span>
-                                    <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-sm">Hotels</span>
-                                    <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-sm">Transfers</span>
+                                <div class="flex flex-wrap gap-2 text-xs font-semibold text-white/90">
+                                    <span class="rounded-full border border-white/18 bg-white/12 px-3 py-1.5 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.12)]">Tours</span>
+                                    <span class="rounded-full border border-white/18 bg-white/12 px-3 py-1.5 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.12)]">Visa</span>
+                                    <span class="rounded-full border border-white/18 bg-white/12 px-3 py-1.5 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.12)]">Hotels</span>
+                                    <span class="rounded-full border border-white/18 bg-white/12 px-3 py-1.5 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.12)]">Transfers</span>
                                 </div>
                             </div>
                         </div>
