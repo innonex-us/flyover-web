@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Blog Posts">
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
             <h2 class="text-2xl font-bold" style="color:#0F1419;">Blog Posts</h2>

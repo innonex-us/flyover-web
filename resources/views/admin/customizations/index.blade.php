@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Custom Requests">
     @php $pendingCount = $requests->getCollection()->where('status', 'pending')->count(); @endphp
     <div class="flex items-center gap-3 mb-6">
         <h2 class="text-2xl font-bold" style="color:#0F1419;">Custom Requests</h2>

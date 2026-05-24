@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Dashboard">
     <div class="mb-8 flex justify-between items-center">
         <div>
             <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>

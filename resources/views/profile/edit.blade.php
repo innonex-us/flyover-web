@@ -1,5 +1,5 @@
 @if(request()->routeIs('admin.profile.edit') || (auth()->user() && auth()->user()->role === 'admin'))
-    <x-admin-layout>
+    <x-admin-layout pageTitle="Profile Settings">
         <div class="mb-8">
             <h2 class="text-3xl font-bold text-gray-800">Profile Settings</h2>
             <p class="text-sm text-gray-500 mt-1">Manage your account information and password</p>

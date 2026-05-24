@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Bookings">
     <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h2 class="text-3xl font-bold text-gray-800">Bookings</h2>

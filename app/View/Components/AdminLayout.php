@@ -7,9 +7,8 @@ use Illuminate\View\View;
 
 class AdminLayout extends Component
 {
-    /**
-     * Get the view / contents that represents the component.
-     */
+    public function __construct(public ?string $pageTitle = null) {}
+
     public function render(): View
     {
         return view('layouts.admin');

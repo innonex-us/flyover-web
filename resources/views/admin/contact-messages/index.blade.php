@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Messages">
     @php $unreadCount = $messages->getCollection()->where('is_read', false)->count(); @endphp
     <div class="flex items-center gap-3 mb-6">
         <h2 class="text-2xl font-bold" style="color:#0F1419;">Messages</h2>

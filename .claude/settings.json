@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(curl -s http://localhost:8001)"
+      "Bash(curl -s http://localhost:8001)",
+      "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Add Package\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/packages/create.blade.php)",
+      "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Edit Package\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/packages/edit.blade.php)",
+      "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Visa Services\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/visas/index.blade.php)",
+      "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Add Visa\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/visas/create.blade.php)",
+      "Bash(sed -i '' '1s/<x-admin-layout>/<x-admin-layout pageTitle=\"Edit Visa\">/' /Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2/resources/views/admin/visas/edit.blade.php)"
     ]
   }
 }

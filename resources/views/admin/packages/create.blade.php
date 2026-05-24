@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Add Package">
     <div class="mb-8">
         <a href="{{ route('admin.packages.index') }}"
             class="text-gray-500 hover:text-gray-700 flex items-center mb-4 transition">

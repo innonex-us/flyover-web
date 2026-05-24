@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Request Detail">
     <div class="mb-6">
         <a href="{{ route('admin.customizations.index') }}" class="inline-flex items-center gap-1.5 text-sm mb-3 transition hover:opacity-70" style="color:#6B7280;">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>

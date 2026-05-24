@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Message Detail">
     <div class="mb-5">
         <a href="{{ route('admin.contact-messages.index') }}" class="inline-flex items-center gap-1.5 text-sm transition hover:opacity-70" style="color:#6B7280;">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>

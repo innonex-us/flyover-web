@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="New Post">
     <div class="mb-6">
         <h2 class="text-2xl font-bold" style="color:#0F1419;">Create New Post</h2>
     </div>

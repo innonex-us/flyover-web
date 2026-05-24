@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Edit Visa">
     <div class="mb-8">
         <a href="{{ route('admin.visas.index') }}" class="text-gray-500 hover:text-gray-700 flex items-center mb-4 transition">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>

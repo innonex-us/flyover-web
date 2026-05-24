@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout pageTitle="Edit Post">
     <div class="mb-6">
         <h2 class="text-2xl font-bold" style="color:#0F1419;">Edit Post</h2>
         <p class="text-sm mt-1" style="color:#6B7280;">Updating: {{ $post->title }}</p>
