@@ -49,6 +49,9 @@
 </head>
 
 <body class="font-sans antialiased text-gray-900 bg-gray-50 pb-[72px] md:pb-0">
+
+    @include('components.loader')
+
     <div class="min-h-screen flex flex-col">
         <!-- Navigation -->
         <nav

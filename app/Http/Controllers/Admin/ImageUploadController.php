@@ -107,7 +107,10 @@ class ImageUploadController extends Controller
     private function prepareWatermark($image, $watermark, string $imagickClass): void
     {
         $maxWidth = max(96, (int) round($image->getImageWidth() * 0.18));
-        $watermark->resizeImage($maxWidth, 0, constant($imagickClass . '::FILTER_LANCZOS'), 1, true);
+        $originalWidth = max(1, $watermark->getImageWidth());
+        $targetHeight = max(1, (int) round($watermark->getImageHeight() * ($maxWidth / $originalWidth)));
+
+        $watermark->resizeImage($maxWidth, $targetHeight, constant($imagickClass . '::FILTER_LANCZOS'), 1);
         $watermark->setImageAlphaChannel(constant($imagickClass . '::ALPHACHANNEL_ACTIVATE'));
         $watermark->evaluateImage(constant($imagickClass . '::EVALUATE_MULTIPLY'), 0.55, constant($imagickClass . '::CHANNEL_ALPHA'));
         $watermark->setImageFormat('png');

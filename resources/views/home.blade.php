@@ -351,7 +351,7 @@
                                         :class="calOpen==='checkIn' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
                                     <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     <div class="min-w-0">
-                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Check-in</p>
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">Check-in</p>
                                         <p class="text-sm font-semibold text-gray-700 truncate" x-text="checkIn ? fmtDateShort(checkIn) : 'Select'"></p>
                                     </div>
                                 </button>
@@ -360,7 +360,7 @@
                                         :class="calOpen==='checkOut' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
                                     <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     <div class="min-w-0">
-                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Check-out</p>
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">Check-Out</p>
                                         <p class="text-sm font-semibold text-gray-700 truncate" x-text="checkOut ? fmtDateShort(checkOut) : 'Select'"></p>
                                     </div>
                                 </button>
