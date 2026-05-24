@@ -1,65 +1,66 @@
-<x-app-layout>
-    <div class="bg-gray-50 py-24 sm:py-32">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8">
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-10 sm:p-14">
-                <div class="mx-auto max-w-2xl text-center mb-16">
-                    <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Privacy Policy</h1>
-                    <p class="mt-4 text-gray-500">Last Updated: January 08, 2026</p>
-                </div>
+<x-app-layout
+    title="Privacy Policy | FlyoverBD"
+    meta_description="Read FlyoverBD's privacy policy to understand how we collect, use, and protect your personal information."
+>
 
-                <div class="prose prose-lg prose-red max-w-none text-gray-600">
-                    <p class="lead">At FlyoverBD, we respect your privacy and are committed to protecting the personal information you share with us. This policy outlines how we collect, use, and safeguard your data.</p>
+{{-- ── Hero ─────────────────────────────── --}}
+<section style="background:#F9F6EF;border-bottom:1px solid #E4DCC9;" class="px-4 py-12 text-center">
+    <p class="section-eyebrow mb-3">Legal</p>
+    <h1 class="font-extrabold text-4xl text-gray-900 mb-2" style="font-family:'Merriweather',Georgia,serif;">Privacy Policy</h1>
+    <p class="text-sm" style="color:#7A7166;">Last Updated: January 08, 2026</p>
+</section>
 
-                    <h3 class="text-gray-900 font-bold mt-8">1. Information We Collect</h3>
-                    <p>We collect information that you provide to us directly when you use our services. This includes:</p>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li><strong>Personal Identification:</strong> Name, email address, phone number, mailing address, and passport details.</li>
-                        <li><strong>Travel Information:</strong> Travel dates, destination preferences, and accommodation details.</li>
-                        <li><strong>Payment Information:</strong> Credit card details and billing address (processed securely via third-party gateways).</li>
-                    </ul>
+{{-- ── Content ──────────────────────────── --}}
+<section class="bg-white py-14">
+    <div class="max-w-3xl mx-auto px-4">
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 sm:p-12">
+            <div class="prose prose-sm md:prose-base prose-gray max-w-none">
+                <p class="lead text-gray-600">At FlyoverBD, we respect your privacy and are committed to protecting the personal information you share with us. This policy outlines how we collect, use, and safeguard your data.</p>
 
-                    <h3 class="text-gray-900 font-bold mt-8">2. How We Use Your Information</h3>
-                    <p>We use your information to facilitate your travel arrangements and improve our services. Specifically, we use it to:</p>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li>Process visa applications and flight/hotel bookings.</li>
-                        <li>Communicate with you regarding your bookings and inquiries.</li>
-                        <li>Send important updates, confirmations, and travel alerts.</li>
-                        <li>Comply with legal and regulatory requirements.</li>
-                    </ul>
+                <h3 class="text-gray-900 font-bold mt-8">1. Information We Collect</h3>
+                <p>We collect information that you provide directly when you use our services. This includes:</p>
+                <ul class="list-disc pl-6 space-y-1 text-gray-600">
+                    <li><strong>Personal Identification:</strong> Name, email address, phone number, mailing address, and passport details.</li>
+                    <li><strong>Travel Information:</strong> Travel dates, destination preferences, and accommodation details.</li>
+                    <li><strong>Payment Information:</strong> Billing details (processed securely via third-party gateways — we do not store card numbers).</li>
+                </ul>
 
-                    <h3 class="text-gray-900 font-bold mt-8">3. Data Sharing and Disclosure</h3>
-                    <p>We do not sell your personal data. However, we may share necessary information with:</p>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li><strong>Service Providers:</strong> Embassies, airlines, hotels, and insurance providers to fulfill your travel requests.</li>
-                        <li><strong>Legal Authorities:</strong> When required by law or to protect our rights and safety.</li>
-                    </ul>
+                <h3 class="text-gray-900 font-bold mt-8">2. How We Use Your Information</h3>
+                <p>We use your information to facilitate your travel arrangements and improve our services. Specifically, we use it to:</p>
+                <ul class="list-disc pl-6 space-y-1 text-gray-600">
+                    <li>Process visa applications and tour/hotel bookings.</li>
+                    <li>Communicate with you regarding bookings and inquiries.</li>
+                    <li>Send confirmations, travel alerts, and important updates.</li>
+                    <li>Comply with legal and regulatory requirements.</li>
+                </ul>
 
-                    <h3 class="text-gray-900 font-bold mt-8">4. Data Security</h3>
-                    <p>We implement industry-standard security measures, including encryption and secure servers, to protect your personal data from unauthorized access, alteration, or disclosure.</p>
+                <h3 class="text-gray-900 font-bold mt-8">3. Data Sharing and Disclosure</h3>
+                <p>We do not sell your personal data. However, we may share necessary information with:</p>
+                <ul class="list-disc pl-6 space-y-1 text-gray-600">
+                    <li><strong>Service Providers:</strong> Embassies, airlines, hotels, and insurance providers to fulfil your travel requests.</li>
+                    <li><strong>Legal Authorities:</strong> When required by law or to protect our rights and safety.</li>
+                </ul>
 
-                    <h3 class="text-gray-900 font-bold mt-8">5. Your Rights</h3>
-                    <p>You have the right to access, correct, or request the deletion of your personal data. Please contact us at support@flyoverbd.com to exercise these rights.</p>
+                <h3 class="text-gray-900 font-bold mt-8">4. Data Security</h3>
+                <p>We implement industry-standard security measures, including encryption and secure servers, to protect your personal data from unauthorised access, alteration, or disclosure.</p>
 
-                    <h3 class="text-gray-900 font-bold mt-8">6. Contact Us</h3>
-                    <p>If you have any questions about this Privacy Policy, please contact us:</p>
-                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 not-prose mt-4">
-                        <ul class="space-y-2 text-gray-600">
-                            <li class="flex items-start">
-                                <span class="font-bold w-20">Email:</span>
-                                <span>support@flyoverbd.com</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="font-bold w-20">Phone:</span>
-                                <span>+880 1335 111370</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="font-bold w-20">Address:</span>
-                                <span>Banani, Dhaka, Bangladesh</span>
-                            </li>
-                        </ul>
-                    </div>
+                <h3 class="text-gray-900 font-bold mt-8">5. Your Rights</h3>
+                <p>You have the right to access, correct, or request the deletion of your personal data. Please contact us at <a href="mailto:support@flyoverbd.com" class="text-red-600 hover:underline">support@flyoverbd.com</a> to exercise these rights.</p>
+
+                <h3 class="text-gray-900 font-bold mt-8">6. Contact Us</h3>
+                <p>If you have any questions about this Privacy Policy, please get in touch:</p>
+                <div class="not-prose bg-gray-50 border border-gray-100 rounded-xl p-5 mt-4 space-y-2 text-sm text-gray-600">
+                    <div class="flex items-center gap-2"><span class="font-bold w-16 text-gray-900">Email:</span><a href="mailto:support@flyoverbd.com" class="text-red-600 hover:underline">support@flyoverbd.com</a></div>
+                    <div class="flex items-center gap-2"><span class="font-bold w-16 text-gray-900">Phone:</span>+880 1335 111370</div>
+                    <div class="flex items-center gap-2"><span class="font-bold w-16 text-gray-900">Address:</span>Banani, Dhaka, Bangladesh</div>
                 </div>
             </div>
         </div>
+
+        <div class="mt-8 text-center">
+            <a href="{{ route('contact') }}" class="btn-outline">Have a Question? Contact Us</a>
+        </div>
     </div>
+</section>
+
 </x-app-layout>

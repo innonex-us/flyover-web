@@ -1,20 +1,20 @@
 <x-app-layout>
-    <div class="bg-gray-50/50 min-h-screen pb-20">
+    <div class="min-h-screen pb-20" style="background:#F9F6EF;">
         <!-- Hero Section -->
-        <div class="bg-white border-b border-gray-100/80 pt-12 pb-16">
+        <div style="background:#F9F6EF;border-bottom:1px solid #E4DCC9;" class="pt-12 pb-14">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <nav class="flex justify-center text-xs font-medium text-gray-500 mb-6" aria-label="Breadcrumb">
+                <nav class="flex justify-center text-xs font-medium text-gray-500 mb-5" aria-label="Breadcrumb">
                     <ol class="flex items-center space-x-2">
                         <li><a href="{{ route('home') }}" class="hover:text-red-500 transition">Home</a></li>
                         <li><svg class="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
                         <li class="text-gray-900 font-medium">Custom Plan</li>
                     </ol>
                 </nav>
-                <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight">Plan Your Dream Trip</h1>
-                <p class="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
-                    Tell us where you want to go, and our travel experts will craft a personalized itinerary that fits your style and budget perfectly.
+                <p class="section-eyebrow mb-3">Build your trip</p>
+                <h1 class="font-extrabold text-4xl md:text-5xl mb-4" style="font-family:'Merriweather',Georgia,serif;color:#18130E;">Plan Your Dream Trip</h1>
+                <p class="text-sm md:text-base max-w-xl mx-auto leading-relaxed" style="color:#7A7166;">
+                    Tell us where you want to go, and our travel experts will craft a personalised itinerary that fits your style and budget perfectly.
                 </p>
-                <div class="w-20 h-1.5 bg-red-500 mx-auto mt-8 rounded-full"></div>
             </div>
         </div>
 

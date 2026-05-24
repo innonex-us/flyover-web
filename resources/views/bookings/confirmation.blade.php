@@ -1,11 +1,11 @@
 <x-app-layout>
-    <div class="py-12 bg-gray-50 min-h-screen">
+    <div class="py-12 min-h-screen" style="background:#F9F6EF;">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden print:shadow-none print:border print:border-gray-200">
-                
+
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 print:shadow-none print:border print:border-gray-200">
+
                 <!-- Header -->
-                <div class="bg-red-600 px-8 py-10 text-center text-white print:bg-white print:text-black print:border-b print:border-gray-300">
+                <div class="px-8 py-10 text-center text-white print:bg-white print:text-black print:border-b print:border-gray-300" style="background:#C8102E;">
                     <div class="mb-4 flex justify-center print:hidden">
                         <div class="h-16 w-16 bg-white rounded-full flex items-center justify-center text-red-600">
                              <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>

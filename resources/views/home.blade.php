@@ -24,8 +24,7 @@
     <div class="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center">
         <h1 class="text-white font-extrabold text-4xl md:text-6xl leading-tight mb-3 drop-shadow-xl"
             style="font-family:'Merriweather',Georgia,serif;">
-            Discover Bangladesh<br>
-            <span class="text-red-400">&amp; Beyond</span>
+            Discover <span class="text-red-400"> Beyond</span>
         </h1>
         <p class="text-white/80 text-lg mb-10 max-w-xl">Tours · Visa · Hotels · Airport Transfers. All in one trusted place.</p>
 
