@@ -1,18 +1,18 @@
 <x-admin-layout>
-    <div class="mb-8">
-        <a href="{{ route('admin.customizations.index') }}" class="text-gray-500 hover:text-gray-700 flex items-center mb-4 transition">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+    <div class="mb-6">
+        <a href="{{ route('admin.customizations.index') }}" class="inline-flex items-center gap-1.5 text-sm mb-3 transition hover:opacity-70" style="color:#6B7280;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             Back to Requests
         </a>
-        <h2 class="text-3xl font-bold text-gray-800">Request #{{ $customization->id }}</h2>
+        <h2 class="text-2xl font-bold" style="color:#0F1419;">Request #{{ $customization->id }}</h2>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-6">
             
             <!-- Customer & Service Info -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-4">Customer & Package</h3>
+            <div class="rounded-xl p-6" style="background:#fff;border:1px solid #E6E8EC;">
+                <h3 class="text-base font-bold mb-4 pb-2" style="color:#0F1419;border-bottom:1px solid #E6E8EC;">Customer & Package</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Customer</p>
@@ -36,8 +36,8 @@
 
             <!-- Structured Details (The New Dynamic Content) -->
             @if($customization->details)
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-4">Travel Details</h3>
+            <div class="rounded-xl p-6" style="background:#fff;border:1px solid #E6E8EC;">
+                <h3 class="text-base font-bold mb-4 pb-2" style="color:#0F1419;border-bottom:1px solid #E6E8EC;">Travel Details</h3>
                 
                 <!-- PAX & Hotel Info -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 bg-gray-50 p-4 rounded-xl">
@@ -94,8 +94,8 @@
             @endif
 
             <!-- Message/Notes -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-4">Message / Requirements</h3>
+            <div class="rounded-xl p-6" style="background:#fff;border:1px solid #E6E8EC;">
+                <h3 class="text-base font-bold mb-4 pb-2" style="color:#0F1419;border-bottom:1px solid #E6E8EC;">Message / Requirements</h3>
                 <div class="prose prose-sm max-w-none text-gray-600 bg-red-50/30 p-4 rounded-xl border border-red-100/50">
                     {{ $customization->message }}
                 </div>
@@ -105,8 +105,8 @@
 
         <div class="lg:col-span-1 space-y-6">
             <!-- Status Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-24">
-                <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-4">Request Status</h3>
+            <div class="rounded-xl p-6 sticky top-24" style="background:#fff;border:1px solid #E6E8EC;">
+                <h3 class="text-base font-bold mb-4 pb-2" style="color:#0F1419;border-bottom:1px solid #E6E8EC;">Request Status</h3>
                 
                 <div class="mb-6">
                     @if($customization->status == 'contacted')

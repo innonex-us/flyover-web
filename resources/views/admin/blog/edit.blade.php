@@ -1,10 +1,10 @@
 <x-admin-layout>
-    <div class="mb-8">
-        <h2 class="text-3xl font-bold text-gray-800">Edit Post</h2>
-        <p class="text-sm text-gray-500 mt-1">Updating: {{ $post->title }}</p>
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold" style="color:#0F1419;">Edit Post</h2>
+        <p class="text-sm mt-1" style="color:#6B7280;">Updating: {{ $post->title }}</p>
     </div>
 
-    <form action="{{ route('admin.blog.update', $post) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 relative" x-data="formUploader" @submit.prevent="submitForm">
+    <form action="{{ route('admin.blog.update', $post) }}" method="POST" enctype="multipart/form-data" class="rounded-xl p-8 relative" style="background:#fff;border:1px solid #E6E8EC;" x-data="formUploader" @submit.prevent="submitForm">
         
         <!-- Upload Overlay -->
         <div x-show="uploading" 
@@ -54,14 +54,21 @@
 
             <div class="lg:col-span-1 space-y-6">
                 <!-- Status -->
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <label class="flex items-center space-x-3 mb-4 cursor-pointer">
-                        <input type="checkbox" name="is_published" value="1" {{ old('is_published', $post->is_published) ? 'checked' : '' }} class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50 h-5 w-5">
-                        <span class="text-sm font-bold text-gray-900">Publish Immediately</span>
+                <div class="p-5 rounded-xl" style="background:#F9FAFB;border:1px solid #E6E8EC;">
+                    <div class="flex items-center justify-between mb-2">
+                        @if($post->is_published)
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold" style="background:#D1FAE5;color:#065F46;">Published</span>
+                        @else
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold" style="background:#F3F4F6;color:#6B7280;">Draft</span>
+                        @endif
+                        @if($post->published_at)
+                            <span class="text-xs" style="color:#9CA3AF;">{{ $post->published_at->format('M d, Y') }}</span>
+                        @endif
+                    </div>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" name="is_published" value="1" {{ old('is_published', $post->is_published) ? 'checked' : '' }} class="rounded h-4 w-4" style="accent-color:#C8102E;">
+                        <span class="text-sm font-semibold" style="color:#0F1419;">Publish</span>
                     </label>
-                     @if($post->published_at)
-                        <p class="text-xs text-gray-500">Originally published: {{ $post->published_at->format('M d, Y') }}</p>
-                    @endif
                 </div>
 
                 <!-- Featured Image -->

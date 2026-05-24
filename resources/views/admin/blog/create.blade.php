@@ -1,9 +1,9 @@
 <x-admin-layout>
-    <div class="mb-8">
-        <h2 class="text-3xl font-bold text-gray-800">Create New Post</h2>
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold" style="color:#0F1419;">Create New Post</h2>
     </div>
 
-    <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 relative" x-data="formUploader" @submit.prevent="submitForm">
+    <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data" class="rounded-xl p-8 relative" style="background:#fff;border:1px solid #E6E8EC;" x-data="formUploader" @submit.prevent="submitForm">
         
         <!-- Upload Overlay -->
         <div x-show="uploading" 
@@ -52,12 +52,12 @@
 
             <div class="lg:col-span-1 space-y-6">
                 <!-- Status -->
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <label class="flex items-center space-x-3 mb-4 cursor-pointer">
-                        <input type="checkbox" name="is_published" value="1" {{ old('is_published') ? 'checked' : '' }} class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50 h-5 w-5">
-                        <span class="text-sm font-bold text-gray-900">Publish Immediately</span>
+                <div class="p-5 rounded-xl" style="background:#F9FAFB;border:1px solid #E6E8EC;">
+                    <label class="flex items-center gap-3 mb-2 cursor-pointer">
+                        <input type="checkbox" name="is_published" value="1" {{ old('is_published') ? 'checked' : '' }} class="rounded h-4 w-4" style="accent-color:#C8102E;">
+                        <span class="text-sm font-bold" style="color:#0F1419;">Publish Immediately</span>
                     </label>
-                    <p class="text-xs text-gray-500">If unchecked, the post will be saved as a Draft.</p>
+                    <p class="text-xs" style="color:#6B7280;">If unchecked, saved as Draft.</p>
                 </div>
 
                 <!-- Featured Image -->
