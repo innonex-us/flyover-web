@@ -127,6 +127,8 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::get('/system/logs', function () { return view('admin.system'); })->name('system.logs');
     Route::get('/system/backup', function () { return view('admin.system'); })->name('system.backup');
 
+    Route::delete('/packages/{package}/thumbnail', [\App\Http\Controllers\Admin\PackageController::class, 'removeThumbnail'])->name('packages.thumbnail.destroy');
+    Route::delete('/packages/{package}/images/{index}', [\App\Http\Controllers\Admin\PackageController::class, 'removeImage'])->name('packages.images.destroy');
     Route::resource('packages', \App\Http\Controllers\Admin\PackageController::class);
     Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'show', 'update', 'destroy']);

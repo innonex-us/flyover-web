@@ -187,6 +187,44 @@ class PackageController extends Controller
     }
 
     /**
+     * Remove the package thumbnail.
+     */
+    public function removeThumbnail(Package $package)
+    {
+        if ($package->thumbnail) {
+            Storage::disk('public')->delete($package->thumbnail);
+            $package->thumbnail = null;
+            $package->save();
+            
+            return back()->with('success', 'Thumbnail removed successfully.');
+        }
+
+        return back()->with('error', 'Thumbnail not found.');
+    }
+
+    /**
+     * Remove a specific gallery image.
+     */
+    public function removeImage(Package $package, $index)
+    {
+        $images = $package->images ?? [];
+        
+        if (isset($images[$index])) {
+            // Delete from storage
+            Storage::disk('public')->delete($images[$index]);
+            
+            // Remove from array and reindex
+            unset($images[$index]);
+            $package->images = array_values($images);
+            $package->save();
+            
+            return back()->with('success', 'Image removed successfully.');
+        }
+
+        return back()->with('error', 'Image not found.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Package $package)
