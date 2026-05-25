@@ -75,10 +75,6 @@
         </div>
         
         <div class="flex items-center gap-3">
-            <div class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-gray-100 shadow-sm">
-                <input type="checkbox" name="is_active" value="1" {{ $package->is_active ? 'checked' : '' }} class="rounded border-gray-300 text-red-600 focus:ring-red-100">
-                <span class="text-xs font-bold text-gray-500 uppercase tracking-tighter">Public Visibility</span>
-            </div>
             <button type="submit" form="package-form" class="btn-brand px-8 py-3 rounded-xl font-bold shadow-lg shadow-red-900/10 transition-all transform hover:-translate-y-0.5">
                 Commit Changes
             </button>
@@ -88,6 +84,12 @@
     <form id="package-form" action="{{ route('admin.packages.update', $package) }}" method="POST" enctype="multipart/form-data" class="relative">
         @csrf
         @method('PUT')
+
+        {{-- is_active checkbox moved inside form --}}
+        <div class="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-gray-100 shadow-sm mb-6">
+            <input type="checkbox" name="is_active" value="1" {{ $package->is_active ? 'checked' : '' }} class="rounded border-gray-300 text-red-600 focus:ring-red-100">
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-tighter">Public Visibility</span>
+        </div>
 
         <!-- Upload Overlay -->
         <div x-show="uploading" x-transition class="absolute inset-0 bg-white/90 backdrop-blur-md z-50 flex flex-col items-center justify-center rounded-2xl" style="display: none;">

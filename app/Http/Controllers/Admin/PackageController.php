@@ -172,12 +172,15 @@ class PackageController extends Controller
             $validated['travel_data'] = array_values(array_filter($validated['travel_data'], fn($item) => !empty($item['label']) || !empty(($item['content'] ?? ''))));
         }
 
-        // Sort itinerary by day
+        // Sort itinerary by day and filter empty activities
         if (isset($validated['itinerary']) && is_array($validated['itinerary'])) {
             $validated['itinerary'] = array_values($validated['itinerary']); // Reindex
+            foreach ($validated['itinerary'] as &$day) {
+                $day['activities'] = array_values(array_filter($day['activities'] ?? [], fn($value) => !is_null($value) && $value !== ''));
+            }
             usort($validated['itinerary'], fn($a, $b) => $a['day'] <=> $b['day']);
         }
-        
+
         // Handle checkbox logic for is_active (if unchecked, it won't be in request)
         $validated['is_active'] = $request->boolean('is_active');
 
