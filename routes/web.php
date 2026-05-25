@@ -122,8 +122,9 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::get('/reports/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'pdf'])->name('reports.pdf');
     Route::get('/reports/print', [\App\Http\Controllers\Admin\ReportController::class, 'print'])->name('reports.print');
     Route::get('/users', function () { return view('admin.users'); })->name('users.index');
-    Route::get('/settings/general', function () { return view('admin.settings'); })->name('settings.general');
-    Route::get('/settings/email', function () { return view('admin.settings'); })->name('settings.email');
+    Route::get('/settings', fn() => redirect()->route('admin.settings.show', 'general'))->name('settings.index');
+    Route::get('/settings/{group}', [\App\Http\Controllers\Admin\SettingsController::class, 'show'])->name('settings.show');
+    Route::post('/settings/{group}', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
     Route::get('/system/logs', function () { return view('admin.system'); })->name('system.logs');
     Route::get('/system/backup', function () { return view('admin.system'); })->name('system.backup');
 

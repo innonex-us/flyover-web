@@ -1,675 +1,331 @@
 <x-admin-layout pageTitle="System Settings">
 
 @push('styles')
-    <style>
-        .settings-card {
-            background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            border: 1px solid rgb(243 244 246);
-            padding: 1.5rem;
-        }
-        .settings-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgb(229 231 235);
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: rgb(55 65 81);
-        }
-        .form-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid rgb(209 213 219);
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: rgb(59 130 246);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        .form-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.5rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
-            padding-right: 2.5rem;
-        }
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .btn-primary {
-            background-color: rgb(59 130 246);
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: rgb(37 99 235);
-        }
-        .btn-secondary {
-            background-color: rgb(107 114 128);
-            color: white;
-        }
-        .btn-secondary:hover {
-            background-color: rgb(75 85 99);
-        }
-        .btn-danger {
-            background-color: rgb(239 68 68);
-            color: white;
-        }
-        .btn-danger:hover {
-            background-color: rgb(220 38 38);
-        }
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid rgb(229 231 235);
-            margin-bottom: 2rem;
-        }
-        .tab {
-            padding: 0.75rem 1.5rem;
-            font-weight: 500;
-            color: rgb(107 114 128);
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .tab:hover {
-            color: rgb(55 65 81);
-        }
-        .tab.active {
-            color: rgb(59 130 246);
-            border-bottom-color: rgb(59 130 246);
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 24px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgb(209 213 219);
-            transition: 0.3s;
-            border-radius: 24px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.3s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: rgb(59 130 246);
-        }
-        input:checked + .slider:before {
-            transform: translateX(24px);
-        }
-        .notification {
-            padding: 1rem;
-            border-radius: 0.375rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .notification-success {
-            background-color: rgb(34 197 94);
-            color: white;
-        }
-        .notification-error {
-            background-color: rgb(239 68 68);
-            color: white;
-        }
-        
-        /* Responsive */
-        @media (max-width: 767px) {
-            .tabs {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            .settings-header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
-            }
-        }
-    </style>
+<style>
+    .s-input {
+        width: 100%; padding: 0.625rem 1rem; background: #f9fafb;
+        border: 1px solid #e5e7eb; border-radius: 0.75rem; font-size: 0.875rem;
+        transition: all 0.2s ease; color: #111827;
+    }
+    .s-input:focus { background: #fff; border-color: #dc2626; outline: none; box-shadow: 0 0 0 3px rgba(220,38,38,.08); }
+    .s-label { font-size: 0.75rem; font-weight: 700; color: #374151; margin-bottom: 0.375rem; display: block; }
+    .s-hint  { font-size: 0.7rem; color: #9ca3af; margin-top: 0.25rem; }
+    .s-card  { background:#fff; border-radius:1rem; border:1px solid #f3f4f6; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+    .s-section-title { font-size:0.6rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:#9ca3af; margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+    .s-section-title::after { content:""; flex:1; height:1px; background:#f3f4f6; }
+    .toggle-wrap { display:flex; align-items:center; gap:.75rem; padding:.75rem 1rem; background:#f9fafb; border-radius:.75rem; border:1px solid #e5e7eb; }
+    .toggle { position:relative; display:inline-block; width:40px; height:22px; flex-shrink:0; }
+    .toggle input { opacity:0; width:0; height:0; }
+    .toggle-slider { position:absolute; cursor:pointer; inset:0; background:#d1d5db; border-radius:22px; transition:.25s; }
+    .toggle-slider:before { position:absolute; content:""; height:16px; width:16px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.25s; }
+    .toggle input:checked + .toggle-slider { background:#dc2626; }
+    .toggle input:checked + .toggle-slider:before { transform:translateX(18px); }
+    .nav-tab { display:flex; align-items:center; gap:.625rem; padding:.625rem .875rem; border-radius:.75rem; font-size:.8rem; font-weight:600; color:#6b7280; transition:all .15s; width:100%; text-align:left; }
+    .nav-tab:hover { background:#f9fafb; color:#111827; }
+    .nav-tab.active { background:#fef2f2; color:#dc2626; }
+    .nav-tab.active svg { color:#dc2626; }
+    .nav-tab svg { width:16px; height:16px; color:#9ca3af; flex-shrink:0; }
+</style>
 @endpush
 
-<div x-data="settingsManager()" class="space-y-6">
-    <!-- Header -->
-    <div class="flex items-center justify-between">
+@php $g = $group ?? 'general'; @endphp
+
+<div class="max-w-6xl mx-auto">
+
+    {{-- Page header --}}
+    <div class="flex items-center justify-between mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">System Settings</h1>
-            <p class="text-gray-600 mt-1">Configure your application settings</p>
-        </div>
-        <div class="flex items-center gap-3">
-            <button @click="resetSettings()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2.5 px-5 rounded-xl transition shadow-sm hover:shadow-md flex items-center gap-2 text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
-                Reset
-            </button>
-            <button @click="saveAllSettings()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-5 rounded-xl transition shadow-sm hover:shadow-md flex items-center gap-2 text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                Save All
-            </button>
+            <h1 class="text-2xl font-black text-gray-900 tracking-tight">System Settings</h1>
+            <p class="text-sm text-gray-400 mt-0.5">Configure your application preferences</p>
         </div>
     </div>
 
-    <!-- Notification -->
-    <div x-show="notification.show" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 transform translate-y-2"
-         x-transition:enter-end="opacity-100 transform translate-y-0"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         class="notification"
-         :class="notification.type === 'success' ? 'notification-success' : 'notification-error'"
-         x-text="notification.message">
+    @if(session('success'))
+    <div class="mb-6 flex items-center gap-3 px-5 py-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-sm font-semibold text-emerald-700">
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        {{ session('success') }}
     </div>
+    @endif
 
-    <!-- Tabs -->
-    <div class="tabs">
-        <button @click="activeTab = 'general'" :class="{ 'active': activeTab === 'general' }" class="tab">General</button>
-        <button @click="activeTab = 'email'" :class="{ 'active': activeTab === 'email' }" class="tab">Email</button>
-        <button @click="activeTab = 'security'" :class="{ 'active': activeTab === 'security' }" class="tab">Security</button>
-        <button @click="activeTab = 'payment'" :class="{ 'active': activeTab === 'payment' }" class="tab">Payment</button>
-        <button @click="activeTab = 'social'" :class="{ 'active': activeTab === 'social' }" class="tab">Social</button>
-    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-    <!-- General Settings -->
-    <div x-show="activeTab === 'general'" class="tab-content active">
-        <div class="settings-card">
-            <div class="settings-header">
-                <h2 class="text-xl font-semibold text-gray-900">General Settings</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="form-group">
-                    <label class="form-label">Application Name</label>
-                    <input type="text" x-model="settings.general.appName" class="form-input" placeholder="FlyoverBD">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Application URL</label>
-                    <input type="url" x-model="settings.general.appUrl" class="form-input" placeholder="https://flyoverbd.com">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Default Language</label>
-                    <select x-model="settings.general.language" class="form-input form-select">
-                        <option value="en">English</option>
-                        <option value="bn">Bangla</option>
-                        <option value="ar">Arabic</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Timezone</label>
-                    <select x-model="settings.general.timezone" class="form-input form-select">
-                        <option value="Asia/Dhaka">Asia/Dhaka (UTC+6)</option>
-                        <option value="UTC">UTC (UTC+0)</option>
-                        <option value="America/New_York">America/New_York (UTC-5)</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Contact Email</label>
-                    <input type="email" x-model="settings.general.contactEmail" class="form-input" placeholder="info@flyoverbd.com">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Contact Phone</label>
-                    <input type="tel" x-model="settings.general.contactPhone" class="form-input" placeholder="+8801234567890">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Site Description</label>
-                <textarea x-model="settings.general.siteDescription" class="form-input form-textarea" placeholder="Describe your travel business..."></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Maintenance Mode</label>
-                <div class="flex items-center gap-3">
-                    <label class="switch">
-                        <input type="checkbox" x-model="settings.general.maintenanceMode">
-                        <span class="slider"></span>
-                    </label>
-                    <span class="text-sm text-gray-600">Enable maintenance mode to disable public access</span>
-                </div>
+        {{-- Sidebar nav --}}
+        <div class="lg:col-span-1">
+            <div class="s-card p-3 sticky top-24">
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2 mb-2">Configuration</p>
+                <nav class="space-y-0.5">
+                    @php
+                    $tabs = [
+                        'general'  => ['label'=>'General',  'icon'=>'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'],
+                        'email'    => ['label'=>'Email',    'icon'=>'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
+                        'security' => ['label'=>'Security', 'icon'=>'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'],
+                        'payment'  => ['label'=>'Payment',  'icon'=>'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'],
+                        'social'   => ['label'=>'Social',   'icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'],
+                    ];
+                    @endphp
+                    @foreach($tabs as $key => $tab)
+                    <a href="{{ route('admin.settings.show', $key) }}" class="nav-tab {{ $g === $key ? 'active' : '' }}">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $tab['icon'] }}"/></svg>
+                        {{ $tab['label'] }}
+                    </a>
+                    @endforeach
+                </nav>
             </div>
         </div>
-    </div>
 
-    <!-- Email Settings -->
-    <div x-show="activeTab === 'email'" class="tab-content">
-        <div class="settings-card">
-            <div class="settings-header">
-                <h2 class="text-xl font-semibold text-gray-900">Email Configuration</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="form-group">
-                    <label class="form-label">Mail Driver</label>
-                    <select x-model="settings.email.driver" class="form-input form-select">
-                        <option value="smtp">SMTP</option>
-                        <option value="mail">PHP Mail</option>
-                        <option value="sendmail">Sendmail</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Mail Host</label>
-                    <input type="text" x-model="settings.email.host" class="form-input" placeholder="smtp.gmail.com">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Mail Port</label>
-                    <input type="number" x-model="settings.email.port" class="form-input" placeholder="587">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Mail Username</label>
-                    <input type="text" x-model="settings.email.username" class="form-input" placeholder="your-email@gmail.com">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Mail Password</label>
-                    <input type="password" x-model="settings.email.password" class="form-input" placeholder="••••••••">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Encryption</label>
-                    <select x-model="settings.email.encryption" class="form-input form-select">
-                        <option value="tls">TLS</option>
-                        <option value="ssl">SSL</option>
-                        <option value="">None</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="form-group">
-                    <label class="form-label">From Address</label>
-                    <input type="email" x-model="settings.email.fromAddress" class="form-input" placeholder="noreply@flyoverbd.com">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">From Name</label>
-                    <input type="text" x-model="settings.email.fromName" class="form-input" placeholder="FlyoverBD">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <button @click="testEmailSettings()" class="btn btn-secondary">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
-                    Send Test Email
-                </button>
-            </div>
-        </div>
-    </div>
+        {{-- Form panel --}}
+        <div class="lg:col-span-3">
 
-    <!-- Security Settings -->
-    <div x-show="activeTab === 'security'" class="tab-content">
-        <div class="settings-card">
-            <div class="settings-header">
-                <h2 class="text-xl font-semibold text-gray-900">Security Settings</h2>
-            </div>
-            
-            <div class="space-y-6">
-                <div class="form-group">
-                    <label class="form-label">Force HTTPS</label>
-                    <div class="flex items-center gap-3">
-                        <label class="switch">
-                            <input type="checkbox" x-model="settings.security.forceHttps">
-                            <span class="slider"></span>
+            {{-- ── GENERAL ── --}}
+            @if($g === 'general')
+            <form method="POST" action="{{ route('admin.settings.update', 'general') }}">
+                @csrf
+                <div class="s-card p-6 sm:p-8">
+                    <p class="s-section-title">Site Identity</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                        <div>
+                            <label class="s-label">Application Name</label>
+                            <input type="text" name="app_name" value="{{ old('app_name', $settings['general']['app_name'] ?? '') }}" class="s-input" placeholder="FlyoverBD">
+                        </div>
+                        <div>
+                            <label class="s-label">Application URL</label>
+                            <input type="url" name="app_url" value="{{ old('app_url', $settings['general']['app_url'] ?? '') }}" class="s-input" placeholder="https://flyoverbd.com">
+                        </div>
+                        <div>
+                            <label class="s-label">Contact Email</label>
+                            <input type="email" name="contact_email" value="{{ old('contact_email', $settings['general']['contact_email'] ?? '') }}" class="s-input" placeholder="info@flyoverbd.com">
+                        </div>
+                        <div>
+                            <label class="s-label">Contact Phone</label>
+                            <input type="tel" name="contact_phone" value="{{ old('contact_phone', $settings['general']['contact_phone'] ?? '') }}" class="s-input" placeholder="+8801234567890">
+                        </div>
+                        <div>
+                            <label class="s-label">Default Language</label>
+                            <select name="language" class="s-input">
+                                @foreach(['en'=>'English','bn'=>'বাংলা','ar'=>'العربية'] as $val => $label)
+                                <option value="{{ $val }}" {{ ($settings['general']['language'] ?? 'en') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="s-label">Timezone</label>
+                            <select name="timezone" class="s-input">
+                                @foreach(['Asia/Dhaka'=>'Asia/Dhaka (UTC+6)','UTC'=>'UTC (UTC+0)','America/New_York'=>'America/New_York (UTC-5)','Asia/Kolkata'=>'Asia/Kolkata (UTC+5:30)'] as $val => $label)
+                                <option value="{{ $val }}" {{ ($settings['general']['timezone'] ?? 'Asia/Dhaka') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="s-label">Site Description</label>
+                        <textarea name="site_description" rows="3" class="s-input" style="resize:vertical;" placeholder="Describe your travel business...">{{ old('site_description', $settings['general']['site_description'] ?? '') }}</textarea>
+                    </div>
+                    <p class="s-section-title">System</p>
+                    <div class="toggle-wrap">
+                        <label class="toggle">
+                            <input type="hidden" name="maintenance_mode" value="0">
+                            <input type="checkbox" name="maintenance_mode" value="1" {{ ($settings['general']['maintenance_mode'] ?? '0') === '1' ? 'checked' : '' }}>
+                            <span class="toggle-slider"></span>
                         </label>
-                        <span class="text-sm text-gray-600">Redirect all HTTP requests to HTTPS</span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Session Lifetime (minutes)</label>
-                    <input type="number" x-model="settings.security.sessionLifetime" class="form-input" placeholder="120">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Password Requirements</label>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <label class="switch">
-                                <input type="checkbox" x-model="settings.security.passwordMinLength">
-                                <span class="slider"></span>
-                            </label>
-                            <span class="text-sm text-gray-600">Minimum 8 characters</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <label class="switch">
-                                <input type="checkbox" x-model="settings.security.passwordUppercase">
-                                <span class="slider"></span>
-                            </label>
-                            <span class="text-sm text-gray-600">Require uppercase letters</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <label class="switch">
-                                <input type="checkbox" x-model="settings.security.passwordNumbers">
-                                <span class="slider"></span>
-                            </label>
-                            <span class="text-sm text-gray-600">Require numbers</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <label class="switch">
-                                <input type="checkbox" x-model="settings.security.passwordSymbols">
-                                <span class="slider"></span>
-                            </label>
-                            <span class="text-sm text-gray-600">Require special characters</span>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-700">Maintenance Mode</p>
+                            <p class="text-xs text-gray-400">Disable public access while you make updates</p>
                         </div>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Two-Factor Authentication</label>
-                    <div class="flex items-center gap-3">
-                        <label class="switch">
-                            <input type="checkbox" x-model="settings.security.twoFactorAuth">
-                            <span class="slider"></span>
-                        </label>
-                        <span class="text-sm text-gray-600">Enable 2FA for admin accounts</span>
-                    </div>
+                <div class="flex justify-end mt-4">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save General Settings</button>
                 </div>
-            </div>
-        </div>
-    </div>
+            </form>
+            @endif
 
-    <!-- Payment Settings -->
-    <div x-show="activeTab === 'payment'" class="tab-content">
-        <div class="settings-card">
-            <div class="settings-header">
-                <h2 class="text-xl font-semibold text-gray-900">Payment Gateway Settings</h2>
-            </div>
-            
-            <div class="space-y-6">
-                <div class="form-group">
-                    <label class="form-label">Default Currency</label>
-                    <select x-model="settings.payment.currency" class="form-input form-select">
-                        <option value="BDT">Bangladeshi Taka (BDT)</option>
-                        <option value="USD">US Dollar (USD)</option>
-                        <option value="EUR">Euro (EUR)</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">SSL Commerce</label>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" x-model="settings.payment.sslStoreId" class="form-input" placeholder="Store ID">
-                        <input type="text" x-model="settings.payment.sslStorePassword" class="form-input" placeholder="Store Password">
+            {{-- ── EMAIL ── --}}
+            @if($g === 'email')
+            <form method="POST" action="{{ route('admin.settings.update', 'email') }}">
+                @csrf
+                <div class="s-card p-6 sm:p-8">
+                    <p class="s-section-title">SMTP Configuration</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                        <div>
+                            <label class="s-label">Mail Driver</label>
+                            <select name="mail_mailer" class="s-input">
+                                @foreach(['smtp'=>'SMTP','log'=>'Log (Dev)','sendmail'=>'Sendmail'] as $val => $label)
+                                <option value="{{ $val }}" {{ ($settings['email']['mail_mailer'] ?? 'smtp') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="s-label">Mail Host</label>
+                            <input type="text" name="mail_host" value="{{ old('mail_host', $settings['email']['mail_host'] ?? '') }}" class="s-input" placeholder="smtp.gmail.com">
+                        </div>
+                        <div>
+                            <label class="s-label">Mail Port</label>
+                            <input type="number" name="mail_port" value="{{ old('mail_port', $settings['email']['mail_port'] ?? '587') }}" class="s-input" placeholder="587">
+                        </div>
+                        <div>
+                            <label class="s-label">Encryption</label>
+                            <select name="mail_encryption" class="s-input">
+                                @foreach(['tls'=>'TLS','ssl'=>'SSL',''=>'None'] as $val => $label)
+                                <option value="{{ $val }}" {{ ($settings['email']['mail_encryption'] ?? 'tls') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="s-label">Username</label>
+                            <input type="text" name="mail_username" value="{{ old('mail_username', $settings['email']['mail_username'] ?? '') }}" class="s-input" placeholder="your@email.com">
+                        </div>
+                        <div>
+                            <label class="s-label">Password</label>
+                            <input type="password" name="mail_password" value="{{ old('mail_password', $settings['email']['mail_password'] ?? '') }}" class="s-input" placeholder="••••••••">
+                            <p class="s-hint">Leave blank to keep existing password</p>
+                        </div>
+                    </div>
+                    <p class="s-section-title">Sender Identity</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="s-label">From Address</label>
+                            <input type="email" name="mail_from_address" value="{{ old('mail_from_address', $settings['email']['mail_from_address'] ?? '') }}" class="s-input" placeholder="noreply@flyoverbd.com">
+                        </div>
+                        <div>
+                            <label class="s-label">From Name</label>
+                            <input type="text" name="mail_from_name" value="{{ old('mail_from_name', $settings['email']['mail_from_name'] ?? '') }}" class="s-input" placeholder="FlyoverBD">
+                        </div>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Stripe</label>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" x-model="settings.payment.stripeKey" class="form-input" placeholder="Publishable Key">
-                        <input type="text" x-model="settings.payment.stripeSecret" class="form-input" placeholder="Secret Key">
-                    </div>
+                <div class="flex justify-end mt-4">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save Email Settings</button>
                 </div>
-            </div>
-        </div>
-    </div>
+            </form>
+            @endif
 
-    <!-- Social Settings -->
-    <div x-show="activeTab === 'social'" class="tab-content">
-        <div class="settings-card">
-            <div class="settings-header">
-                <h2 class="text-xl font-semibold text-gray-900">Social Media Settings</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="form-group">
-                    <label class="form-label">Facebook URL</label>
-                    <input type="url" x-model="settings.social.facebook" class="form-input" placeholder="https://facebook.com/flyoverbd">
+            {{-- ── SECURITY ── --}}
+            @if($g === 'security')
+            <form method="POST" action="{{ route('admin.settings.update', 'security') }}">
+                @csrf
+                {{-- hidden fallback for all checkboxes --}}
+                <input type="hidden" name="force_https" value="0">
+                <input type="hidden" name="two_factor_admin" value="0">
+                <input type="hidden" name="password_min_length" value="0">
+                <input type="hidden" name="password_uppercase" value="0">
+                <input type="hidden" name="password_numbers" value="0">
+                <input type="hidden" name="password_symbols" value="0">
+                <div class="s-card p-6 sm:p-8 space-y-4">
+                    <p class="s-section-title">Access Control</p>
+                    <div class="toggle-wrap">
+                        <label class="toggle"><input type="checkbox" name="force_https" value="1" {{ ($settings['security']['force_https'] ?? '0') === '1' ? 'checked' : '' }}><span class="toggle-slider"></span></label>
+                        <div><p class="text-sm font-semibold text-gray-700">Force HTTPS</p><p class="text-xs text-gray-400">Redirect all HTTP traffic to HTTPS</p></div>
+                    </div>
+                    <div class="toggle-wrap">
+                        <label class="toggle"><input type="checkbox" name="two_factor_admin" value="1" {{ ($settings['security']['two_factor_admin'] ?? '0') === '1' ? 'checked' : '' }}><span class="toggle-slider"></span></label>
+                        <div><p class="text-sm font-semibold text-gray-700">Two-Factor Authentication</p><p class="text-xs text-gray-400">Require 2FA for all admin logins</p></div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="s-label">Session Lifetime <span class="font-normal text-gray-400">(minutes)</span></label>
+                        <input type="number" name="session_lifetime" value="{{ old('session_lifetime', $settings['security']['session_lifetime'] ?? '120') }}" class="s-input" min="5" placeholder="120">
+                    </div>
+                    <p class="s-section-title">Password Policy</p>
+                    @foreach([
+                        'password_min_length' => 'Minimum 8 characters',
+                        'password_uppercase'  => 'Require uppercase letters',
+                        'password_numbers'    => 'Require numbers',
+                        'password_symbols'    => 'Require special characters',
+                    ] as $key => $label)
+                    <div class="toggle-wrap">
+                        <label class="toggle"><input type="checkbox" name="{{ $key }}" value="1" {{ ($settings['security'][$key] ?? '0') === '1' ? 'checked' : '' }}><span class="toggle-slider"></span></label>
+                        <p class="text-sm font-semibold text-gray-700">{{ $label }}</p>
+                    </div>
+                    @endforeach
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Twitter URL</label>
-                    <input type="url" x-model="settings.social.twitter" class="form-input" placeholder="https://twitter.com/flyoverbd">
+                <div class="flex justify-end mt-4">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save Security Settings</button>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Instagram URL</label>
-                    <input type="url" x-model="settings.social.instagram" class="form-input" placeholder="https://instagram.com/flyoverbd">
+            </form>
+            @endif
+
+            {{-- ── PAYMENT ── --}}
+            @if($g === 'payment')
+            <form method="POST" action="{{ route('admin.settings.update', 'payment') }}">
+                @csrf
+                <div class="s-card p-6 sm:p-8">
+                    <p class="s-section-title">Currency</p>
+                    <div class="mb-6">
+                        <label class="s-label">Default Currency</label>
+                        <select name="currency" class="s-input" style="max-width:240px;">
+                            @foreach(['BDT'=>'Bangladeshi Taka (BDT)','USD'=>'US Dollar (USD)','EUR'=>'Euro (EUR)'] as $val => $label)
+                            <option value="{{ $val }}" {{ ($settings['payment']['currency'] ?? 'BDT') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <p class="s-section-title">bKash</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                        <div>
+                            <label class="s-label">App Key</label>
+                            <input type="text" name="bkash_app_key" value="{{ old('bkash_app_key', $settings['payment']['bkash_app_key'] ?? '') }}" class="s-input" placeholder="bKash App Key">
+                        </div>
+                        <div>
+                            <label class="s-label">App Secret</label>
+                            <input type="password" name="bkash_app_secret" value="{{ old('bkash_app_secret', $settings['payment']['bkash_app_secret'] ?? '') }}" class="s-input" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label class="s-label">Username</label>
+                            <input type="text" name="bkash_username" value="{{ old('bkash_username', $settings['payment']['bkash_username'] ?? '') }}" class="s-input" placeholder="bKash Username">
+                        </div>
+                        <div>
+                            <label class="s-label">Password</label>
+                            <input type="password" name="bkash_password" value="{{ old('bkash_password', $settings['payment']['bkash_password'] ?? '') }}" class="s-input" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <p class="s-section-title">SSL Commerce</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="s-label">Store ID</label>
+                            <input type="text" name="ssl_store_id" value="{{ old('ssl_store_id', $settings['payment']['ssl_store_id'] ?? '') }}" class="s-input" placeholder="Store ID">
+                        </div>
+                        <div>
+                            <label class="s-label">Store Password</label>
+                            <input type="password" name="ssl_store_password" value="{{ old('ssl_store_password', $settings['payment']['ssl_store_password'] ?? '') }}" class="s-input" placeholder="••••••••">
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">LinkedIn URL</label>
-                    <input type="url" x-model="settings.social.linkedin" class="form-input" placeholder="https://linkedin.com/company/flyoverbd">
+                <div class="flex justify-end mt-4">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save Payment Settings</button>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">YouTube URL</label>
-                    <input type="url" x-model="settings.social.youtube" class="form-input" placeholder="https://youtube.com/flyoverbd">
+            </form>
+            @endif
+
+            {{-- ── SOCIAL ── --}}
+            @if($g === 'social')
+            <form method="POST" action="{{ route('admin.settings.update', 'social') }}">
+                @csrf
+                <div class="s-card p-6 sm:p-8">
+                    <p class="s-section-title">Social Media Links</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        @foreach([
+                            'facebook'  => ['Facebook',  'https://facebook.com/flyoverbd',  'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z'],
+                            'twitter'   => ['Twitter/X',  'https://twitter.com/flyoverbd',   'M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z'],
+                            'instagram' => ['Instagram',  'https://instagram.com/flyoverbd', 'M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M6.5 20.5h11a2 2 0 002-2v-11a2 2 0 00-2-2h-11a2 2 0 00-2 2v11a2 2 0 002 2z'],
+                            'linkedin'  => ['LinkedIn',   'https://linkedin.com/company/flyoverbd', 'M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z M4 6a2 2 0 100-4 2 2 0 000 4z'],
+                            'youtube'   => ['YouTube',    'https://youtube.com/flyoverbd',   'M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z M9.75 15.02l5.75-3.02-5.75-3.02v6.04z'],
+                            'whatsapp'  => ['WhatsApp',   '+8801234567890',                  'M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z'],
+                        ] as $key => [$label, $placeholder, $iconPath])
+                        <div>
+                            <label class="s-label flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $iconPath }}"/></svg>
+                                {{ $label }}
+                            </label>
+                            <input type="text" name="{{ $key }}" value="{{ old($key, $settings['social'][$key] ?? '') }}" class="s-input" placeholder="{{ $placeholder }}">
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">WhatsApp Number</label>
-                    <input type="tel" x-model="settings.social.whatsapp" class="form-input" placeholder="+8801234567890">
+                <div class="flex justify-end mt-4">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save Social Settings</button>
                 </div>
-            </div>
+            </form>
+            @endif
+
         </div>
     </div>
 </div>
 
-@push('scripts')
-<script>
-function settingsManager() {
-    return {
-        activeTab: 'general',
-        notification: {
-            show: false,
-            type: 'success',
-            message: ''
-        },
-        settings: {
-            general: {
-                appName: 'FlyoverBD',
-                appUrl: 'https://flyoverbd.com',
-                language: 'en',
-                timezone: 'Asia/Dhaka',
-                contactEmail: 'info@flyoverbd.com',
-                contactPhone: '+8801234567890',
-                siteDescription: 'Your trusted travel partner for amazing journeys',
-                maintenanceMode: false
-            },
-            email: {
-                driver: 'smtp',
-                host: 'smtp.gmail.com',
-                port: '587',
-                username: '',
-                password: '',
-                encryption: 'tls',
-                fromAddress: 'noreply@flyoverbd.com',
-                fromName: 'FlyoverBD'
-            },
-            security: {
-                forceHttps: true,
-                sessionLifetime: 120,
-                passwordMinLength: true,
-                passwordUppercase: true,
-                passwordNumbers: true,
-                passwordSymbols: false,
-                twoFactorAuth: false
-            },
-            payment: {
-                currency: 'BDT',
-                sslStoreId: '',
-                sslStorePassword: '',
-                stripeKey: '',
-                stripeSecret: ''
-            },
-            social: {
-                facebook: '',
-                twitter: '',
-                instagram: '',
-                linkedin: '',
-                youtube: '',
-                whatsapp: ''
-            }
-        },
-        
-        init() {
-            this.loadSettings();
-        },
-        
-        loadSettings() {
-            // Load settings from localStorage or API
-            const saved = localStorage.getItem('adminSettings');
-            if (saved) {
-                this.settings = JSON.parse(saved);
-            }
-        },
-        
-        async saveAllSettings() {
-            try {
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 500));
-                
-                localStorage.setItem('adminSettings', JSON.stringify(this.settings));
-                this.showNotification('Settings saved successfully!', 'success');
-            } catch (error) {
-                this.showNotification('Error saving settings!', 'error');
-            }
-        },
-        
-        async resetSettings() {
-            if (confirm('Are you sure you want to reset all settings to default values?')) {
-                this.settings = {
-                    general: {
-                        appName: 'FlyoverBD',
-                        appUrl: 'https://flyoverbd.com',
-                        language: 'en',
-                        timezone: 'Asia/Dhaka',
-                        contactEmail: 'info@flyoverbd.com',
-                        contactPhone: '+8801234567890',
-                        siteDescription: 'Your trusted travel partner for amazing journeys',
-                        maintenanceMode: false
-                    },
-                    email: {
-                        driver: 'smtp',
-                        host: 'smtp.gmail.com',
-                        port: '587',
-                        username: '',
-                        password: '',
-                        encryption: 'tls',
-                        fromAddress: 'noreply@flyoverbd.com',
-                        fromName: 'FlyoverBD'
-                    },
-                    security: {
-                        forceHttps: true,
-                        sessionLifetime: 120,
-                        passwordMinLength: true,
-                        passwordUppercase: true,
-                        passwordNumbers: true,
-                        passwordSymbols: false,
-                        twoFactorAuth: false
-                    },
-                    payment: {
-                        currency: 'BDT',
-                        sslStoreId: '',
-                        sslStorePassword: '',
-                        stripeKey: '',
-                        stripeSecret: ''
-                    },
-                    social: {
-                        facebook: '',
-                        twitter: '',
-                        instagram: '',
-                        linkedin: '',
-                        youtube: '',
-                        whatsapp: ''
-                    }
-                };
-                
-                localStorage.removeItem('adminSettings');
-                this.showNotification('Settings reset to defaults!', 'success');
-            }
-        },
-        
-        async testEmailSettings() {
-            try {
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                this.showNotification('Test email sent successfully!', 'success');
-            } catch (error) {
-                this.showNotification('Failed to send test email!', 'error');
-            }
-        },
-        
-        showNotification(message, type = 'success') {
-            this.notification = {
-                show: true,
-                type: type,
-                message: message
-            };
-            
-            setTimeout(() => {
-                this.notification.show = false;
-            }, 3000);
-        }
-    }
-}
-</script>
-@endpush
 </x-admin-layout>
