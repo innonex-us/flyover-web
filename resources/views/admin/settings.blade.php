@@ -135,61 +135,6 @@
                         </div>
                     </div>
 
-                    {{-- Banner Modal Section --}}
-                    <p class="s-section-title">Banner Modal</p>
-                    <div class="space-y-4">
-                        <div class="toggle-wrap">
-                            <label class="toggle">
-                                <input type="hidden" name="banner_enabled" value="0">
-                                <input type="checkbox" name="banner_enabled" value="1" {{ ($settings['general']['banner_enabled'] ?? '0') === '1' ? 'checked' : '' }}>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <div>
-                                <p class="text-sm font-semibold text-gray-700">Enable Banner Modal</p>
-                                <p class="text-xs text-gray-400">Show popup modal when visitors first arrive</p>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="s-label">Modal Variant</label>
-                                <select name="banner_variant" class="s-input">
-                                    <option value="promo" {{ ($settings['general']['banner_variant'] ?? 'promo') === 'promo' ? 'selected' : '' }}>Promotional (Red)</option>
-                                    <option value="info" {{ ($settings['general']['banner_variant'] ?? '') === 'info' ? 'selected' : '' }}>Information (Blue)</option>
-                                    <option value="success" {{ ($settings['general']['banner_variant'] ?? '') === 'success' ? 'selected' : '' }}>Success (Green)</option>
-                                    <option value="dark" {{ ($settings['general']['banner_variant'] ?? '') === 'dark' ? 'selected' : '' }}>Dark Mode</option>
-                                    <option value="image" {{ ($settings['general']['banner_variant'] ?? '') === 'image' ? 'selected' : '' }}>Image Background</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="s-label">Button Text</label>
-                                <input type="text" name="banner_button" value="{{ old('banner_button', $settings['general']['banner_button'] ?? 'Book Now') }}" class="s-input" placeholder="Book Now">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="s-label">Banner Title</label>
-                            <input type="text" name="banner_title" value="{{ old('banner_title', $settings['general']['banner_title'] ?? 'Special Offer!') }}" class="s-input" placeholder="Special Offer!">
-                        </div>
-
-                        <div>
-                            <label class="s-label">Banner Message</label>
-                            <textarea name="banner_message" rows="2" class="s-input" style="resize:vertical;" placeholder="Enter your promotional message...">{{ old('banner_message', $settings['general']['banner_message'] ?? '') }}</textarea>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="s-label">Button Link</label>
-                                <input type="text" name="banner_link" value="{{ old('banner_link', $settings['general']['banner_link'] ?? '/tours') }}" class="s-input" placeholder="/tours">
-                                <p class="s-hint">URL or path (e.g., /tours, /hotels, https://example.com)</p>
-                            </div>
-                            <div>
-                                <label class="s-label">Background Image URL (Optional)</label>
-                                <input type="url" name="banner_image" value="{{ old('banner_image', $settings['general']['banner_image'] ?? '') }}" class="s-input" placeholder="https://example.com/image.jpg">
-                                <p class="s-hint">Used for "Image Background" variant</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="flex justify-end mt-4">
                     <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save General Settings</button>
@@ -302,46 +247,172 @@
 
             {{-- ── PAYMENT ── --}}
             @if($g === 'payment')
+            @php
+                $p = $settings['payment'];
+                $configured = [
+                    'bkash'    => !empty($p['bkash_app_key']),
+                    'nagad'    => !empty($p['nagad_merchant_id']),
+                    'rocket'   => !empty($p['rocket_merchant_number']),
+                    'ssl'      => !empty($p['ssl_store_id']),
+                    'stripe'   => !empty($p['stripe_secret_key']),
+                    'paypal'   => !empty($p['paypal_client_id']),
+                    'razorpay' => !empty($p['razorpay_key_id']),
+                ];
+            @endphp
             <form method="POST" action="{{ route('admin.settings.update', 'payment') }}">
                 @csrf
-                <div class="s-card p-6 sm:p-8">
-                    <p class="s-section-title">Currency</p>
-                    <div class="mb-6">
+                {{-- Currency card --}}
+                <div class="s-card p-5 mb-4 flex items-center gap-5">
+                    <div class="flex-1">
                         <label class="s-label">Default Currency</label>
-                        <select name="currency" class="s-input" style="max-width:240px;">
-                            @foreach(['BDT'=>'Bangladeshi Taka (BDT)','USD'=>'US Dollar (USD)','EUR'=>'Euro (EUR)'] as $val => $label)
-                            <option value="{{ $val }}" {{ ($settings['payment']['currency'] ?? 'BDT') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                        <select name="currency" class="s-input" style="max-width:260px;">
+                            @foreach(['BDT'=>'Bangladeshi Taka (BDT)','USD'=>'US Dollar (USD)','EUR'=>'Euro (EUR)','GBP'=>'British Pound (GBP)'] as $val => $lbl)
+                            <option value="{{ $val }}" {{ ($p['currency'] ?? 'BDT') === $val ? 'selected' : '' }}>{{ $lbl }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <p class="s-section-title">bKash</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                        <div>
-                            <label class="s-label">App Key</label>
-                            <input type="text" name="bkash_app_key" value="{{ old('bkash_app_key', $settings['payment']['bkash_app_key'] ?? '') }}" class="s-input" placeholder="bKash App Key">
+                    <div class="text-xs text-gray-400">Applies to all payment gateways</div>
+                </div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 mt-6 px-1">Bangladeshi Gateways</p>
+                {{-- bKash --}}
+                <div class="s-card mb-3 overflow-hidden" x-data="{ open: {{ $configured['bkash'] ? 'true' : 'false' }} }">
+                    <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center flex-shrink-0"><span class="text-pink-600 font-black text-xs">bK</span></div>
+                            <div class="text-left"><p class="text-sm font-bold text-gray-900">bKash</p><p class="text-xs text-gray-400">Mobile Financial Service</p></div>
                         </div>
-                        <div>
-                            <label class="s-label">App Secret</label>
-                            <input type="password" name="bkash_app_secret" value="{{ old('bkash_app_secret', $settings['payment']['bkash_app_secret'] ?? '') }}" class="s-input" placeholder="••••••••">
+                        <div class="flex items-center gap-3">
+                            @if($configured['bkash'])<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Configured</span>@else<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Not Set</span>@endif
+                            <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </div>
-                        <div>
-                            <label class="s-label">Username</label>
-                            <input type="text" name="bkash_username" value="{{ old('bkash_username', $settings['payment']['bkash_username'] ?? '') }}" class="s-input" placeholder="bKash Username">
-                        </div>
-                        <div>
-                            <label class="s-label">Password</label>
-                            <input type="password" name="bkash_password" value="{{ old('bkash_password', $settings['payment']['bkash_password'] ?? '') }}" class="s-input" placeholder="••••••••">
+                    </button>
+                    <div x-show="open" x-collapse class="border-t border-gray-100">
+                        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="s-label">App Key</label><input type="text" name="bkash_app_key" value="{{ old('bkash_app_key', $p['bkash_app_key'] ?? '') }}" class="s-input" placeholder="bKash App Key"></div>
+                            <div><label class="s-label">App Secret</label><input type="password" name="bkash_app_secret" value="{{ old('bkash_app_secret', $p['bkash_app_secret'] ?? '') }}" class="s-input" placeholder="••••••••"></div>
+                            <div><label class="s-label">Username</label><input type="text" name="bkash_username" value="{{ old('bkash_username', $p['bkash_username'] ?? '') }}" class="s-input" placeholder="bKash Username"></div>
+                            <div><label class="s-label">Password</label><input type="password" name="bkash_password" value="{{ old('bkash_password', $p['bkash_password'] ?? '') }}" class="s-input" placeholder="••••••••"></div>
                         </div>
                     </div>
-                    <p class="s-section-title">SSL Commerce</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                            <label class="s-label">Store ID</label>
-                            <input type="text" name="ssl_store_id" value="{{ old('ssl_store_id', $settings['payment']['ssl_store_id'] ?? '') }}" class="s-input" placeholder="Store ID">
+                </div>
+                {{-- Nagad --}}
+                <div class="s-card mb-3 overflow-hidden" x-data="{ open: {{ $configured['nagad'] ? 'true' : 'false' }} }">
+                    <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0"><span class="text-orange-600 font-black text-xs">NG</span></div>
+                            <div class="text-left"><p class="text-sm font-bold text-gray-900">Nagad</p><p class="text-xs text-gray-400">Bangladesh Post Office MFS</p></div>
                         </div>
-                        <div>
-                            <label class="s-label">Store Password</label>
-                            <input type="password" name="ssl_store_password" value="{{ old('ssl_store_password', $settings['payment']['ssl_store_password'] ?? '') }}" class="s-input" placeholder="••••••••">
+                        <div class="flex items-center gap-3">
+                            @if($configured['nagad'])<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Configured</span>@else<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Not Set</span>@endif
+                            <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </button>
+                    <div x-show="open" x-collapse class="border-t border-gray-100">
+                        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="s-label">Merchant ID</label><input type="text" name="nagad_merchant_id" value="{{ old('nagad_merchant_id', $p['nagad_merchant_id'] ?? '') }}" class="s-input" placeholder="Nagad Merchant ID"></div>
+                            <div><label class="s-label">Sandbox Mode</label><div class="toggle-wrap mt-1"><label class="toggle"><input type="hidden" name="nagad_sandbox" value="0"><input type="checkbox" name="nagad_sandbox" value="1" {{ ($p['nagad_sandbox'] ?? '1') === '1' ? 'checked' : '' }}><span class="toggle-slider"></span></label><span class="text-sm text-gray-600">Use sandbox / test mode</span></div></div>
+                            <div><label class="s-label">Public Key</label><input type="text" name="nagad_public_key" value="{{ old('nagad_public_key', $p['nagad_public_key'] ?? '') }}" class="s-input" placeholder="Nagad Public Key"></div>
+                            <div><label class="s-label">Private Key</label><input type="password" name="nagad_private_key" value="{{ old('nagad_private_key', $p['nagad_private_key'] ?? '') }}" class="s-input" placeholder="••••••••"></div>
+                        </div>
+                    </div>
+                </div>
+                {{-- Rocket --}}
+                <div class="s-card mb-3 overflow-hidden" x-data="{ open: {{ $configured['rocket'] ? 'true' : 'false' }} }">
+                    <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0"><span class="text-purple-600 font-black text-xs">RK</span></div>
+                            <div class="text-left"><p class="text-sm font-bold text-gray-900">Rocket <span class="text-gray-400 font-normal">— DBBL</span></p><p class="text-xs text-gray-400">Dutch-Bangla Bank MFS</p></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            @if($configured['rocket'])<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Configured</span>@else<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Not Set</span>@endif
+                            <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </button>
+                    <div x-show="open" x-collapse class="border-t border-gray-100">
+                        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="s-label">Merchant Number</label><input type="text" name="rocket_merchant_number" value="{{ old('rocket_merchant_number', $p['rocket_merchant_number'] ?? '') }}" class="s-input" placeholder="01XXXXXXXXX"></div>
+                            <div><label class="s-label">API Key</label><input type="text" name="rocket_api_key" value="{{ old('rocket_api_key', $p['rocket_api_key'] ?? '') }}" class="s-input" placeholder="API Key"></div>
+                            <div class="md:col-span-2"><label class="s-label">API Secret</label><input type="password" name="rocket_api_secret" value="{{ old('rocket_api_secret', $p['rocket_api_secret'] ?? '') }}" class="s-input" placeholder="••••••••"></div>
+                        </div>
+                    </div>
+                </div>
+                {{-- SSL Commerz --}}
+                <div class="s-card mb-3 overflow-hidden" x-data="{ open: {{ $configured['ssl'] ? 'true' : 'false' }} }">
+                    <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0"><span class="text-blue-600 font-black text-xs">SSL</span></div>
+                            <div class="text-left"><p class="text-sm font-bold text-gray-900">SSL Commerz</p><p class="text-xs text-gray-400">BD's leading payment aggregator</p></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            @if($configured['ssl'])<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Configured</span>@else<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Not Set</span>@endif
+                            <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </button>
+                    <div x-show="open" x-collapse class="border-t border-gray-100">
+                        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="s-label">Store ID</label><input type="text" name="ssl_store_id" value="{{ old('ssl_store_id', $p['ssl_store_id'] ?? '') }}" class="s-input" placeholder="Store ID"></div>
+                            <div><label class="s-label">Store Password</label><input type="password" name="ssl_store_password" value="{{ old('ssl_store_password', $p['ssl_store_password'] ?? '') }}" class="s-input" placeholder="••••••••"></div>
+                            <div class="md:col-span-2"><div class="toggle-wrap"><label class="toggle"><input type="hidden" name="ssl_sandbox" value="0"><input type="checkbox" name="ssl_sandbox" value="1" {{ ($p['ssl_sandbox'] ?? '1') === '1' ? 'checked' : '' }}><span class="toggle-slider"></span></label><div><p class="text-sm font-semibold text-gray-700">Sandbox Mode</p><p class="text-xs text-gray-400">Use test credentials against sandbox API</p></div></div></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 mt-6 px-1">International Gateways</p>
+                {{-- Stripe --}}
+                <div class="s-card mb-3 overflow-hidden" x-data="{ open: {{ $configured['stripe'] ? 'true' : 'false' }} }">
+                    <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0"><span class="text-indigo-600 font-black text-xs">STR</span></div>
+                            <div class="text-left"><p class="text-sm font-bold text-gray-900">Stripe</p><p class="text-xs text-gray-400">Cards, wallets &amp; global payments</p></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            @if($configured['stripe'])<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Configured</span>@else<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Not Set</span>@endif
+                            <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </button>
+                    <div x-show="open" x-collapse class="border-t border-gray-100">
+                        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="s-label">Publishable Key</label><input type="text" name="stripe_publishable_key" value="{{ old('stripe_publishable_key', $p['stripe_publishable_key'] ?? '') }}" class="s-input" placeholder="pk_live_..."><p class="s-hint">Starts with pk_live_ or pk_test_</p></div>
+                            <div><label class="s-label">Secret Key</label><input type="password" name="stripe_secret_key" value="{{ old('stripe_secret_key', $p['stripe_secret_key'] ?? '') }}" class="s-input" placeholder="sk_live_..."><p class="s-hint">Starts with sk_live_ or sk_test_</p></div>
+                            <div class="md:col-span-2"><label class="s-label">Webhook Secret</label><input type="password" name="stripe_webhook_secret" value="{{ old('stripe_webhook_secret', $p['stripe_webhook_secret'] ?? '') }}" class="s-input" placeholder="whsec_..."><p class="s-hint">From Stripe Dashboard → Webhooks</p></div>
+                        </div>
+                    </div>
+                </div>
+                {{-- PayPal --}}
+                <div class="s-card mb-3 overflow-hidden" x-data="{ open: {{ $configured['paypal'] ? 'true' : 'false' }} }">
+                    <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-yellow-50 flex items-center justify-center flex-shrink-0"><span class="text-yellow-600 font-black text-xs">PP</span></div>
+                            <div class="text-left"><p class="text-sm font-bold text-gray-900">PayPal</p><p class="text-xs text-gray-400">PayPal checkout &amp; payments</p></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            @if($configured['paypal'])<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Configured</span>@else<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Not Set</span>@endif
+                            <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </button>
+                    <div x-show="open" x-collapse class="border-t border-gray-100">
+                        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="s-label">Client ID</label><input type="text" name="paypal_client_id" value="{{ old('paypal_client_id', $p['paypal_client_id'] ?? '') }}" class="s-input" placeholder="PayPal Client ID"></div>
+                            <div><label class="s-label">Client Secret</label><input type="password" name="paypal_client_secret" value="{{ old('paypal_client_secret', $p['paypal_client_secret'] ?? '') }}" class="s-input" placeholder="••••••••"></div>
+                            <div><label class="s-label">Mode</label><select name="paypal_mode" class="s-input"><option value="sandbox" {{ ($p['paypal_mode'] ?? 'sandbox') === 'sandbox' ? 'selected' : '' }}>Sandbox (Testing)</option><option value="live" {{ ($p['paypal_mode'] ?? 'sandbox') === 'live' ? 'selected' : '' }}>Live (Production)</option></select></div>
+                        </div>
+                    </div>
+                </div>
+                {{-- Razorpay --}}
+                <div class="s-card mb-3 overflow-hidden" x-data="{ open: {{ $configured['razorpay'] ? 'true' : 'false' }} }">
+                    <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-teal-50 flex items-center justify-center flex-shrink-0"><span class="text-teal-600 font-black text-xs">RZP</span></div>
+                            <div class="text-left"><p class="text-sm font-bold text-gray-900">Razorpay</p><p class="text-xs text-gray-400">India &amp; international payments</p></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            @if($configured['razorpay'])<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Configured</span>@else<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Not Set</span>@endif
+                            <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </button>
+                    <div x-show="open" x-collapse class="border-t border-gray-100">
+                        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="s-label">Key ID</label><input type="text" name="razorpay_key_id" value="{{ old('razorpay_key_id', $p['razorpay_key_id'] ?? '') }}" class="s-input" placeholder="rzp_live_..."></div>
+                            <div><label class="s-label">Key Secret</label><input type="password" name="razorpay_key_secret" value="{{ old('razorpay_key_secret', $p['razorpay_key_secret'] ?? '') }}" class="s-input" placeholder="••••••••"></div>
                         </div>
                     </div>
                 </div>
@@ -468,11 +539,13 @@
                         'desc' => 'Dark professional for important news'
                     ],
                 ];
+                $colors = ['red' => 'from-red-500 to-red-600', 'blue' => 'from-blue-500 to-blue-600', 'green' => 'from-emerald-500 to-emerald-600', 'orange' => 'from-orange-500 to-orange-600', 'purple' => 'from-purple-500 to-purple-600', 'pink' => 'from-pink-500 to-pink-600', 'indigo' => 'from-indigo-500 to-indigo-600', 'teal' => 'from-teal-500 to-teal-600', 'amber' => 'from-amber-500 to-amber-600', 'slate' => 'from-slate-600 to-slate-700'];
                 $selectedType = $settings['banners']['type'] ?? 'promo';
                 $isEnabled = ($settings['banners']['enabled'] ?? '0') === '1';
+                $currentColor = $settings['banners']['primary_color'] ?? 'red';
             @endphp
 
-            <form method="POST" action="{{ route('admin.settings.update', 'banners') }}" enctype="multipart/form-data" x-data="{ selected: '{{ $selectedType }}', enabled: {{ $isEnabled ? 'true' : 'false' }} }">
+            <form method="POST" action="{{ route('admin.settings.update', 'banners') }}" enctype="multipart/form-data" x-data="{ selected: '{{ $selectedType }}', enabled: {{ $isEnabled ? 'true' : 'false' }}, activeTab: 'template' }">
                 @csrf
 
                 {{-- Enable Toggle --}}
@@ -492,49 +565,79 @@
                     </div>
                 </div>
 
-                {{-- Template Selection --}}
-                <div class="s-card p-6 mb-6" x-show="enabled" x-cloak>
-                    <p class="s-section-title">Choose Template</p>
-                    <p class="text-xs text-gray-400 mb-4">Click any template to select it</p>
+                {{-- Navigation Tabs --}}
+                <div class="flex gap-1 mb-6 bg-gray-100 p-1 rounded-xl" x-show="enabled" x-cloak>
+                    <button type="button" @click="activeTab = 'template'" :class="activeTab === 'template' ? 'bg-white text-red-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'" class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition">
+                        1. Template
+                    </button>
+                    <button type="button" @click="activeTab = 'content'" :class="activeTab === 'content' ? 'bg-white text-red-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'" class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition">
+                        2. Content
+                    </button>
+                    <button type="button" @click="activeTab = 'display'" :class="activeTab === 'display' ? 'bg-white text-red-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'" class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition">
+                        3. Display
+                    </button>
+                    <button type="button" @click="activeTab = 'preview'" :class="activeTab === 'preview' ? 'bg-white text-red-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'" class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition">
+                        4. Preview
+                    </button>
+                </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {{-- TAB 1: Template Selection --}}
+                <div class="s-card p-6 mb-6" x-show="enabled && activeTab === 'template'" x-cloak>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                        <p class="s-section-title mb-0">Choose Template</p>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 ml-10">Select a modal style. First 3 support images, last 2 are solid color.</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                         @foreach($bannerTypes as $key => $type)
+                        @php $hasImage = in_array($key, ['promo', 'newsletter', 'offer']); @endphp
                         <label class="cursor-pointer group">
                             <input type="radio" name="type" value="{{ $key }}" class="hidden" x-model="selected" {{ $selectedType === $key ? 'checked' : '' }}>
                             <div class="relative rounded-xl border-2 transition-all overflow-hidden"
                                  :class="selected === '{{ $key }}' ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-200 hover:border-gray-300'">
 
                                 {{-- Preview Mini --}}
-                                <div class="h-24 bg-gradient-to-r {{ $type['color'] }} flex items-center justify-center">
-                                    <svg class="w-10 h-10 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="h-20 bg-gradient-to-r {{ $type['color'] }} flex items-center justify-center relative">
+                                    <svg class="w-8 h-8 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $type['icon'] }}"/>
                                     </svg>
+                                    @if($hasImage)
+                                    <div class="absolute top-1 right-1 bg-white/90 text-gray-700 text-[9px] px-1.5 py-0.5 rounded font-medium">+IMG</div>
+                                    @endif
                                 </div>
 
                                 {{-- Info --}}
                                 <div class="p-3 bg-white">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <div class="w-2 h-2 rounded-full {{ $type['bg'] }}"></div>
-                                        <p class="font-semibold text-gray-900 text-sm">{{ $type['name'] }}</p>
-                                    </div>
-                                    <p class="text-xs text-gray-500">{{ $type['desc'] }}</p>
+                                    <p class="font-semibold text-gray-900 text-sm mb-1">{{ $type['name'] }}</p>
+                                    <p class="text-[11px] text-gray-500 leading-tight">{{ $type['desc'] }}</p>
                                 </div>
 
                                 {{-- Selected Badge --}}
-                                <div x-show="selected === '{{ $key }}'" class="absolute top-2 right-2 bg-white rounded-full p-1 shadow-lg" x-cloak>
-                                    <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <div x-show="selected === '{{ $key }}'" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg" x-cloak>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                 </div>
                             </div>
                         </label>
                         @endforeach
                     </div>
+                    
+                    <div class="flex justify-end mt-4">
+                        <button type="button" @click="activeTab = 'content'" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg text-sm transition">
+                            Next: Content →
+                        </button>
+                    </div>
                 </div>
 
-                {{-- Customization --}}
-                <div class="s-card p-6 mb-6" x-show="enabled" x-cloak>
-                    <p class="s-section-title">Customize Content</p>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                {{-- TAB 2: Content & Style --}}
+                <div class="s-card p-6 mb-6" x-show="enabled && activeTab === 'content'" x-cloak>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                        <p class="s-section-title mb-0">Content & Style</p>
+                    </div>
+                    
+                    {{-- Content --}}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
                         <div>
                             <label class="s-label">Modal Title</label>
                             <input type="text" name="title" value="{{ old('title', $settings['banners']['title'] ?? 'Special Offer!') }}" class="s-input" placeholder="Enter modal title">
@@ -545,98 +648,115 @@
                         </div>
                     </div>
 
-                    <div class="mb-5">
+                    <div class="mb-6">
                         <label class="s-label">Message Content</label>
                         <textarea name="message" rows="3" class="s-input" style="resize:vertical;" placeholder="Enter your promotional message...">{{ old('message', $settings['banners']['message'] ?? 'Don\'t miss out on our exclusive deal. Limited time only!') }}</textarea>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
                         <div>
                             <label class="s-label">Button Link</label>
                             <input type="text" name="link" value="{{ old('link', $settings['banners']['link'] ?? '/tours') }}" class="s-input" placeholder="/tours or https://example.com">
                             <p class="s-hint">Can be internal path (/tours) or full URL</p>
                         </div>
-                        <div x-data="{ imageType: '{{ ($settings['banners']['image'] ?? '') && str_starts_with($settings['banners']['image'], url('/')) ? 'upload' : 'url' }}' }">
+                        <div x-data="{ imageMode: '{{ ($settings['banners']['image'] ?? '') && in_array($settings['banners']['image'], ['banner/promo-travel.jpg', 'banner/offer-beach.jpg', 'banner/newsletter-city.jpg', 'banner/discount-flight.jpg', 'banner/announcement-hotel.jpg']) ? 'preset' : (($settings['banners']['image'] ?? '') && str_starts_with($settings['banners']['image'], url('/')) ? 'upload' : 'url') }}' }">
+                            @php
+                                $demoImages = [
+                                    'banner/promo-travel.jpg' => ['name' => 'Travel Adventure', 'icon' => 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                                    'banner/offer-beach.jpg' => ['name' => 'Beach Paradise', 'icon' => 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z'],
+                                    'banner/newsletter-city.jpg' => ['name' => 'City Explorer', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],
+                                    'banner/discount-flight.jpg' => ['name' => 'Flight Deal', 'icon' => 'M12 19l9 2-9-18-9 18 9-2zm0 0v-8'],
+                                    'banner/announcement-hotel.jpg' => ['name' => 'Luxury Hotel', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],
+                                ];
+                                $currentImage = $settings['banners']['image'] ?? '';
+                            @endphp
+                            
                             <label class="s-label">Background Image</label>
                             
-                            <div class="flex gap-2 mb-2">
-                                <button type="button" @click="imageType = 'url'" :class="imageType === 'url' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">URL</button>
-                                <button type="button" @click="imageType = 'upload'" :class="imageType === 'upload' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">Upload</button>
+                            <div class="flex gap-2 mb-3">
+                                <button type="button" @click="imageMode = 'preset'" :class="imageMode === 'preset' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">Demo Images</button>
+                                <button type="button" @click="imageMode = 'upload'" :class="imageMode === 'upload' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">Upload</button>
+                                <button type="button" @click="imageMode = 'url'" :class="imageMode === 'url' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">URL</button>
                             </div>
                             
-                            {{-- URL Input --}}
-                            <div x-show="imageType === 'url'">
-                                <input type="url" name="image" value="{{ old('image', $settings['banners']['image'] ?? '') }}" class="s-input" placeholder="https://example.com/banner.jpg">
-                                <p class="s-hint">Enter external image URL</p>
+                            {{-- Preset Demo Images --}}
+                            <div x-show="imageMode === 'preset'">
+                                <p class="text-xs text-gray-500 mb-2">Click to select a preset image:</p>
+                                <div class="grid grid-cols-5 gap-2">
+                                    @foreach($demoImages as $path => $info)
+                                    <label class="cursor-pointer relative group">
+                                        <input type="radio" name="image" value="{{ asset('storage/' . $path) }}" class="hidden" x-on:click="imageMode = 'preset'" {{ $currentImage === asset('storage/' . $path) ? 'checked' : '' }}>
+                                        <div class="aspect-[4/3] rounded-lg bg-gray-200 overflow-hidden border-2 transition-all group-hover:border-red-300 {{ $currentImage === asset('storage/' . $path) ? 'border-red-500 ring-2 ring-red-200' : 'border-gray-200' }}">
+                                            <div class="w-full h-full bg-gradient-to-br from-red-400 to-pink-500 flex flex-col items-center justify-center p-2">
+                                                <svg class="w-8 h-8 text-white/80 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $info['icon'] }}"/>
+                                                </svg>
+                                                <span class="text-[10px] text-white/90 text-center leading-tight">{{ $info['name'] }}</span>
+                                            </div>
+                                        </div>
+                                        @if($currentImage === asset('storage/' . $path))
+                                        <div class="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                                            <svg class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                        </div>
+                                        @endif
+                                    </label>
+                                    @endforeach
+                                </div>
+                                <p class="s-hint mt-2">Click any image to use it as banner background</p>
                             </div>
                             
                             {{-- File Upload --}}
-                            <div x-show="imageType === 'upload'" x-cloak>
-                                <div class="relative">
-                                    <input type="file" name="image_upload" accept="image/*" class="s-input file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
-                                </div>
-                                @if($settings['banners']['image'] ?? '')
+                            <div x-show="imageMode === 'upload'" x-cloak>
+                                <input type="file" name="image_upload" accept="image/*" class="s-input file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                                @if($currentImage && !in_array($currentImage, array_map(fn($p) => asset('storage/' . $p), array_keys($demoImages))))
                                 <div class="mt-2 flex items-center gap-2">
-                                    <img src="{{ $settings['banners']['image'] }}" alt="Current banner" class="h-16 w-16 object-cover rounded-lg border">
-                                    <span class="text-xs text-gray-500">Current image</span>
+                                    <img src="{{ $currentImage }}" alt="Current banner" class="h-16 w-24 object-cover rounded-lg border">
+                                    <span class="text-xs text-gray-500">Current uploaded image</span>
                                 </div>
                                 @endif
                                 <p class="s-hint">Upload JPG, PNG or WebP (max 2MB)</p>
                             </div>
+                            
+                            {{-- URL Input --}}
+                            <div x-show="imageMode === 'url'" x-cloak>
+                                <input type="url" name="image" value="{{ !in_array($currentImage, array_map(fn($p) => asset('storage/' . $p), array_keys($demoImages))) && !str_starts_with($currentImage, asset('storage/banners')) ? old('image', $currentImage) : '' }}" class="s-input" placeholder="https://example.com/banner.jpg">
+                                <p class="s-hint">Enter external image URL</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {{-- Preview --}}
-                <div class="s-card p-6 mb-6" x-show="enabled" x-cloak>
-                    <p class="s-section-title">Live Preview</p>
-                    <p class="text-xs text-gray-400 mb-4">This is how your banner will appear to visitors</p>
+                    {{-- Color Options --}}
+                    <div class="border-t pt-6 mt-6">
+                        <p class="s-section-title mb-3">Theme Color</p>
+                        <div class="flex flex-wrap gap-3">
+                            @foreach($colors as $name => $gradient)
+                            <label class="cursor-pointer">
+                                <input type="radio" name="primary_color" value="{{ $name }}" class="hidden" {{ $currentColor === $name ? 'checked' : '' }} x-on:click="color = '{{ $name }}'">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br {{ $gradient }} ring-2 ring-offset-2 ring-transparent hover:ring-gray-300 {{ $currentColor === $name ? 'ring-gray-900' : '' }} transition-all shadow-lg"></div>
+                                <span class="text-[10px] text-gray-500 text-center block mt-1">{{ ucfirst($name) }}</span>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
 
-                    <div class="relative bg-gray-100 rounded-xl p-8 flex items-center justify-center min-h-[300px]">
-                        @foreach($bannerTypes as $key => $type)
-                        <template x-if="selected === '{{ $key }}'">
-                            <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden transform scale-95">
-                                @if($key === 'newsletter')
-                                {{-- Newsletter specific layout --}}
-                                <div class="h-32 bg-gradient-to-r {{ $type['color'] }} flex items-center justify-center">
-                                    <svg class="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $type['icon'] }}"/></svg>
-                                </div>
-                                <div class="p-6">
-                                    <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="$refs.titleInput?.value || '{{ $settings['banners']['title'] ?? 'Join Our Newsletter' }}'"></h3>
-                                    <p class="text-gray-600 mb-4" x-text="$refs.messageInput?.value || '{{ $settings['banners']['message'] ?? 'Get exclusive deals delivered to your inbox' }}'"></p>
-                                    <div class="flex gap-2">
-                                        <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm" disabled>
-                                        <button class="px-4 py-2 {{ $type['bg'] }} text-white rounded-lg font-semibold text-sm" x-text="$refs.buttonInput?.value || 'Subscribe'"></button>
-                                    </div>
-                                </div>
-                                @else
-                                {{-- Standard layout --}}
-                                <div class="h-16 bg-gradient-to-r {{ $type['color'] }}"></div>
-                                <div class="p-6">
-                                    <div class="flex items-start gap-4">
-                                        <div class="w-12 h-12 {{ $type['bg'] }} rounded-xl flex items-center justify-center flex-shrink-0">
-                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $type['icon'] }}"/></svg>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-lg font-bold text-gray-900 mb-1" x-text="$refs.titleInput?.value || '{{ $settings['banners']['title'] ?? 'Special Offer!' }}'"></h3>
-                                            <p class="text-gray-600 text-sm" x-text="$refs.messageInput?.value || '{{ $settings['banners']['message'] ?? 'Limited time offer - book now!' }}'"></p>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 flex gap-3">
-                                        <button class="flex-1 {{ $type['bg'] }} text-white py-2.5 rounded-xl font-semibold" x-text="$refs.buttonInput?.value || 'Get Started'"></button>
-                                        <button class="px-4 py-2.5 text-gray-500 font-medium">Maybe later</button>
-                                    </div>
-                                </div>
-                                @endif
-                            </div>
-                        </template>
-                        @endforeach
+                    {{-- Navigation --}}
+                    <div class="flex justify-between mt-6 pt-4 border-t">
+                        <button type="button" @click="activeTab = 'template'" class="text-gray-500 hover:text-gray-700 font-medium text-sm">
+                            ← Back: Template
+                        </button>
+                        <button type="button" @click="activeTab = 'display'" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg text-sm transition">
+                            Next: Display →
+                        </button>
                     </div>
                 </div>
 
-                {{-- Timing Settings --}}
-                <div class="s-card p-6 mb-6" x-show="enabled" x-cloak>
-                    <p class="s-section-title">Display Settings</p>
+                {{-- TAB 3: Display Settings --}}
+                <div class="s-card p-6 mb-6" x-show="enabled && activeTab === 'display'" x-cloak>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-sm font-bold">3</span>
+                        <p class="s-section-title mb-0">Display Settings</p>
+                    </div>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <div>
                             <label class="s-label">Delay Before Showing (seconds)</label>
@@ -660,10 +780,118 @@
                             </select>
                         </div>
                     </div>
+
+                    {{-- Navigation --}}
+                    <div class="flex justify-between mt-6 pt-4 border-t">
+                        <button type="button" @click="activeTab = 'content'" class="text-gray-500 hover:text-gray-700 font-medium text-sm">
+                            ← Back: Content
+                        </button>
+                        <button type="button" @click="activeTab = 'preview'" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg text-sm transition">
+                            Next: Preview →
+                        </button>
+                    </div>
                 </div>
 
-                <div class="flex justify-end">
-                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save Banner Settings</button>
+                {{-- TAB 4: Preview All Modal Types --}}
+                <div class="s-card p-6 mb-6" x-show="enabled && activeTab === 'preview'" x-cloak x-data="{ color: '{{ $currentColor }}' }" @color-change.window="color = $event.detail">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="s-section-title mb-0">Modal Previews</p>
+                        <div class="flex gap-2 text-xs">
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded">With Image</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded">Solid Color</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4">Showing all 5 template variations with your selected color</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        @php
+                        $demoImages = [
+                            'promo' => 'https://images.unsplash.com/photo-1502005229766-52727ba04431?w=400',
+                            'newsletter' => 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400',
+                            'offer' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400',
+                        ];
+                        $colorMap = ['red' => 'from-red-500 to-red-600', 'blue' => 'from-blue-500 to-blue-600', 'green' => 'from-emerald-500 to-emerald-600', 'orange' => 'from-orange-500 to-orange-600', 'purple' => 'from-purple-500 to-purple-600', 'pink' => 'from-pink-500 to-pink-600', 'indigo' => 'from-indigo-500 to-indigo-600', 'teal' => 'from-teal-500 to-teal-600', 'amber' => 'from-amber-500 to-amber-600', 'slate' => 'from-slate-600 to-slate-700'];
+                        $currentColor = $settings['banners']['primary_color'] ?? 'red';
+                        @endphp
+
+                        @foreach($bannerTypes as $key => $type)
+                        @php $hasImage = in_array($key, ['promo', 'newsletter', 'offer']); @endphp
+                        <div class="relative">
+                            <div class="absolute -top-3 left-3 bg-gray-900 text-white text-[10px] px-2 py-1 rounded font-medium z-10">{{ $type['name'] }}</div>
+                            
+                            <div class="w-full bg-white rounded-2xl shadow-xl overflow-hidden" :class="selected === '{{ $key }}' ? 'ring-2 ring-red-500' : ''">
+                                @if($hasImage)
+                                {{-- With Image Background --}}
+                                <div class="relative h-40">
+                                    <img src="{{ $demoImages[$key] ?? '' }}" alt="" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
+                                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $type['icon'] }}"/></svg>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-white font-bold text-lg">{{ $settings['banners']['title'] ?? $type['name'] }}</h3>
+                                                <p class="text-white/80 text-xs">Background image version</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @else
+                                {{-- Solid Color Background --}}
+                                <div class="h-24 bg-gradient-to-r {{ $colorMap[$currentColor] }} flex items-center px-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $type['icon'] }}"/></svg>
+                                        </div>
+                                        <h3 class="text-white font-bold text-lg">{{ $settings['banners']['title'] ?? $type['name'] }}</h3>
+                                    </div>
+                                </div>
+                                @endif
+                                
+                                <div class="p-4">
+                                    @if($key === 'newsletter')
+                                    <p class="text-gray-600 text-sm mb-3">Get exclusive deals delivered to your inbox</p>
+                                    <div class="flex gap-2">
+                                        <input type="email" placeholder="Enter your email" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" disabled>
+                                        <button class="px-4 py-2 bg-gradient-to-r {{ $colorMap[$currentColor] }} text-white rounded-lg font-semibold text-sm">Subscribe</button>
+                                    </div>
+                                    @else
+                                    <p class="text-gray-600 text-sm mb-3">{{ $settings['banners']['message'] ?? 'Special promotional message goes here' }}</p>
+                                    <div class="flex gap-2">
+                                        <button class="flex-1 bg-gradient-to-r {{ $colorMap[$currentColor] }} text-white py-2 rounded-lg font-semibold text-sm">{{ $settings['banners']['button_text'] ?? 'Get Started' }}</button>
+                                        <button class="px-3 py-2 text-gray-500 text-sm">Maybe later</button>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            @if($hasImage)
+                            <div class="absolute top-2 right-2 bg-green-500 text-white text-[10px] px-2 py-0.5 rounded">With Image</div>
+                            @else
+                            <div class="absolute top-2 right-2 bg-gray-500 text-white text-[10px] px-2 py-0.5 rounded">No Image</div>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    
+                    <p class="text-xs text-gray-400 mt-4">Preview shows demo images. Actual banner will use your selected image (or solid color if none)</p>
+                </div>
+
+                    {{-- Navigation & Save --}}
+                    <div class="flex justify-between items-center mt-6 pt-4 border-t">
+                        <button type="button" @click="activeTab = 'display'" class="text-gray-500 hover:text-gray-700 font-medium text-sm">
+                            ← Back: Display
+                        </button>
+                        <div class="flex gap-3">
+                            <button type="button" @click="activeTab = 'template'" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-2">
+                                Start Over
+                            </button>
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">
+                                Save Banner Settings
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </form>
             @endif

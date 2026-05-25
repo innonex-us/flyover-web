@@ -36,14 +36,57 @@ class AppServiceProvider extends ServiceProvider
                 Config::set('mail.from.name',                         $email['mail_from_name']   ?? '');
             }
 
-            // ── bKash ────────────────────────────────────────────────────────
+            // ── Payment Gateways ─────────────────────────────────────────────
             $payment = Setting::getGroup('payment');
 
+            // bKash
             if (!empty($payment['bkash_app_key'])) {
                 Config::set('services.bkash.app_key',    $payment['bkash_app_key']);
                 Config::set('services.bkash.app_secret', $payment['bkash_app_secret'] ?? '');
                 Config::set('services.bkash.username',   $payment['bkash_username']   ?? '');
                 Config::set('services.bkash.password',   $payment['bkash_password']   ?? '');
+            }
+
+            // Nagad
+            if (!empty($payment['nagad_merchant_id'])) {
+                Config::set('services.nagad.merchant_id',  $payment['nagad_merchant_id']);
+                Config::set('services.nagad.public_key',   $payment['nagad_public_key']  ?? '');
+                Config::set('services.nagad.private_key',  $payment['nagad_private_key'] ?? '');
+                Config::set('services.nagad.sandbox',      ($payment['nagad_sandbox'] ?? '1') === '1');
+            }
+
+            // Rocket (DBBL)
+            if (!empty($payment['rocket_merchant_number'])) {
+                Config::set('services.rocket.merchant_number', $payment['rocket_merchant_number']);
+                Config::set('services.rocket.api_key',         $payment['rocket_api_key']    ?? '');
+                Config::set('services.rocket.api_secret',      $payment['rocket_api_secret'] ?? '');
+            }
+
+            // SSL Commerce
+            if (!empty($payment['ssl_store_id'])) {
+                Config::set('services.sslcommerz.store_id',       $payment['ssl_store_id']);
+                Config::set('services.sslcommerz.store_password',  $payment['ssl_store_password'] ?? '');
+                Config::set('services.sslcommerz.sandbox',         ($payment['ssl_sandbox'] ?? '1') === '1');
+            }
+
+            // Stripe
+            if (!empty($payment['stripe_secret_key'])) {
+                Config::set('services.stripe.key',            $payment['stripe_publishable_key'] ?? '');
+                Config::set('services.stripe.secret',         $payment['stripe_secret_key']);
+                Config::set('services.stripe.webhook_secret', $payment['stripe_webhook_secret']  ?? '');
+            }
+
+            // PayPal
+            if (!empty($payment['paypal_client_id'])) {
+                Config::set('services.paypal.client_id',     $payment['paypal_client_id']);
+                Config::set('services.paypal.client_secret', $payment['paypal_client_secret'] ?? '');
+                Config::set('services.paypal.mode',          $payment['paypal_mode']          ?? 'sandbox');
+            }
+
+            // Razorpay
+            if (!empty($payment['razorpay_key_id'])) {
+                Config::set('services.razorpay.key_id',     $payment['razorpay_key_id']);
+                Config::set('services.razorpay.key_secret', $payment['razorpay_key_secret'] ?? '');
             }
 
             // ── General + Social → shared with all views ─────────────────────

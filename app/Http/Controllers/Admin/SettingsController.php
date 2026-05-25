@@ -42,13 +42,36 @@ class SettingsController extends Controller
             'password_symbols'    => '0',
         ],
         'payment' => [
-            'currency'           => 'BDT',
-            'bkash_app_key'      => '',
-            'bkash_app_secret'   => '',
-            'bkash_username'     => '',
-            'bkash_password'     => '',
-            'ssl_store_id'       => '',
-            'ssl_store_password' => '',
+            'currency'               => 'BDT',
+            // bKash
+            'bkash_app_key'          => '',
+            'bkash_app_secret'       => '',
+            'bkash_username'         => '',
+            'bkash_password'         => '',
+            // Nagad
+            'nagad_merchant_id'      => '',
+            'nagad_public_key'       => '',
+            'nagad_private_key'      => '',
+            'nagad_sandbox'          => '1',
+            // Rocket (DBBL)
+            'rocket_merchant_number' => '',
+            'rocket_api_key'         => '',
+            'rocket_api_secret'      => '',
+            // SSL Commerce
+            'ssl_store_id'           => '',
+            'ssl_store_password'     => '',
+            'ssl_sandbox'            => '1',
+            // Stripe
+            'stripe_publishable_key' => '',
+            'stripe_secret_key'      => '',
+            'stripe_webhook_secret'  => '',
+            // PayPal
+            'paypal_client_id'       => '',
+            'paypal_client_secret'   => '',
+            'paypal_mode'            => 'sandbox',
+            // Razorpay
+            'razorpay_key_id'        => '',
+            'razorpay_key_secret'    => '',
         ],
         'social' => [
             'facebook'  => '',
@@ -66,16 +89,17 @@ class SettingsController extends Controller
             'stat_destinations'          => '62',
         ],
         'banners' => [
-            'enabled'       => '0',
-            'type'          => 'promo',
-            'title'         => 'Special Offer!',
-            'message'       => 'Get 20% off on all bookings this week. Use code SUMMER20',
-            'button_text'   => 'Book Now',
-            'link'          => '/tours',
-            'image'         => '',
-            'delay'         => '1',
-            'frequency'     => 'once',
-            'pages'         => 'home',
+            'enabled'        => '0',
+            'type'           => 'promo',
+            'title'          => 'Special Offer!',
+            'message'        => 'Get 20% off on all bookings this week. Use code SUMMER20',
+            'button_text'    => 'Book Now',
+            'link'           => '/tours',
+            'image'          => '',
+            'primary_color'  => 'red',
+            'delay'          => '1',
+            'frequency'      => 'once',
+            'pages'          => 'home',
         ],
     ];
 

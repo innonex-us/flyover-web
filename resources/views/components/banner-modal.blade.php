@@ -7,9 +7,40 @@ $message = $banners['message'] ?? '';
 $button = $banners['button_text'] ?? 'Book Now';
 $link = $banners['link'] ?? '/tours';
 $image = $banners['image'] ?? '';
+$primaryColor = $banners['primary_color'] ?? 'red';
 $delay = (float)($banners['delay'] ?? '1');
 $frequency = $banners['frequency'] ?? 'once';
 $pages = $banners['pages'] ?? 'home';
+
+// Color maps
+$colorGradients = [
+    'red' => 'from-red-600 to-red-700',
+    'blue' => 'from-blue-600 to-blue-700',
+    'green' => 'from-emerald-600 to-emerald-700',
+    'orange' => 'from-amber-500 to-orange-600',
+    'purple' => 'from-purple-600 to-purple-700',
+    'pink' => 'from-pink-500 to-pink-600',
+    'indigo' => 'from-indigo-600 to-indigo-700',
+    'teal' => 'from-teal-600 to-teal-700',
+    'amber' => 'from-amber-500 to-amber-600',
+    'slate' => 'from-gray-800 to-gray-900',
+];
+
+$colorButtons = [
+    'red' => 'bg-red-600 hover:bg-red-700',
+    'blue' => 'bg-blue-600 hover:bg-blue-700',
+    'green' => 'bg-emerald-600 hover:bg-emerald-700',
+    'orange' => 'bg-amber-500 hover:bg-orange-600',
+    'purple' => 'bg-purple-600 hover:bg-purple-700',
+    'pink' => 'bg-pink-500 hover:bg-pink-600',
+    'indigo' => 'bg-indigo-600 hover:bg-indigo-700',
+    'teal' => 'bg-teal-600 hover:bg-teal-700',
+    'amber' => 'bg-amber-500 hover:bg-amber-600',
+    'slate' => 'bg-white hover:bg-gray-100',
+];
+
+$selectedGradient = $colorGradients[$primaryColor] ?? $colorGradients['red'];
+$selectedButton = $colorButtons[$primaryColor] ?? $colorButtons['red'];
 
 // Check page restrictions
 $currentRoute = request()->route()?->getName();
@@ -18,16 +49,16 @@ if ($pages === 'tours' && !str_starts_with($currentRoute ?? '', 'tours')) return
 
 if (!$enabled || !$message) return;
 
-// 5 Banner Types Configuration
+// 5 Banner Types Configuration with customizable colors
 $bannerTypes = [
     'promo' => [
         'name' => 'Special Promotion',
         'overlay' => 'bg-black/60',
         'modal' => 'bg-white',
-        'header' => 'bg-gradient-to-r from-red-600 to-red-700',
+        'header' => 'bg-gradient-to-r ' . $selectedGradient,
         'title' => 'text-white',
         'message' => 'text-gray-600',
-        'button' => 'bg-red-600 hover:bg-red-700 text-white',
+        'button' => $selectedButton . ' text-white',
         'close' => 'text-white/80 hover:text-white',
         'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
     ],
@@ -35,10 +66,10 @@ $bannerTypes = [
         'name' => 'Newsletter Signup',
         'overlay' => 'bg-black/60',
         'modal' => 'bg-white',
-        'header' => 'bg-gradient-to-r from-blue-600 to-blue-700',
+        'header' => 'bg-gradient-to-r ' . $selectedGradient,
         'title' => 'text-white',
         'message' => 'text-gray-600',
-        'button' => 'bg-blue-600 hover:bg-blue-700 text-white',
+        'button' => $selectedButton . ' text-white',
         'close' => 'text-white/80 hover:text-white',
         'icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
         'has_email' => true,
@@ -47,10 +78,10 @@ $bannerTypes = [
         'name' => 'Limited Offer',
         'overlay' => 'bg-black/60',
         'modal' => 'bg-white',
-        'header' => 'bg-gradient-to-r from-amber-500 to-orange-600',
+        'header' => 'bg-gradient-to-r ' . $selectedGradient,
         'title' => 'text-white',
         'message' => 'text-gray-600',
-        'button' => 'bg-amber-500 hover:bg-orange-600 text-white',
+        'button' => $selectedButton . ' text-white',
         'close' => 'text-white/80 hover:text-white',
         'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
     ],
@@ -58,22 +89,22 @@ $bannerTypes = [
         'name' => 'Big Discount',
         'overlay' => 'bg-black/60',
         'modal' => 'bg-white',
-        'header' => 'bg-gradient-to-r from-emerald-600 to-emerald-700',
+        'header' => 'bg-gradient-to-r ' . $selectedGradient,
         'title' => 'text-white',
         'message' => 'text-gray-600',
-        'button' => 'bg-emerald-600 hover:bg-emerald-700 text-white',
+        'button' => $selectedButton . ' text-white',
         'close' => 'text-white/80 hover:text-white',
         'icon' => 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z',
     ],
     'announcement' => [
         'name' => 'Announcement',
         'overlay' => 'bg-black/70',
-        'modal' => 'bg-gray-900 border border-gray-700',
-        'header' => 'bg-gradient-to-r from-gray-800 to-gray-900',
-        'title' => 'text-white',
-        'message' => 'text-gray-300',
-        'button' => 'bg-white hover:bg-gray-100 text-gray-900',
-        'close' => 'text-gray-400 hover:text-white',
+        'modal' => $primaryColor === 'slate' ? 'bg-gray-900 border border-gray-700' : 'bg-white',
+        'header' => 'bg-gradient-to-r ' . $selectedGradient,
+        'title' => $primaryColor === 'slate' ? 'text-white' : 'text-white',
+        'message' => $primaryColor === 'slate' ? 'text-gray-300' : 'text-gray-600',
+        'button' => $primaryColor === 'slate' ? 'bg-white hover:bg-gray-100 text-gray-900' : $selectedButton . ' text-white',
+        'close' => $primaryColor === 'slate' ? 'text-gray-400 hover:text-white' : 'text-white/80 hover:text-white',
         'icon' => 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z',
     ],
 ];
