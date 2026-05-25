@@ -6,6 +6,9 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Package;
 use App\Models\Visa;
+use App\Models\Hotel;
+use App\Models\HotelRoom;
+use App\Models\TransferRoute;
 
 class DatabaseSeeder extends Seeder
 {
@@ -94,6 +97,11 @@ Refund
 50% of the fees will be refunded if the booking is canceled within Fourteen (14) to Twenty-One (21) days before the beginning of the experience/tour.
 30% of the tour fee will be refunded if the booking is canceled within Seven (7) to Fourteen (14) days before the beginning of the experience/tour.
 Refund will not be provided if the tour is cancelled less than Seven (7) days before the beginning of the experience/tour.",
+        ]);
+
+        $this->call([
+            HotelSeeder::class,
+            TransferRouteSeeder::class,
         ]);
 
         // Seed Visas with Rich Data

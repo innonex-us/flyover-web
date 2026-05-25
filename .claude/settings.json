@@ -29,7 +29,12 @@
       "Bash(convert logo.png -threshold 50% -trim -format \"%wx%h%O\" info:)",
       "Bash(convert logo.png txt:-)",
       "Bash(convert logo.png -threshold 80% -morphology Erode Rectangle:1x100 -trim -format \"Trim offset: %O, size: %wx%h\" info:)",
-      "Bash(node -e ':*)"
+      "Bash(node -e ':*)",
+      "Bash(php -r ':*)",
+      "Bash(mysql -u root flyoverbd -e \"DROP TABLE IF EXISTS push_subscriptions;\")"
+    ],
+    "additionalDirectories": [
+      "/Users/rokon-dev/Desktop/innonexus-projects/innonexus/flyoverbd2"
     ]
   }
 }

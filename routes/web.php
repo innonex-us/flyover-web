@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Push Notification Subscriptions
+Route::post('/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'store'])->name('push.subscribe');
+Route::post('/push/unsubscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'destroy'])->name('push.unsubscribe');
+
 // Short Link Redirect
 Route::get('/s/{code}', [App\Http\Controllers\ShortLinkController::class, 'redirect'])->name('short-link.redirect');
 
@@ -144,7 +148,11 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::resource('hotels.rooms', \App\Http\Controllers\Admin\HotelRoomController::class);
     Route::resource('hotel-bookings', \App\Http\Controllers\Admin\HotelBookingController::class)->only(['index', 'show', 'update', 'destroy']);
 
-    // Notifications
+    // Push Notifications (Marketing)
+    Route::get('/push-notifications', [\App\Http\Controllers\Admin\PushNotificationController::class, 'index'])->name('push-notifications.index');
+    Route::post('/push-notifications/send', [\App\Http\Controllers\Admin\PushNotificationController::class, 'send'])->name('push-notifications.send');
+
+    // In-App Notifications
     Route::get('/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllRead'])->name('notifications.read-all');

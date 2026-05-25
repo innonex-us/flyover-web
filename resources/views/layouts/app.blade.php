@@ -389,6 +389,54 @@
 
     @stack('scripts')
 
+    {{-- Browser Push Notification subscription --}}
+    <script>
+    (function(){
+        if(!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+
+        const VAPID_PUBLIC = '{{ env('VAPID_PUBLIC_KEY') }}';
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const raw = window.atob(base64);
+            return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+        }
+
+        navigator.serviceWorker.register('/sw.js').then(function(reg) {
+            return reg.pushManager.getSubscription().then(function(existing) {
+                if (existing) return; // already subscribed
+
+                // Ask after 3 s to avoid annoying on landing
+                setTimeout(function() {
+                    Notification.requestPermission().then(function(permission) {
+                        if (permission !== 'granted') return;
+                        reg.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC),
+                        }).then(function(sub) {
+                            const key  = sub.getKey('p256dh');
+                            const auth = sub.getKey('auth');
+                            fetch('{{ route('push.subscribe') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.content ?? '',
+                                },
+                                body: JSON.stringify({
+                                    endpoint:   sub.endpoint,
+                                    public_key: btoa(String.fromCharCode(...new Uint8Array(key))),
+                                    auth_token: btoa(String.fromCharCode(...new Uint8Array(auth))),
+                                }),
+                            });
+                        });
+                    });
+                }, 3000);
+            });
+        });
+    })();
+    </script>
+
     <!-- ═══════════════════════════════════════
          MOBILE BOTTOM NAVIGATION BAR
     ═══════════════════════════════════════ -->
@@ -555,6 +603,8 @@
 <!-- Cookie Consent -->
     <x-cookie-consent />
     
+    <!-- Toast Notifications -->
+    <x-toast-notifications />
 </body>
 
 </html>
