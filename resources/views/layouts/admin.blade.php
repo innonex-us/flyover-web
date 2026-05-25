@@ -338,6 +338,11 @@
 
                 {{-- Notification Bell (cached count, cached list) --}}
                 @php
+                    $hasNotifRoutes = Route::has('admin.notifications.lazy') && Route::has('admin.notifications.read-all') && Route::has('admin.notifications.read') && Route::has('admin.notifications.index');
+                @endphp
+
+                @if($hasNotifRoutes)
+                @php
                     $notifications = cache()->remember('admin_notif_list_' . auth()->id(), 60, function () {
                         return auth()->user()->notifications()->latest()->take(10)->get();
                     });
@@ -424,6 +429,7 @@
                             <a href="{{ route('admin.notifications.index') }}" class="text-xs font-semibold text-red-600 hover:text-red-700 transition">View all notifications &rarr;</a>
                         </div>
                     </div>
+                @endif
                 </div>
 
                 <div class="relative" x-data="{ userOpen: false }">

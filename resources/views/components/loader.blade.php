@@ -331,6 +331,21 @@
     var dots    = document.getElementById('fol-dots');
     if (!loader) return;
 
+    function markSeen() {
+        if (document.cookie.indexOf('flyover_home_loader_seen=') !== -1) return;
+
+        var maxAge = 60 * 60 * 24 * 365;
+        var cookie = 'flyover_home_loader_seen=1; path=/; max-age=' + maxAge + '; samesite=lax';
+
+        if (window.location.protocol === 'https:') {
+            cookie += '; secure';
+        }
+
+        document.cookie = cookie;
+    }
+
+    markSeen();
+
     /* ── Globe constants (pixel-exact from logo.png) ──────────
      * Logo: 400×130 px  |  Globe: cx=200, cy=48, r=42
      * SVG displayed 300px wide  →  SCALE = 300/400 = 0.75

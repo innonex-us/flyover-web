@@ -53,7 +53,9 @@
 
 <body class="font-sans antialiased text-gray-900 bg-gray-50 pb-[72px] md:pb-0">
 
-    @include('components.loader')
+    @if (request()->routeIs('home') && !request()->cookie('flyover_home_loader_seen'))
+        @include('components.loader')
+    @endif
 
     <div class="min-h-screen flex flex-col">
         <!-- Navigation -->
