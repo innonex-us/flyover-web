@@ -33,7 +33,7 @@
                     setTimeout(() => this.addToast('info', @json(session('info'))), 100);
                 @endif
 
-                @if($errors->any())
+                @if(isset($errors) && $errors->any())
                     @foreach($errors->all() as $error)
                         setTimeout(() => this.addToast('error', @json($error)), 100);
                     @endforeach

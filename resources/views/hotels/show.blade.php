@@ -6,7 +6,7 @@
     {{-- Hotel Hero --}}
     @if($hotel->thumbnail)
     <div class="w-full h-72 md:h-[420px] overflow-hidden relative">
-        <img src="{{ Storage::url($hotel->thumbnail) }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover">
+        <img src="{{ Str::startsWith($hotel->thumbnail, 'http') ? $hotel->thumbnail : Storage::url($hotel->thumbnail) }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover">
         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);"></div>
         <div class="absolute bottom-0 left-0 right-0 px-4 sm:px-6 lg:px-8 pb-8 max-w-5xl mx-auto">
             <a href="{{ route('hotels.index') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-white/80 hover:text-white mb-4 transition">
@@ -129,7 +129,7 @@
                         @foreach($hotel->rooms as $room)
                         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition">
                             @if($room->image)
-                                <img src="{{ Storage::url($room->image) }}" alt="{{ $room->name }}" class="w-full h-44 object-cover">
+                                <img src="{{ $room->image ? (Str::startsWith($room->image, 'http') ? $room->image : Storage::url($room->image)) : $hotelDefault }}" alt="{{ $room->name }}" class="w-full h-44 object-cover">
                             @endif
                             <div class="p-5">
                                 <div class="flex items-start justify-between mb-2">

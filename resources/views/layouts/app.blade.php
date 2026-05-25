@@ -396,6 +396,9 @@
 
         const VAPID_PUBLIC = '{{ env('VAPID_PUBLIC_KEY') }}';
 
+        // Only attempt push subscription if VAPID key is configured
+        if (!VAPID_PUBLIC || VAPID_PUBLIC.trim() === '') return;
+
         function urlBase64ToUint8Array(base64String) {
             const padding = '='.repeat((4 - base64String.length % 4) % 4);
             const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -429,10 +432,17 @@
                                     auth_token: btoa(String.fromCharCode(...new Uint8Array(auth))),
                                 }),
                             });
+                        }).catch(function(err) {
+                            // Push subscription failed (e.g. no push service, invalid VAPID key)
+                            // This is expected in local dev without proper VAPID configuration
+                            console.warn('Push subscription not available:', err.message);
                         });
                     });
                 }, 3000);
             });
+        }).catch(function(err) {
+            // Service worker registration failed
+            console.warn('Service worker registration failed:', err.message);
         });
     })();
     </script>

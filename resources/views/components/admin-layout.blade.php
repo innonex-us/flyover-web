@@ -481,7 +481,7 @@
             @if(session('error'))
                 this.notify('{{ addslashes(session('error')) }}', 'error');
             @endif
-            @if($errors->any())
+            @if(isset($errors) && $errors->any())
                 this.notify('Please check the form for errors.', 'error');
             @endif
         },
