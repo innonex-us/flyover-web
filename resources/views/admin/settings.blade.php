@@ -61,6 +61,7 @@
                         'security' => ['label'=>'Security', 'icon'=>'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'],
                         'payment'  => ['label'=>'Payment',  'icon'=>'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'],
                         'social'   => ['label'=>'Social',   'icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'],
+                        'stats'    => ['label'=>'Stats',    'icon'=>'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
                     ];
                     @endphp
                     @foreach($tabs as $key => $tab)
@@ -320,6 +321,47 @@
                 </div>
                 <div class="flex justify-end mt-4">
                     <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save Social Settings</button>
+                </div>
+            </form>
+            @endif
+
+            {{-- ── STATS ── --}}
+            @if($g === 'stats')
+            <form method="POST" action="{{ route('admin.settings.update', 'stats') }}">
+                @csrf
+                <div class="s-card p-6 sm:p-8">
+                    <p class="s-section-title">Public Trust Bar Stats</p>
+                    <p class="text-xs text-gray-400 mb-5">These values appear on the homepage trust bar and About page. Travellers, Destinations, and Visa Approval are auto-calculated from real DB data — use the fields below as fallbacks or overrides when real data is zero.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="s-label">Star Rating <span class="font-normal text-gray-400">(e.g. 4.8)</span></label>
+                            <input type="text" name="stat_rating" value="{{ old('stat_rating', $settings['stats']['stat_rating'] ?? '4.8') }}" class="s-input" placeholder="4.8">
+                            <p class="s-hint">Shown as "4.8★ Rating" — update manually or integrate a reviews API.</p>
+                        </div>
+                        <div>
+                            <label class="s-label">Visa Approval Rate Fallback <span class="font-normal text-gray-400">(%)</span></label>
+                            <input type="text" name="stat_visa_approval_rate" value="{{ old('stat_visa_approval_rate', $settings['stats']['stat_visa_approval_rate'] ?? '94.2') }}" class="s-input" placeholder="94.2">
+                            <p class="s-hint">Used only when no visa booking records exist yet.</p>
+                        </div>
+                        <div>
+                            <label class="s-label">Travellers Display Fallback</label>
+                            <input type="text" name="stat_travellers_display" value="{{ old('stat_travellers_display', $settings['stats']['stat_travellers_display'] ?? '1.2M+') }}" class="s-input" placeholder="1.2M+">
+                            <p class="s-hint">Shown when total bookings + offset is zero (e.g. fresh install).</p>
+                        </div>
+                        <div>
+                            <label class="s-label">Travellers Historic Offset</label>
+                            <input type="number" name="stat_travellers_offset" value="{{ old('stat_travellers_offset', $settings['stats']['stat_travellers_offset'] ?? '0') }}" class="s-input" placeholder="0" min="0">
+                            <p class="s-hint">Added to DB booking count to represent pre-digital history (e.g. 10000).</p>
+                        </div>
+                        <div>
+                            <label class="s-label">Destinations Fallback</label>
+                            <input type="number" name="stat_destinations" value="{{ old('stat_destinations', $settings['stats']['stat_destinations'] ?? '62') }}" class="s-input" placeholder="62" min="0">
+                            <p class="s-hint">Used when no active packages or visas exist in the database.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-4">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save Stats Settings</button>
                 </div>
             </form>
             @endif

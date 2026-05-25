@@ -79,7 +79,9 @@ Route::prefix('api/analytics')->name('analytics.')->group(function () {
 
 
 // Static Pages
-Route::view('/about', 'pages.about')->name('about');
+Route::get('/about', function () {
+    return view('pages.about', ['siteStats' => \App\Helpers\SiteStats::get()]);
+})->name('about');
 Route::get('/contact', function () {
     return view('pages.contact');
 })->name('contact');

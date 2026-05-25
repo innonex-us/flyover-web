@@ -436,47 +436,49 @@
                 <template x-if="tab==='transfers'">
                     <div class="bg-white rounded-3xl shadow-2xl shadow-black/25 p-4 text-left">
                         <div class="flex flex-col gap-3">
-                            {{-- Pickup --}}
-                            <div class="flex items-center px-3 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Pickup</p>
-                                    <input type="text" name="pickup" x-model="query" placeholder="Dhaka Airport, Cox's Bazar…"
-                                           class="w-full text-gray-800 text-sm border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent" autocomplete="off">
-                                </div>
-                            </div>
-                            {{-- Drop-off --}}
-                            <div class="flex items-center px-3 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                                <svg class="w-4 h-4 text-red-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Drop-off</p>
-                                    <input type="text" name="drop" placeholder="Hotel, destination…"
-                                           class="w-full text-gray-800 text-sm border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent" autocomplete="off">
-                                </div>
-                            </div>
-                            {{-- Date + Passengers --}}
-                            <div class="grid grid-cols-2 gap-2">
-                                <button type="button" @click.stop="openCal('travelDate')"
-                                        class="flex items-center gap-2 px-3 py-3 bg-gray-50 border rounded-xl transition-all text-left"
-                                        :class="calOpen==='travelDate' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
-                                    <svg class="w-4 h-4 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                    <div class="min-w-0">
-                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Date</p>
-                                        <p class="text-sm font-semibold text-gray-700 truncate" x-text="travelDate ? fmtDateShort(travelDate) : 'Select'"></p>
-                                    </div>
-                                </button>
-                                <div class="flex items-center gap-2 px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl">
-                                    <svg class="w-4 h-4 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            {{-- Pickup + Drop-off + Passengers in 3-column grid like Hotels --}}
+                            <div class="grid grid-cols-3 gap-2">
+                                {{-- Pickup --}}
+                                <div class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all col-span-1">
+                                    <svg class="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Passengers</p>
-                                        <div class="flex items-center gap-1 mt-0.5">
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">Pickup</p>
+                                        <input type="text" name="pickup" x-model="query" placeholder="From..."
+                                               class="w-full text-gray-800 text-sm border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent truncate" autocomplete="off">
+                                    </div>
+                                </div>
+                                {{-- Drop-off --}}
+                                <div class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all col-span-1">
+                                    <svg class="w-3.5 h-3.5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">Drop-off</p>
+                                        <input type="text" name="drop" placeholder="To..."
+                                               class="w-full text-gray-800 text-sm border-0 p-0 focus:ring-0 outline-none placeholder-gray-400 bg-transparent truncate" autocomplete="off">
+                                    </div>
+                                </div>
+                                {{-- Passengers --}}
+                                <div class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border border-gray-200 rounded-xl col-span-1">
+                                    <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">Passengers</p>
+                                        <div class="flex items-center gap-1">
                                             <button type="button" @click.stop="passengers=Math.max(1,passengers-1)" class="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">−</button>
-                                            <span class="text-sm font-bold text-gray-800 w-5 text-center" x-text="passengers"></span>
+                                            <span class="text-sm font-bold text-gray-800 w-4 text-center" x-text="passengers"></span>
                                             <button type="button" @click.stop="passengers=Math.min(50,passengers+1)" class="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-red-600 font-bold text-base leading-none">+</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            {{-- Date selector --}}
+                            <button type="button" @click.stop="openCal('travelDate')"
+                                    class="flex items-center gap-2 px-3 py-3 bg-gray-50 border rounded-xl transition-all text-left w-full"
+                                    :class="calOpen==='travelDate' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
+                                <svg class="w-4 h-4 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <div class="min-w-0">
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Travel Date</p>
+                                    <p class="text-sm font-semibold text-gray-700 truncate" x-text="travelDate ? fmtDateShort(travelDate) : 'Select date'"></p>
+                                </div>
+                            </button>
                             {{-- inline calendar for transfer --}}
                             <div x-show="calOpen==='travelDate'"
                                  x-transition:enter="transition ease-out duration-150"
@@ -511,7 +513,7 @@
                                 </div>
                             </div>
                             <button @click="window.location='{{ route('transfers.index') }}?pickup='+encodeURIComponent(query)+'&travel_date='+fmtISO(travelDate)+'&passengers='+passengers"
-                                    class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3.5 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 flex items-center justify-center gap-2">
+                                    class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 Book Transfer
                             </button>
@@ -612,25 +614,25 @@
             <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
                 <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
             </div>
-            <span><strong class="text-gray-900">1.2M+</strong> Happy Travellers</span>
+            <span><strong class="text-gray-900">{{ $siteStats['travellers'] }}</strong> Happy Travellers</span>
         </div>
         <div class="flex items-center gap-2.5 text-gray-600">
             <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <span><strong class="text-gray-900">62</strong> Destinations</span>
+            <span><strong class="text-gray-900">{{ $siteStats['destinations'] }}</strong> Destinations</span>
         </div>
         <div class="flex items-center gap-2.5 text-gray-600">
             <div class="w-8 h-8 rounded-full bg-yellow-50 flex items-center justify-center">
                 <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
             </div>
-            <span><strong class="text-gray-900">4.8★</strong> Rating</span>
+            <span><strong class="text-gray-900">{{ $siteStats['rating'] }}★</strong> Rating</span>
         </div>
         <div class="flex items-center gap-2.5 text-gray-600">
             <div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center">
                 <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
             </div>
-            <span><strong class="text-gray-900">94.2%</strong> Visa Approval</span>
+            <span><strong class="text-gray-900">{{ $siteStats['visa_approval'] }}%</strong> Visa Approval</span>
         </div>
         <div class="flex items-center gap-2.5 text-gray-600">
             <div class="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">

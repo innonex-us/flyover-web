@@ -56,8 +56,15 @@
             <h2 class="font-extrabold text-3xl" style="font-family:'Merriweather',Georgia,serif;color:#FAF6EE;">Our Track Record</h2>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-px" style="background:#2E2720;">
-            @php $stats = [['1.2M+','Happy Travellers'],['5,000+','Visas Processed'],['62','Destinations'],['8+','Years Experience']]; @endphp
-            @foreach($stats as [$num,$label])
+            @php
+            $aboutStats = [
+                [$siteStats['travellers'],     'Happy Travellers'],
+                [$siteStats['visa_total'] > 0 ? number_format($siteStats['visa_total']) . '+' : '5,000+', 'Visas Processed'],
+                [$siteStats['destinations'],   'Destinations'],
+                [$siteStats['visa_approval'] . '%', 'Visa Approval Rate'],
+            ];
+            @endphp
+            @foreach($aboutStats as [$num, $label])
             <div class="text-center py-10 px-6" style="background:#18130E;">
                 <p class="font-extrabold text-4xl mb-1" style="color:#C8102E;">{{ $num }}</p>
                 <p class="text-sm font-medium" style="color:#A09890;">{{ $label }}</p>

@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SettingsController extends Controller
 {
-    private array $groups = ['general', 'email', 'security', 'payment', 'social'];
+    private array $groups = ['general', 'email', 'security', 'payment', 'social', 'stats'];
 
     private array $defaults = [
         'general' => [
@@ -57,6 +58,13 @@ class SettingsController extends Controller
             'youtube'   => '',
             'whatsapp'  => '',
         ],
+        'stats' => [
+            'stat_rating'                => '4.8',
+            'stat_visa_approval_rate'    => '94.2',
+            'stat_travellers_offset'     => '0',
+            'stat_travellers_display'    => '1.2M+',
+            'stat_destinations'          => '62',
+        ],
     ];
 
     public function show(string $group = 'general')
@@ -86,6 +94,10 @@ class SettingsController extends Controller
         foreach ($allowed as $key) {
             $value = $data[$key] ?? ($group === 'security' ? '0' : '');
             Setting::set($key, $value, $group);
+        }
+
+        if ($group === 'stats') {
+            Cache::forget('site_stats');
         }
 
         return redirect()->route('admin.settings.show', $group)

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Package;
 use App\Models\Visa;
 use App\Models\Post;
+use App\Helpers\SiteStats;
 
 class HomeController extends Controller
 {
@@ -44,6 +45,8 @@ class HomeController extends Controller
                 ->get();
         });
 
-        return view('home', compact('packages', 'visas', 'recentPosts'));
+        $siteStats = SiteStats::get();
+
+        return view('home', compact('packages', 'visas', 'recentPosts', 'siteStats'));
     }
 }
