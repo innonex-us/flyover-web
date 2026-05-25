@@ -151,7 +151,6 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     // Push Notifications (Marketing)
     Route::get('/push-notifications', [\App\Http\Controllers\Admin\PushNotificationController::class, 'index'])->name('push-notifications.index');
     Route::post('/push-notifications/send', [\App\Http\Controllers\Admin\PushNotificationController::class, 'send'])->name('push-notifications.send');
-    Route::post('/push-notifications/{endpointHash}/test', [\App\Http\Controllers\Admin\PushNotificationController::class, 'test'])->name('push-notifications.test');
 
     // In-App Notifications
     Route::get('/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');

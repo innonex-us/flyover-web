@@ -1,6 +1,6 @@
 <x-admin-layout title="Push Notifications">
 
-    <div class="p-6 max-w-2xl">
+    <div class="p-6 max-w-5xl mx-auto">
 
         {{-- Header --}}
         <div class="mb-6">
@@ -114,38 +114,62 @@
         </div>
 
         <div class="mt-6 bg-white rounded-2xl border border-gray-200 p-6">
-            <h2 class="text-base font-semibold text-gray-800 mb-2">Registered Subscriptions</h2>
-            <p class="text-sm text-gray-500 mb-4">These are the browser endpoints currently stored in the database. Use a test send to verify the exact browser that should receive notifications.</p>
+            <div class="flex items-start justify-between gap-4 mb-4">
+                <div>
+                    <h2 class="text-base font-semibold text-gray-800">Registered Subscriptions</h2>
+                    <p class="text-sm text-gray-500 mt-1">Stored browser endpoints that can receive push notifications.</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-2xl font-bold text-gray-900">{{ number_format($total) }}</p>
+                    <p class="text-xs uppercase tracking-wide text-gray-400">Active</p>
+                </div>
+            </div>
 
             @if($subscriptions->isEmpty())
                 <div class="text-sm text-gray-500 bg-gray-50 border border-dashed border-gray-200 rounded-xl p-4">
                     No stored push subscriptions yet.
                 </div>
             @else
-                <div class="space-y-3">
-                    @foreach($subscriptions as $subscription)
-                        <div class="border border-gray-200 rounded-xl p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                            <div class="min-w-0">
-                                <p class="text-sm font-semibold text-gray-900 truncate">{{ $subscription->user_agent ?? 'Unknown browser' }}</p>
-                                <p class="text-xs text-gray-500 mt-1 break-all">{{ $subscription->endpoint }}</p>
-                                <p class="text-[11px] text-gray-400 mt-1">Added {{ $subscription->created_at->diffForHumans() }}</p>
-                            </div>
-
-                            <form method="POST" action="{{ route('admin.push-notifications.test', $subscription->endpoint_hash) }}">
-                                @csrf
-                                <button type="submit" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition">
-                                    Send Test
-                                </button>
-                            </form>
-                        </div>
-                    @endforeach
+                <div class="overflow-hidden rounded-xl border border-gray-200">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Browser</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Endpoint</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Added</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                @foreach($subscriptions as $subscription)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-4 py-4 align-top">
+                                            <div class="flex items-start gap-3">
+                                                <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                                                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <p class="text-sm font-semibold text-gray-900 truncate">{{ $subscription->user_agent ?? 'Unknown browser' }}</p>
+                                                    <p class="text-xs text-gray-400 mt-0.5 truncate">{{ $subscription->endpoint_hash }}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-4 align-top">
+                                            <p class="text-xs text-gray-600 break-all leading-relaxed">{{ $subscription->endpoint }}</p>
+                                        </td>
+                                        <td class="px-4 py-4 align-top whitespace-nowrap">
+                                            <p class="text-sm text-gray-700">{{ $subscription->created_at->format('M d, Y') }}</p>
+                                            <p class="text-xs text-gray-400">{{ $subscription->created_at->diffForHumans() }}</p>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             @endif
-        </div>
-
-        {{-- Info box --}}
-        <div class="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl text-xs text-blue-700 leading-relaxed">
-            <strong>How it works:</strong> Visitors who click "Allow" on the browser permission prompt are added to the subscriber list automatically. Expired or revoked subscriptions are cleaned up on each send.
         </div>
 
     </div>

@@ -112,27 +112,4 @@ class PushNotificationController extends Controller
         return back()->with('success', "Sent to {$sent} subscriber(s). Failed: {$failed}.");
     }
 
-    public function test(Request $request, string $endpointHash)
-    {
-        $subscription = PushSubscription::all()->firstWhere('endpoint_hash', $endpointHash);
-
-        if (! $subscription) {
-            abort(404);
-        }
-
-        $payload = $this->buildPayload(
-            'Test Push Notification',
-            'This is a test notification from the admin panel.',
-            route('home'),
-            asset('logo.png')
-        );
-
-        ['sent' => $sent, 'failed' => $failed] = $this->deliverToSubscriptions(collect([$subscription]), $payload);
-
-        if ($sent > 0) {
-            return back()->with('success', 'Test push sent successfully to ' . ($subscription->user_agent ?? 'the selected subscriber') . '.');
-        }
-
-        return back()->with('error', 'Test push failed for the selected subscriber.');
-    }
 }
