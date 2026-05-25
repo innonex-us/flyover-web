@@ -11,7 +11,7 @@
 @endphp
 
 <x-app-layout
-    :title="$visa->country . ' ' . $visa->type . ' Visa | Apply Online | FlyoverBD'"
+    :title="$title"
     :meta_description="$visaDescription"
     :meta_image="$visaImage"
     :og_type="'product'"

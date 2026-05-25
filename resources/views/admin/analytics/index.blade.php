@@ -266,8 +266,13 @@
                                 </div>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <div class="text-gray-900">{{ $session['location'] }}</div>
-                                <div class="text-gray-500 text-xs">Session #{{ $session['id'] }}</div>
+                                <div class="text-gray-900 font-medium">{{ $session['location'] }}</div>
+                                <div class="text-gray-500 text-xs mt-0.5">
+                                    {{ $session['city'] }} · {{ $session['region'] }} · {{ $session['country'] }}
+                                </div>
+                                <div class="text-gray-400 text-[11px] mt-1">
+                                    {{ $session['country_code'] }} · Session #{{ $session['id'] }}
+                                </div>
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 <div class="text-gray-900 font-medium">{{ $session['ip_address'] }}</div>

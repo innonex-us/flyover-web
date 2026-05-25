@@ -32,7 +32,17 @@ class HotelController extends Controller
         $hotel->load(['rooms' => function ($q) {
             $q->where('is_active', true);
         }]);
-        return view('hotels.show', compact('hotel'));
+
+        $title = 'Hotel | ' . $hotel->name;
+        $meta_description = \Illuminate\Support\Str::limit(strip_tags($hotel->description ?? ''), 155);
+        if (! $meta_description) {
+            $meta_description = 'Book your stay at ' . $hotel->name . ' in ' . $hotel->location . '. FlyoverBD curated hotels.';
+        }
+        $meta_image = $hotel->thumbnail
+            ? (\Illuminate\Support\Str::startsWith($hotel->thumbnail, 'http') ? $hotel->thumbnail : \Illuminate\Support\Facades\Storage::url($hotel->thumbnail))
+            : asset('logo.png');
+
+        return view('hotels.show', compact('hotel', 'title', 'meta_description', 'meta_image'));
     }
 
     public function book(Request $request)

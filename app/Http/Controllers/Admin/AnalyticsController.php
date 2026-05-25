@@ -293,18 +293,26 @@ class AnalyticsController extends Controller
 
             $browserLabel = $visitor?->browser ?: ($visitor?->user_agent ? Str::limit($visitor->user_agent, 36) : 'Unknown browser');
             $deviceLabel = $visitor?->device_type ?: ($visitor?->is_mobile ? 'mobile' : ($visitor?->is_tablet ? 'tablet' : ($visitor?->is_desktop ? 'desktop' : 'Unknown device')));
-            $locationLabel = trim(implode(', ', array_filter([
+            $locationParts = array_filter([
                 $visitor?->city,
+                $visitor?->region,
                 $visitor?->country,
-            ]))) ?: 'Unknown location';
-            $pageTitle = data_get($latestPageView, 'title') ?: data_get($latestPageView, 'path') ?: 'Unknown page';
-            $pagePath = data_get($latestPageView, 'path') ?: '/';
+            ]);
+            $locationLabel = ! empty($locationParts)
+                ? implode(', ', $locationParts)
+                : 'Unknown location';
+            $pageTitle = data_get($latestPageView, 'title') ?: data_get($latestPageView, 'url') ?: 'Unknown page';
+            $pagePath = data_get($latestPageView, 'path') ?: parse_url((string) data_get($latestPageView, 'url', '/'), PHP_URL_PATH) ?: '/';
 
             return [
                 'id' => $session->id,
                 'browser' => $browserLabel,
                 'device_type' => $deviceLabel,
                 'location' => $locationLabel,
+                'city' => $visitor?->city ?: '-',
+                'region' => $visitor?->region ?: '-',
+                'country' => $visitor?->country ?: '-',
+                'country_code' => $visitor?->country_code ?: '-',
                 'ip_address' => $visitor?->ip_address ?: 'Unknown',
                 'page_title' => $pageTitle,
                 'page_path' => $pagePath,

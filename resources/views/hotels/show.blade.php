@@ -1,6 +1,7 @@
 <x-app-layout
-    :title="$hotel->name . ' | FlyoverBD'"
-    :meta_description="Str::limit($hotel->description ?? 'Book your stay at ' . $hotel->name . ' in ' . $hotel->location . '. FlyoverBD curated hotels.', 155)"
+    :title="$title"
+    :meta_description="$meta_description"
+    :meta_image="$meta_image"
 >
 
     {{-- Hotel Hero --}}

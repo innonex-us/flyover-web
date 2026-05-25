@@ -25,7 +25,7 @@ class VisaController extends Controller
         $visa = Visa::where('slug', $slug)->firstOrFail();
 
         // SEO Data
-        $title = $visa->country . ' Visa Processing - ' . $visa->type . ' | FlyoverBD';
+        $title = 'Visa | ' . trim($visa->country . ' ' . $visa->type);
         $meta_description = \Illuminate\Support\Str::limit(strip_tags($visa->description), 155);
         $meta_image = $visa->thumbnail 
             ? (\Illuminate\Support\Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : \Illuminate\Support\Facades\Storage::url($visa->thumbnail))

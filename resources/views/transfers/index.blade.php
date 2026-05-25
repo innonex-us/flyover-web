@@ -1,5 +1,5 @@
 <x-app-layout
-    title="Pick & Drop Transfer Service | FlyoverBD"
+    :title="$title"
     meta_description="Book hassle-free airport transfers and pick & drop services across Bangladesh. Fixed pricing, preset routes, or custom locations."
 >
 

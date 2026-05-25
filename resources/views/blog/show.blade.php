@@ -15,7 +15,7 @@
 @endphp
 
 <x-app-layout
-    :title="$post->title . ' | Blog | FlyoverBD'"
+    :title="$title"
     :meta_description="$blogDescription"
     :meta_image="$blogImage"
     :og_type="'article'"

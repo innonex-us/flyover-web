@@ -12,6 +12,8 @@ class TransferController extends Controller
 {
     public function index(Request $request)
     {
+        $title = 'Transfer | Pick & Drop Transfer Service';
+
         $routes = TransferRoute::active()
             ->when($request->filled('pickup') || $request->filled('drop'), function ($q) use ($request) {
                 $q->where(function ($sub) use ($request) {
@@ -24,7 +26,7 @@ class TransferController extends Controller
                 });
             })
             ->get();
-        return view('transfers.index', compact('routes'));
+        return view('transfers.index', compact('routes', 'title'));
     }
 
     public function store(Request $request)
