@@ -116,9 +116,9 @@
                 <section x-data="{
                     showBooking: false,
                     selectedRoom: null,
-                    checkIn: '',
-                    checkOut: '',
-                    guests: 1,
+                    checkIn: '{{ request('check_in') }}',
+                    checkOut: '{{ request('check_out') }}',
+                    guests: {{ request('persons', 1) }},
                     get nights() {
                         if (!this.checkIn || !this.checkOut) return 0;
                         const d = (new Date(this.checkOut) - new Date(this.checkIn)) / 86400000;
@@ -130,7 +130,6 @@
                     },
                     openBooking(room) {
                         this.selectedRoom = room;
-                        this.guests = 1;
                         this.showBooking = true;
                     },
                     submitting: false,

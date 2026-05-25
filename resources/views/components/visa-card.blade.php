@@ -6,7 +6,7 @@
         : Storage::url($visa->thumbnail);
 @endphp
 
-<a href="{{ route('visas.show', $visa->slug) }}" class="group block bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 h-full flex flex-col">
+<a href="{{ route('visas.show', $visa->slug) }}" class="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 h-full flex flex-col">
     <div class="relative h-56 overflow-hidden">
         <div class="absolute inset-0 bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700 ease-out"
              style="background-image: url('{{ $thumbnail }}');">
