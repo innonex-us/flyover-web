@@ -252,8 +252,12 @@
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition overflow-hidden group">
                 <div class="relative overflow-hidden">
                     @if($hotel->thumbnail)
-                        @php $thumbnail = Str::startsWith($hotel->thumbnail, 'http') ? $hotel->thumbnail : Storage::url($hotel->thumbnail); @endphp
-                        <img src="{{ $thumbnail }}" alt="{{ $hotel->name }}"
+                        @php
+                            $thumbnail = Str::startsWith($hotel->thumbnail, 'http')
+                                ? preg_replace('/&w=\d+/', '&w=600', preg_replace('/\?w=\d+/', '?w=600', $hotel->thumbnail))
+                                : Storage::url($hotel->thumbnail);
+                        @endphp
+                        <img src="{{ $thumbnail }}" alt="{{ $hotel->name }}" loading="lazy" decoding="async"
                             class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                     @else
                         <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">

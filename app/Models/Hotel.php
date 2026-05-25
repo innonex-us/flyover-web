@@ -15,6 +15,7 @@ class Hotel extends Model
         'location',
         'description',
         'thumbnail',
+        'gallery',
         'amenities',
         'star_rating',
         'is_active',
@@ -22,6 +23,7 @@ class Hotel extends Model
 
     protected $casts = [
         'amenities' => 'array',
+        'gallery'   => 'array',
         'is_active' => 'boolean',
         'star_rating' => 'decimal:1',
     ];

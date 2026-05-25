@@ -27,7 +27,8 @@ class HotelController extends Controller
             'name'        => 'required|string|max:255',
             'location'    => 'required|string|max:255',
             'description' => 'nullable|string',
-            'thumbnail'   => 'nullable|image|max:2048',
+            'thumbnail'   => 'nullable|image|max:4096',
+            'gallery.*'   => 'nullable|image|max:4096',
             'star_rating' => 'required|numeric|min:1|max:5',
             'amenities'   => 'nullable|string',
             'is_active'   => 'nullable|boolean',
@@ -44,6 +45,13 @@ class HotelController extends Controller
             $data['thumbnail'] = $request->file('thumbnail')->store('hotels', 'public');
         }
 
+        if ($request->hasFile('gallery')) {
+            $data['gallery'] = collect($request->file('gallery'))
+                ->map(fn ($file) => $file->store('hotels/gallery', 'public'))
+                ->values()
+                ->all();
+        }
+
         Hotel::create($data);
 
         return redirect()->route('admin.hotels.index')->with('success', 'Hotel created successfully.');
@@ -57,13 +65,16 @@ class HotelController extends Controller
     public function update(Request $request, Hotel $hotel)
     {
         $request->validate([
-            'name'        => 'required|string|max:255',
-            'location'    => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'thumbnail'   => 'nullable|image|max:2048',
-            'star_rating' => 'required|numeric|min:1|max:5',
-            'amenities'   => 'nullable|string',
-            'is_active'   => 'nullable|boolean',
+            'name'           => 'required|string|max:255',
+            'location'       => 'required|string|max:255',
+            'description'    => 'nullable|string',
+            'thumbnail'      => 'nullable|image|max:4096',
+            'gallery.*'      => 'nullable|image|max:4096',
+            'remove_gallery' => 'nullable|array',
+            'remove_gallery.*' => 'nullable|string',
+            'star_rating'    => 'required|numeric|min:1|max:5',
+            'amenities'      => 'nullable|string',
+            'is_active'      => 'nullable|boolean',
         ]);
 
         $data = $request->only(['name', 'location', 'description', 'star_rating']);
@@ -79,6 +90,25 @@ class HotelController extends Controller
             $data['thumbnail'] = $request->file('thumbnail')->store('hotels', 'public');
         }
 
+        $existingGallery = $hotel->gallery ?? [];
+
+        if ($request->filled('remove_gallery')) {
+            foreach ($request->remove_gallery as $path) {
+                Storage::disk('public')->delete($path);
+            }
+            $existingGallery = array_values(array_diff($existingGallery, $request->remove_gallery));
+        }
+
+        if ($request->hasFile('gallery')) {
+            $newImages = collect($request->file('gallery'))
+                ->map(fn ($file) => $file->store('hotels/gallery', 'public'))
+                ->values()
+                ->all();
+            $existingGallery = array_merge($existingGallery, $newImages);
+        }
+
+        $data['gallery'] = $existingGallery ?: null;
+
         $hotel->update($data);
 
         return redirect()->route('admin.hotels.index')->with('success', 'Hotel updated successfully.');
@@ -88,6 +118,9 @@ class HotelController extends Controller
     {
         if ($hotel->thumbnail) {
             Storage::disk('public')->delete($hotel->thumbnail);
+        }
+        if ($hotel->gallery) {
+            Storage::disk('public')->delete($hotel->gallery);
         }
         $hotel->delete();
         return redirect()->route('admin.hotels.index')->with('success', 'Hotel deleted successfully.');

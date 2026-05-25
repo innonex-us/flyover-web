@@ -109,7 +109,7 @@
 
                         <div>
                             <label class="input-label">Core Amenities (Comma Separated)</label>
-                            <input type="text" name="amenities" value="{{ old('amenities', $hotel->amenities) }}" placeholder="e.g. WiFi, Pool, Spa, Gym, Breakfast" class="custom-input text-xs">
+                            <input type="text" name="amenities" value="{{ old('amenities', is_array($hotel->amenities) ? implode(', ', $hotel->amenities) : $hotel->amenities) }}" placeholder="e.g. WiFi, Pool, Spa, Gym, Breakfast" class="custom-input text-xs">
                         </div>
                     </div>
                 </div>
@@ -118,11 +118,13 @@
             {{-- Sidebar --}}
             <div class="space-y-8">
                 <div class="form-card p-6">
-                    <h3 class="section-label">Visual Asset</h3>
-                    <div x-data="fileUploader">
+                    <h3 class="section-label">Visual Assets</h3>
+
+                    {{-- Thumbnail --}}
+                    <div x-data="fileUploader" class="mb-6">
                         <label class="input-label">Thumbnail Image</label>
                         @if($hotel->thumbnail)
-                            <div class="relative mb-3 group inline-block">
+                            <div class="relative mb-3 group inline-block w-full">
                                 <img src="{{ Storage::url($hotel->thumbnail) }}" class="w-full h-32 object-cover rounded-xl border border-gray-100 shadow-sm">
                             </div>
                         @endif
@@ -134,6 +136,42 @@
                             </div>
                             <button type="button" @click="clearSelection('thumbnail-input')" class="text-emerald-500 hover:text-red-500"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg></button>
                         </div>
+                    </div>
+
+                    {{-- Gallery --}}
+                    <div x-data="galleryUploader">
+                        <label class="input-label">Image Gallery <span class="text-gray-400 font-normal normal-case">(multiple)</span></label>
+
+                        {{-- Existing gallery images --}}
+                        @if($hotel->gallery && count($hotel->gallery) > 0)
+                            <div class="grid grid-cols-3 gap-2 mb-3">
+                                @foreach($hotel->gallery as $image)
+                                    <div class="relative group" x-data="{ marked: false }">
+                                        <img src="{{ Storage::url($image) }}" class="w-full h-16 object-cover rounded-lg border border-gray-100" :class="marked ? 'opacity-40 ring-2 ring-red-400' : ''">
+                                        <input type="checkbox" name="remove_gallery[]" value="{{ $image }}" x-model="marked" class="sr-only">
+                                        <button type="button" @click="marked = !marked" :class="marked ? 'bg-red-500 text-white' : 'bg-white text-gray-400 opacity-0 group-hover:opacity-100'" class="absolute top-0.5 right-0.5 rounded-full p-0.5 shadow transition">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tight mb-3">Click × to mark for removal on save</p>
+                        @endif
+
+                        <input type="file" name="gallery[]" id="gallery-input" @change="handleGalleryChange" accept="image/*" multiple class="w-full text-[10px] text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 transition">
+                        <template x-if="previews.length > 0">
+                            <div class="mt-3 grid grid-cols-3 gap-2">
+                                <template x-for="(src, i) in previews" :key="i">
+                                    <div class="relative group">
+                                        <img :src="src" class="w-full h-16 object-cover rounded-lg border border-gray-100">
+                                        <button type="button" @click="removePreview(i)" class="absolute top-0.5 right-0.5 bg-white rounded-full p-0.5 shadow opacity-0 group-hover:opacity-100 transition text-red-500 hover:text-red-700">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                        <p x-show="previews.length > 0" class="text-[9px] text-gray-400 font-bold uppercase tracking-tight mt-1" x-text="previews.length + ' new image(s) to add'"></p>
                     </div>
                 </div>
                 
@@ -168,6 +206,31 @@
         return {
             fileName: '', handleFileChange(e) { if (e.target.files.length > 0) this.fileName = e.target.files[0].name; },
             clearSelection(inputId) { const input = document.getElementById(inputId); if (input) { input.value = ''; this.fileName = ''; } }
+        }
+    }
+    function galleryUploader() {
+        return {
+            files: [], previews: [],
+            handleGalleryChange(e) {
+                const newFiles = Array.from(e.target.files);
+                newFiles.forEach(file => {
+                    this.files.push(file);
+                    const reader = new FileReader();
+                    reader.onload = (r) => this.previews.push(r.target.result);
+                    reader.readAsDataURL(file);
+                });
+                this.syncInput();
+            },
+            removePreview(index) {
+                this.files.splice(index, 1);
+                this.previews.splice(index, 1);
+                this.syncInput();
+            },
+            syncInput() {
+                const dt = new DataTransfer();
+                this.files.forEach(f => dt.items.add(f));
+                document.getElementById('gallery-input').files = dt.files;
+            }
         }
     }
 </script>

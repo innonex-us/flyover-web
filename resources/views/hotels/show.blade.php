@@ -7,7 +7,12 @@
     {{-- Hotel Hero --}}
     @if($hotel->thumbnail)
     <div class="w-full h-72 md:h-[420px] overflow-hidden relative">
-        <img src="{{ Str::startsWith($hotel->thumbnail, 'http') ? $hotel->thumbnail : Storage::url($hotel->thumbnail) }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover">
+@php
+            $heroSrc = Str::startsWith($hotel->thumbnail, 'http')
+                ? preg_replace('/&w=\d+/', '&w=1400', preg_replace('/\?w=\d+/', '?w=1400', $hotel->thumbnail))
+                : Storage::url($hotel->thumbnail);
+        @endphp
+        <img src="{{ $heroSrc }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover" fetchpriority="high" decoding="async">
         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);"></div>
         <div class="absolute bottom-0 left-0 right-0 px-4 sm:px-6 lg:px-8 pb-8 max-w-5xl mx-auto">
             <a href="{{ route('hotels.index') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-white/80 hover:text-white mb-4 transition">
@@ -74,10 +79,13 @@
                     $hotelDefault = asset('banner/hero-banner-1.png');
                     $hotelGallery = [];
                     if ($hotel->thumbnail) {
-                        $hotelGallery[] = \Illuminate\Support\Str::startsWith($hotel->thumbnail, 'http') ? $hotel->thumbnail : Storage::url($hotel->thumbnail);
+                        $thumbSrc = \Illuminate\Support\Str::startsWith($hotel->thumbnail, 'http')
+                            ? preg_replace('/&w=\d+/', '&w=900', preg_replace('/\?w=\d+/', '?w=900', $hotel->thumbnail))
+                            : Storage::url($hotel->thumbnail);
+                        $hotelGallery[] = $thumbSrc;
                     }
-                    if (!empty($hotel->images) && is_array($hotel->images)) {
-                        foreach ($hotel->images as $img) {
+                    if (!empty($hotel->gallery) && is_array($hotel->gallery)) {
+                        foreach ($hotel->gallery as $img) {
                             $hotelGallery[] = \Illuminate\Support\Str::startsWith($img, 'http') ? $img : Storage::url($img);
                         }
                     }
