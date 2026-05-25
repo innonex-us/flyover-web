@@ -66,7 +66,7 @@ class PackageController extends Controller
         return view('packages.custom-plan', compact('title', 'meta_description', 'meta_image'));
     }
 
-    public function customize(Request $request, Package $package = null)
+    public function customize(Request $request, ?Package $package = null)
     {
         $request->validate([
             'name' => 'required|string|max:255',
