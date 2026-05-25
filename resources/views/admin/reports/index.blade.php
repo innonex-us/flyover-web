@@ -16,9 +16,9 @@
             transition: all 0.2s ease;
         }
         .filter-pill.active {
-            background: #18130E;
+            background: #dc2626;
             color: #fff;
-            box-shadow: 0 4px 6px -1px rgba(24, 19, 14, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.2);
         }
         .status-badge {
             font-size: 0.7rem;
@@ -29,18 +29,20 @@
             border-radius: 9999px;
         }
         .btn-brand {
-            background: #C8102E;
+            background: #dc2626;
             color: #fff;
         }
         .btn-brand:hover {
-            background: #a50d26;
+            background: #b91c1c;
         }
-        .btn-dark {
-            background: #18130E;
-            color: #fff;
+        .btn-secondary-light {
+            background: #f9fafb;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
         }
-        .btn-dark:hover {
-            background: #2E2720;
+        .btn-secondary-light:hover {
+            background: #f3f4f6;
+            color: #111827;
         }
     </style>
 @endpush
@@ -70,25 +72,25 @@
                 Export PDF
             </a>
             <a href="{{ route('admin.reports.print', $exportParams) }}" target="_blank"
-               class="btn-dark px-5 py-2.5 text-sm font-semibold rounded-xl transition shadow-sm inline-flex items-center gap-2">
+               class="btn-secondary-light px-5 py-2.5 text-sm font-semibold rounded-xl transition shadow-sm inline-flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                 Print
             </a>
         </div>
     </div>
 
-    <form method="GET" action="{{ route('admin.reports.index') }}" id="filter-form" class="report-card p-6">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+    <form method="GET" action="{{ route('admin.reports.index') }}" id="filter-form" class="report-card p-4 sm:p-6">
+        <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-end">
             {{-- Report Type --}}
-            <div class="lg:col-span-5">
+            <div class="flex-1 min-w-0">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Report Category</label>
                 <div class="flex flex-wrap gap-2">
                     @foreach($reportTypes as $val => $rt)
                         <button type="button" onclick="setType('{{ $val }}')"
-                                class="filter-pill flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border border-gray-100 {{ $type === $val ? 'active' : 'bg-gray-50 text-gray-500 hover:bg-gray-100' }}"
+                                class="filter-pill flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-[10px] sm:text-xs font-bold border border-gray-100 {{ $type === $val ? 'active' : 'bg-gray-50 text-gray-500 hover:bg-gray-100' }}"
                                 data-type="{{ $val }}">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $rt['icon'] }}"/></svg>
-                            {{ $rt['label'] }}
+                            <span class="whitespace-nowrap">{{ $rt['label'] }}</span>
                         </button>
                     @endforeach
                 </div>
@@ -97,12 +99,12 @@
             </div>
 
             {{-- Period --}}
-            <div class="lg:col-span-4">
+            <div class="shrink-0">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Timeframe</label>
                 <div class="flex flex-wrap gap-2">
                     @foreach(['7d'=>'7D','30d'=>'30D','90d'=>'90D','1y'=>'1Y','all'=>'ALL'] as $val=>$label)
                         <a href="{{ route('admin.reports.index', ['type'=>$type,'period'=>$val]) }}"
-                           class="filter-pill px-4 py-2.5 rounded-xl text-xs font-bold border border-gray-100 {{ $period===$val ? 'active' : 'bg-gray-50 text-gray-500 hover:bg-gray-100' }}">
+                           class="filter-pill px-4 py-2 sm:py-2.5 rounded-xl text-[10px] sm:text-xs font-bold border border-gray-100 {{ $period===$val ? 'active' : 'bg-gray-50 text-gray-500 hover:bg-gray-100' }}">
                             {{ $label }}
                         </a>
                     @endforeach
@@ -110,19 +112,19 @@
             </div>
 
             {{-- Custom Dates --}}
-            <div class="lg:col-span-3">
+            <div class="lg:w-72 shrink-0">
                 <div class="flex gap-2 items-end">
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Custom Range</label>
-                        <div class="flex items-center gap-2 bg-gray-50 border border-gray-100 rounded-xl p-1">
+                        <div class="flex items-center gap-1 sm:gap-2 bg-gray-50 border border-gray-100 rounded-xl p-1">
                             <input type="date" name="date_from" value="{{ request('date_from') }}"
-                                   class="bg-transparent border-none text-[11px] font-semibold focus:ring-0 p-1 w-full">
+                                   class="bg-transparent border-none text-[10px] sm:text-[11px] font-semibold focus:ring-0 p-1 w-full min-w-0">
                             <span class="text-gray-300">/</span>
                             <input type="date" name="date_to" value="{{ request('date_to') }}"
-                                   class="bg-transparent border-none text-[11px] font-semibold focus:ring-0 p-1 w-full">
+                                   class="bg-transparent border-none text-[10px] sm:text-[11px] font-semibold focus:ring-0 p-1 w-full min-w-0">
                         </div>
                     </div>
-                    <button type="submit" class="btn-dark p-3 rounded-xl shadow-sm transition">
+                    <button type="submit" class="bg-gray-900 text-white p-2.5 sm:p-3 rounded-xl shadow-sm hover:bg-gray-800 transition shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </button>
                 </div>
@@ -131,57 +133,57 @@
     </form>
 
     {{-- Stats Grid --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="report-card p-6 flex flex-col justify-between">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-green-600 mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 2v2m0 4v1m-4 2a9 9 0 110-18 9 9 0 010 18z"/></svg>
-                </div>
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Revenue</p>
-                <h3 class="text-2xl font-black text-gray-900 mt-1">৳{{ number_format($summary['total_revenue']) }}</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="report-card p-3 sm:p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-green-600 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 2v2m0 4v1m-4 2a9 9 0 110-18 9 9 0 010 18z"/></svg>
             </div>
-            <p class="text-[10px] text-gray-400 mt-4 pt-4 border-t border-gray-50 flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> Consolidated earnings
-            </p>
+            <div class="min-w-0 flex-1">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest truncate">Total Revenue</p>
+                <div class="flex items-baseline gap-1">
+                    <h3 class="text-base font-black text-gray-900">৳{{ number_format($summary['total_revenue']) }}</h3>
+                    <span class="text-[8px] text-gray-400 font-medium">gross</span>
+                </div>
+            </div>
         </div>
 
-        <div class="report-card p-6 flex flex-col justify-between">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
-                </div>
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tours & Visas</p>
-                <h3 class="text-2xl font-black text-gray-900 mt-1">{{ number_format($summary['total_bookings']) }}</h3>
+        <div class="report-card p-3 sm:p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
             </div>
-            <p class="text-[10px] text-gray-400 mt-4 pt-4 border-t border-gray-50 font-bold">
-                ৳{{ number_format($summary['bookings_revenue']) }} <span class="font-normal">revenue</span>
-            </p>
+            <div class="min-w-0 flex-1">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest truncate">Tours & Visas</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-base font-black text-gray-900">{{ number_format($summary['total_bookings']) }}</h3>
+                    <span class="text-[9px] text-gray-400 font-bold truncate">৳{{ number_format($summary['bookings_revenue']) }}</span>
+                </div>
+            </div>
         </div>
 
-        <div class="report-card p-6 flex flex-col justify-between">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                </div>
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Hotel Bookings</p>
-                <h3 class="text-2xl font-black text-gray-900 mt-1">{{ number_format($summary['hotel_bookings']) }}</h3>
+        <div class="report-card p-3 sm:p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
             </div>
-            <p class="text-[10px] text-gray-400 mt-4 pt-4 border-t border-gray-50 font-bold">
-                ৳{{ number_format($summary['hotel_revenue']) }} <span class="font-normal">revenue</span>
-            </p>
+            <div class="min-w-0 flex-1">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest truncate">Hotels</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-base font-black text-gray-900">{{ number_format($summary['hotel_bookings']) }}</h3>
+                    <span class="text-[9px] text-gray-400 font-bold truncate">৳{{ number_format($summary['hotel_revenue']) }}</span>
+                </div>
+            </div>
         </div>
 
-        <div class="report-card p-6 flex flex-col justify-between">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                </div>
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Logistics/Transfers</p>
-                <h3 class="text-2xl font-black text-gray-900 mt-1">{{ number_format($summary['transfer_bookings']) }}</h3>
+        <div class="report-card p-3 sm:p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
             </div>
-            <p class="text-[10px] text-gray-400 mt-4 pt-4 border-t border-gray-50 font-bold">
-                ৳{{ number_format($summary['transfer_revenue']) }} <span class="font-normal">revenue</span>
-            </p>
+            <div class="min-w-0 flex-1">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest truncate">Transfers</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-base font-black text-gray-900">{{ number_format($summary['transfer_bookings']) }}</h3>
+                    <span class="text-[9px] text-gray-400 font-bold truncate">৳{{ number_format($summary['transfer_revenue']) }}</span>
+                </div>
+            </div>
         </div>
     </div>
 

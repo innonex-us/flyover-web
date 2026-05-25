@@ -68,16 +68,23 @@ class BookingController extends Controller
         $oldStatus = $booking->status;
         $booking->update($validated);
 
-        if ($booking->user_id && $oldStatus !== $booking->status) {
+        if ($oldStatus !== $booking->status) {
             $booking->load('payable', 'user');
             $serviceName = $booking->payable?->title ?? $booking->payable?->country ?? "Booking #{$booking->id}";
-            $booking->user->notify(new BookingStatusUpdatedNotification(
+            $notification = new BookingStatusUpdatedNotification(
                 bookingType: 'tour_visa',
                 bookingId:   $booking->id,
                 serviceName: $serviceName,
                 status:      $booking->status,
                 url:         route('bookings.confirmation', $booking),
-            ));
+            );
+
+            if ($booking->user) {
+                $booking->user->notify($notification);
+            } elseif ($booking->guest_email) {
+                \Illuminate\Support\Facades\Notification::route('mail', $booking->guest_email)
+                    ->notify($notification);
+            }
         }
 
         return redirect()->route('admin.bookings.show', $booking)->with('success', 'Booking updated successfully.');

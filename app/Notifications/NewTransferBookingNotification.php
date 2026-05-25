@@ -14,7 +14,25 @@ class NewTransferBookingNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
+    }
+
+    public function toMail(object $notifiable): \Illuminate\Notifications\Messages\MailMessage
+    {
+        $customerName = $this->booking->user
+            ? $this->booking->user->name
+            : $this->booking->guest_name;
+
+        $route = $this->booking->pickup_location . ' → ' . $this->booking->drop_location;
+
+        return (new \Illuminate\Notifications\Messages\MailMessage)
+            ->subject("New Transfer Booking: " . config('app.name'))
+            ->greeting("Hello Admin,")
+            ->line("A new transfer booking has been received from **{$customerName}**.")
+            ->line("Route: **{$route}**")
+            ->line("Total Amount: ৳" . number_format($this->booking->total_amount))
+            ->action('View Booking Details', route('admin.transfer-bookings.show', $this->booking))
+            ->line('Please review and process the booking.');
     }
 
     public function toArray(object $notifiable): array

@@ -49,16 +49,23 @@ class TransferBookingController extends Controller
         $oldStatus = $transferBooking->status;
         $transferBooking->update(['status' => $request->status]);
 
-        if ($transferBooking->user_id && $oldStatus !== $transferBooking->status) {
+        if ($oldStatus !== $transferBooking->status) {
             $transferBooking->load('user');
             $route = $transferBooking->pickup_location . ' → ' . $transferBooking->drop_location;
-            $transferBooking->user->notify(new BookingStatusUpdatedNotification(
+            $notification = new BookingStatusUpdatedNotification(
                 bookingType: 'transfer',
                 bookingId:   $transferBooking->id,
                 serviceName: $route,
                 status:      $transferBooking->status,
                 url:         route('transfers.confirmation', $transferBooking),
-            ));
+            );
+
+            if ($transferBooking->user) {
+                $transferBooking->user->notify($notification);
+            } elseif ($transferBooking->guest_email) {
+                \Illuminate\Support\Facades\Notification::route('mail', $transferBooking->guest_email)
+                    ->notify($notification);
+            }
         }
 
         return redirect()->back()->with('success', 'Booking status updated successfully.');

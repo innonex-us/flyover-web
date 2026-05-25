@@ -49,16 +49,23 @@ class HotelBookingController extends Controller
         $oldStatus = $hotelBooking->status;
         $hotelBooking->update(['status' => $request->status]);
 
-        if ($hotelBooking->user_id && $oldStatus !== $hotelBooking->status) {
+        if ($oldStatus !== $hotelBooking->status) {
             $hotelBooking->load('room.hotel', 'user');
             $hotelName = $hotelBooking->room?->hotel?->name ?? "Hotel Booking #{$hotelBooking->id}";
-            $hotelBooking->user->notify(new BookingStatusUpdatedNotification(
+            $notification = new BookingStatusUpdatedNotification(
                 bookingType: 'hotel',
                 bookingId:   $hotelBooking->id,
                 serviceName: $hotelName,
                 status:      $hotelBooking->status,
                 url:         route('hotels.confirmation', $hotelBooking),
-            ));
+            );
+
+            if ($hotelBooking->user) {
+                $hotelBooking->user->notify($notification);
+            } elseif ($hotelBooking->guest_email) {
+                \Illuminate\Support\Facades\Notification::route('mail', $hotelBooking->guest_email)
+                    ->notify($notification);
+            }
         }
 
         return redirect()->back()->with('success', 'Booking status updated successfully.');

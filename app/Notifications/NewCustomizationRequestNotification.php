@@ -14,7 +14,18 @@ class NewCustomizationRequestNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
+    }
+
+    public function toMail(object $notifiable): \Illuminate\Notifications\Messages\MailMessage
+    {
+        return (new \Illuminate\Notifications\Messages\MailMessage)
+            ->subject("New Customization Request: " . config('app.name'))
+            ->greeting("Hello Admin,")
+            ->line("A new custom trip request has been received from **{$this->customization->name}**.")
+            ->line("Message: {$this->customization->message}")
+            ->action('View Request Details', route('admin.customizations.show', $this->customization))
+            ->line('Please review and respond to the customer.');
     }
 
     public function toArray(object $notifiable): array

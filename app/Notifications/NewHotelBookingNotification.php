@@ -14,7 +14,26 @@ class NewHotelBookingNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
+    }
+
+    public function toMail(object $notifiable): \Illuminate\Notifications\Messages\MailMessage
+    {
+        $customerName = $this->booking->user
+            ? $this->booking->user->name
+            : $this->booking->guest_name;
+
+        $hotelName = $this->booking->room?->hotel?->name ?? 'Hotel';
+
+        return (new \Illuminate\Notifications\Messages\MailMessage)
+            ->subject("New Hotel Booking: {$hotelName} - " . config('app.name'))
+            ->greeting("Hello Admin,")
+            ->line("A new hotel booking has been received from **{$customerName}**.")
+            ->line("Hotel: **{$hotelName}**")
+            ->line("Nights: **{$this->booking->nights}**")
+            ->line("Total Amount: ৳" . number_format($this->booking->total_amount))
+            ->action('View Booking Details', route('admin.hotel-bookings.show', $this->booking))
+            ->line('Please review and process the booking.');
     }
 
     public function toArray(object $notifiable): array

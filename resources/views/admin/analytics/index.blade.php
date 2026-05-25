@@ -1,303 +1,319 @@
-<x-admin-layout pageTitle="Analytics Dashboard">
+<x-admin-layout pageTitle="Visitor Analytics">
 
 @push('styles')
     <style>
         .analytics-card {
             background: #fff;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,.07);
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,.05), 0 10px 15px -5px rgba(0,0,0,.02);
             border: 1px solid #f3f4f6;
-            padding: 1.5rem;
+            transition: all 0.3s ease;
         }
         .metric-card {
-            background: linear-gradient(135deg, #eff6ff, #eef2ff);
-            border-radius: 0.75rem;
+            background: #fff;
+            border-radius: 1rem;
             padding: 1.5rem;
-            border: 1px solid #bfdbfe;
+            border: 1px solid #f3f4f6;
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            transition: all 0.3s ease;
+        }
+        .metric-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+            transform: translateY(-2px);
         }
         .metric-value {
-            font-size: 1.875rem;
-            font-weight: 700;
+            font-size: 1.75rem;
+            font-weight: 800;
             color: #111827;
+            letter-spacing: -0.5px;
         }
         .metric-label {
-            font-size: 0.875rem;
-            color: #4b5563;
-            margin-top: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
         }
-        .metric-change {
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-top: 0.5rem;
+        .growth-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
         }
-        .metric-change.positive { color: #16a34a; }
-        .metric-change.negative { color: #dc2626; }
+        .growth-positive { background: #ecfdf5; color: #059669; }
+        .growth-negative { background: #fef2f2; color: #dc2626; }
+        
         .chart-container {
-            height: 16rem;
+            height: 18rem;
             width: 100%;
         }
         .realtime-indicator {
             display: inline-block;
-            width: 0.5rem;
-            height: 0.5rem;
-            background: #22c55e;
+            width: 0.625rem;
+            height: 0.625rem;
+            background: #10b981;
             border-radius: 9999px;
-            margin-right: 0.5rem;
-            animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            animation: pulse-green 2s infinite;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
-        .table-hover tbody tr:hover { background: #f9fafb; }
+        .btn-brand {
+            background: #dc2626;
+            color: #fff;
+        }
+        .btn-brand:hover {
+            background: #b91c1c;
+        }
     </style>
 @endpush
 
-<div class="min-h-screen bg-gray-50" x-data="analyticsDashboard()">
+<div class="space-y-4 sm:space-y-8" x-data="analyticsDashboard()">
     <!-- Header -->
-    <div class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="realtime-indicator"></span>
+                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Live System</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Traffic Intel</h1>
+            <p class="text-sm text-gray-500 mt-1">Deep insights into visitor behavior and platform performance.</p>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <select x-model="period" @change="refreshData()" class="flex-1 sm:flex-none bg-white border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold shadow-sm focus:ring-red-100 focus:border-red-400">
+                <option value="1d">Last 24 Hours</option>
+                <option value="7d">Last 7 Days</option>
+                <option value="30d">Last 30 Days</option>
+                <option value="90d">Last 90 Days</option>
+                <option value="1y">Last Year</option>
+            </select>
+            <a href="{{ route('admin.analytics.export') }}?period={{ $period }}" class="flex-1 sm:flex-none btn-brand px-5 py-2.5 text-xs sm:text-sm font-semibold rounded-xl transition shadow-sm inline-flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span class="hidden sm:inline">Export Dataset</span>
+                <span class="sm:hidden">Export</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Overview Metrics -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="metric-card p-4 sm:p-6">
+            <p class="metric-label">Total Reach</p>
+            <div class="flex items-end justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
-                    <p class="text-gray-600 mt-1">Monitor your website traffic and visitor behavior</p>
+                    <div class="metric-value text-xl sm:text-[1.75rem]">{{ number_format($metrics['total_visitors']) }}</div>
+                    <div class="mt-1 sm:mt-2">
+                        <span class="growth-badge {{ $metrics['visitors_growth'] >= 0 ? 'growth-positive' : 'growth-negative' }}">
+                            {{ $metrics['visitors_growth'] >= 0 ? '↑' : '↓' }} {{ abs($metrics['visitors_growth']) }}%
+                        </span>
+                    </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <span class="realtime-indicator"></span>
-                    <span class="text-sm text-gray-600">Live Data</span>
-                    <select x-model="period" @change="refreshData()" class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                        <option value="1d">Last 24 Hours</option>
-                        <option value="7d">Last 7 Days</option>
-                        <option value="30d">Last 30 Days</option>
-                        <option value="90d">Last 90 Days</option>
-                        <option value="1y">Last Year</option>
-                    </select>
-                    <a href="{{ route('admin.analytics.export') }}?period={{ $period }}" class="btn-secondary text-sm">
-                        Export CSV
-                    </a>
+                <div class="hidden sm:flex w-12 h-12 rounded-2xl bg-red-50 items-center justify-center text-red-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="metric-card p-4 sm:p-6">
+            <p class="metric-label">Engagement</p>
+            <div class="flex items-end justify-between">
+                <div>
+                    <div class="metric-value text-xl sm:text-[1.75rem]">{{ number_format($metrics['total_page_views']) }}</div>
+                    <div class="mt-1 sm:mt-2">
+                        <span class="growth-badge {{ $metrics['page_views_growth'] >= 0 ? 'growth-positive' : 'growth-negative' }}">
+                            {{ $metrics['page_views_growth'] >= 0 ? '↑' : '↓' }} {{ abs($metrics['page_views_growth']) }}%
+                        </span>
+                    </div>
+                </div>
+                <div class="hidden sm:flex w-12 h-12 rounded-2xl bg-emerald-50 items-center justify-center text-emerald-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="metric-card p-4 sm:p-6">
+            <p class="metric-label">Sessions</p>
+            <div class="flex items-end justify-between">
+                <div>
+                    <div class="metric-value text-xl sm:text-[1.75rem]">{{ number_format($metrics['total_sessions']) }}</div>
+                    <div class="mt-1 sm:mt-2">
+                        <span class="growth-badge {{ $metrics['sessions_growth'] >= 0 ? 'growth-positive' : 'growth-negative' }}">
+                            {{ $metrics['sessions_growth'] >= 0 ? '↑' : '↓' }} {{ abs($metrics['sessions_growth']) }}%
+                        </span>
+                    </div>
+                </div>
+                <div class="hidden sm:flex w-12 h-12 rounded-2xl bg-blue-50 items-center justify-center text-blue-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="metric-card p-4 sm:p-6">
+            <p class="metric-label">Retention</p>
+            <div class="flex items-end justify-between">
+                <div>
+                    <div class="metric-value text-xl sm:text-[1.75rem]">{{ gmdate('i:s', $metrics['avg_session_duration']) }}</div>
+                    <div class="mt-1 sm:mt-2">
+                        <span class="text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{{ $metrics['bounce_rate'] }}% Bounce</span>
+                    </div>
+                </div>
+                <div class="hidden sm:flex w-12 h-12 rounded-2xl bg-orange-50 items-center justify-center text-orange-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Overview Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="metric-card">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <div class="metric-value">{{ number_format($metrics['total_visitors']) }}</div>
-                        <div class="metric-label">Total Visitors</div>
-                        <div class="metric-change {{ $metrics['visitors_growth'] >= 0 ? 'positive' : 'negative' }}">
-                            @if($metrics['visitors_growth'] >= 0)↑@else↓@endif {{ abs($metrics['visitors_growth']) }}% from previous period
-                        </div>
-                    </div>
-                    <div class="text-blue-500">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                    </div>
-                </div>
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        <div class="analytics-card p-4 sm:p-8">
+            <div class="flex items-center justify-between mb-6 sm:mb-8">
+                <h3 class="font-bold text-gray-900 uppercase tracking-widest text-[10px]">Visitor Volume Trend</h3>
+                <span class="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Daily Samples</span>
             </div>
-
-            <div class="metric-card">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <div class="metric-value">{{ number_format($metrics['total_page_views']) }}</div>
-                        <div class="metric-label">Page Views</div>
-                        <div class="metric-change {{ $metrics['page_views_growth'] >= 0 ? 'positive' : 'negative' }}">
-                            @if($metrics['page_views_growth'] >= 0)↑@else↓@endif {{ abs($metrics['page_views_growth']) }}% from previous period
-                        </div>
-                    </div>
-                    <div class="text-green-500">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <div class="metric-value">{{ number_format($metrics['total_sessions']) }}</div>
-                        <div class="metric-label">Sessions</div>
-                        <div class="metric-change {{ $metrics['sessions_growth'] >= 0 ? 'positive' : 'negative' }}">
-                            @if($metrics['sessions_growth'] >= 0)↑@else↓@endif {{ abs($metrics['sessions_growth']) }}% from previous period
-                        </div>
-                    </div>
-                    <div class="text-purple-500">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <div class="metric-value">{{ $metrics['bounce_rate'] }}%</div>
-                        <div class="metric-label">Bounce Rate</div>
-                        <div class="metric-change">
-                            {{ gmdate('i:s', $metrics['avg_session_duration']) }} avg session duration
-                        </div>
-                    </div>
-                    <div class="text-orange-500">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                </div>
+            <div class="chart-container h-64 sm:h-[18rem]">
+                <canvas id="visitorsChart"></canvas>
             </div>
         </div>
 
-        <!-- Charts Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <!-- Visitors Trend -->
-            <div class="analytics-card">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Visitors Trend</h3>
-                <div class="chart-container">
-                    <canvas id="visitorsChart"></canvas>
-                </div>
+        <div class="analytics-card p-4 sm:p-8">
+            <div class="flex items-center justify-between mb-6 sm:mb-8">
+                <h3 class="font-bold text-gray-900 uppercase tracking-widest text-[10px]">Platform Distribution</h3>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-1 rounded">Device Type</span>
             </div>
-
-            <!-- Device Types -->
-            <div class="analytics-card">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Device Types</h3>
-                <div class="chart-container">
-                    <canvas id="devicesChart"></canvas>
-                </div>
+            <div class="chart-container h-64 sm:h-[18rem]">
+                <canvas id="devicesChart"></canvas>
             </div>
         </div>
+    </div>
 
-        <!-- Top Pages & Countries -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <!-- Top Pages -->
-            <div class="analytics-card">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Pages</h3>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Page</th>
-                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Views</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            @foreach($pagesData['top_pages'] as $page)
-                            <tr class="table-hover">
-                                <td class="px-4 py-3 text-sm">
-                                    <div class="font-medium text-gray-900">{{ $page->title ?? $page->path }}</div>
-                                    <div class="text-gray-500 text-xs">{{ $page->path }}</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-right font-medium">{{ number_format($page->views) }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Top Countries -->
-            <div class="analytics-card">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Countries</h3>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Country</th>
-                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Visitors</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            @foreach($visitorsData['top_countries'] as $country)
-                            <tr class="table-hover">
-                                <td class="px-4 py-3 text-sm">
-                                    <div class="flex items-center">
-                                        <span class="text-lg mr-2">{{ $country->country_code }}</span>
-                                        <span class="font-medium text-gray-900">{{ $country->country }}</span>
-                                    </div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-right font-medium">{{ number_format($country->count) }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Real-time Activity -->
-        <div class="analytics-card">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-900">Real-time Activity</h3>
-                <div class="flex items-center text-sm text-gray-600">
-                    <span class="realtime-indicator"></span>
-                    {{ $realtimeData['active_visitors'] }} active visitors
-                </div>
+    <!-- Top Pages & Countries -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Top Pages -->
+        <div class="analytics-card overflow-hidden">
+            <div class="px-8 py-6 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+                <h3 class="font-bold text-gray-900 uppercase tracking-widest text-[10px]">Engagement by Path</h3>
+                <span class="text-[10px] font-bold text-gray-400">Top 10 Performance</span>
             </div>
             <div class="overflow-x-auto">
-                <table class="min-w-full">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Visitor</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">IP Address</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Current Page</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Session Duration</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Last Activity</th>
+                <table class="w-full whitespace-nowrap">
+                    <thead>
+                        <tr class="bg-gray-50/30 border-b border-gray-50">
+                            <th class="px-8 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Resource Path</th>
+                            <th class="px-8 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-gray-400">Impressions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @foreach($realtimeData['current_sessions'] as $session)
-                        <tr class="table-hover">
-                            <td class="px-4 py-3 text-sm">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div class="font-medium text-gray-900">{{ $session['browser'] }}</div>
-                                        <div class="text-gray-500 text-xs">{{ $session['device_type'] }}</div>
-                                    </div>
-                                </div>
+                    <tbody class="divide-y divide-gray-50">
+                        @foreach($pagesData['top_pages'] as $page)
+                        <tr class="hover:bg-gray-50/50 transition">
+                            <td class="px-8 py-4">
+                                <div class="text-sm font-bold text-gray-800">{{ $page->title ?? $page->path }}</div>
+                                <div class="text-[10px] font-mono text-gray-400 mt-0.5">{{ $page->path }}</div>
                             </td>
-                            <td class="px-4 py-3 text-sm">
-                                <div class="text-gray-900 font-medium">{{ $session['location'] }}</div>
-                                <div class="text-gray-500 text-xs mt-0.5">
-                                    {{ $session['city'] }} · {{ $session['region'] }} · {{ $session['country'] }}
-                                </div>
-                                <div class="text-gray-400 text-[11px] mt-1">
-                                    {{ $session['country_code'] }} · Session #{{ $session['id'] }}
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 text-sm">
-                                <div class="text-gray-900 font-medium">{{ $session['ip_address'] }}</div>
-                            </td>
-                            <td class="px-4 py-3 text-sm">
-                                <div class="text-gray-900 font-medium">{{ $session['page_title'] }}</div>
-                                <a href="{{ $session['page_url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-blue-600 text-xs mt-1 hover:text-blue-700 hover:underline">
-                                    <span>Open page</span>
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h6m0 0v6m0-6L10 16m-4 0h2a2 2 0 002-2v-2"/>
-                                    </svg>
-                                </a>
-                                <div class="text-gray-500 text-xs mt-1">{{ $session['page_path'] }}</div>
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-900">
-                                {{ gmdate('i:s', $session['duration']) }}
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-500">
-                                {{ $session['last_activity_at']->diffForHumans() }}
+                            <td class="px-8 py-4 text-right">
+                                <span class="text-sm font-black text-gray-900">{{ number_format($page->views) }}</span>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <!-- Top Countries -->
+        <div class="analytics-card overflow-hidden">
+            <div class="px-8 py-6 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+                <h3 class="font-bold text-gray-900 uppercase tracking-widest text-[10px]">Geographic Reach</h3>
+                <span class="text-[10px] font-bold text-gray-400">By Origin</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full whitespace-nowrap">
+                    <thead>
+                        <tr class="bg-gray-50/30 border-b border-gray-50">
+                            <th class="px-8 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Territory</th>
+                            <th class="px-8 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-gray-400">Total Visitors</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        @foreach($visitorsData['top_countries'] as $country)
+                        <tr class="hover:bg-gray-50/50 transition">
+                            <td class="px-8 py-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg font-black text-gray-300">{{ $country->country_code }}</span>
+                                    <span class="text-sm font-bold text-gray-800">{{ $country->country }}</span>
+                                </div>
+                            </td>
+                            <td class="px-8 py-4 text-right">
+                                <span class="text-sm font-black text-gray-900">{{ number_format($country->count) }}</span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Activity -->
+    <div class="analytics-card overflow-hidden">
+        <div class="px-8 py-6 border-b border-gray-50 flex items-center justify-between bg-red-600">
+            <div>
+                <h3 class="font-bold text-white uppercase tracking-widest text-[10px]">Real-time Session Feed</h3>
+                <p class="text-[10px] text-red-100 mt-0.5">Live activity stream from active endpoints.</p>
+            </div>
+            <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/20">
+                <span class="realtime-indicator bg-white shadow-none"></span>
+                <span class="text-[10px] font-black text-white uppercase tracking-tighter">{{ $realtimeData['active_visitors'] }} PULSE NODES</span>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full whitespace-nowrap">
+                <thead>
+                    <tr class="bg-gray-50/30 border-b border-gray-50">
+                        <th class="px-8 py-4 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Terminal Info</th>
+                        <th class="px-8 py-4 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Origin / Geo</th>
+                        <th class="px-8 py-4 text-left text-[10px] font-bold uppercase tracking-widest text-gray-400">Active Path</th>
+                        <th class="px-8 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-gray-400">Uptime</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @foreach($realtimeData['current_sessions'] as $session)
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 border border-gray-100">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-800">{{ $session['browser'] }}</p>
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{{ $session['device_type'] }} · {{ $session['ip_address'] }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="text-sm font-semibold text-gray-700">{{ $session['city'] }}, {{ $session['country'] }}</div>
+                            <div class="text-[10px] text-gray-400 mt-0.5">{{ $session['region'] }} ({{ $session['country_code'] }})</div>
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="text-sm font-bold text-gray-800">{{ $session['page_title'] }}</div>
+                            <a href="{{ $session['page_url'] }}" target="_blank" class="text-[10px] font-mono text-red-600 hover:underline mt-0.5 block truncate max-w-xs">{{ $session['page_path'] }}</a>
+                        </td>
+                        <td class="px-8 py-5 text-right">
+                            <div class="text-sm font-black text-gray-900">{{ gmdate('i:s', $session['duration']) }}</div>
+                            <div class="text-[10px] text-gray-400 mt-0.5">{{ $session['last_activity_at']->diffForHumans() }}</div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -331,22 +347,33 @@
                             datasets: [{
                                 label: 'Daily Visitors',
                                 data: @json($visitorsData['daily_trend']->pluck('count')),
-                                borderColor: 'rgb(59, 130, 246)',
-                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                                tension: 0.4
+                                borderColor: '#dc2626',
+                                backgroundColor: 'rgba(220, 38, 38, 0.05)',
+                                borderWidth: 3,
+                                pointBackgroundColor: '#fff',
+                                pointBorderColor: '#dc2626',
+                                pointBorderWidth: 2,
+                                pointRadius: 4,
+                                pointHoverRadius: 6,
+                                tension: 0.4,
+                                fill: true
                             }]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
                             plugins: {
-                                legend: {
-                                    display: false
-                                }
+                                legend: { display: false }
                             },
                             scales: {
                                 y: {
-                                    beginAtZero: true
+                                    beginAtZero: true,
+                                    grid: { color: '#f3f4f6', drawBorder: false },
+                                    ticks: { font: { size: 10, weight: 'bold' }, color: '#9ca3af' }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { font: { size: 10, weight: 'bold' }, color: '#9ca3af' }
                                 }
                             }
                         }
@@ -361,19 +388,28 @@
                             datasets: [{
                                 data: @json($deviceData['device_types']->pluck('count')),
                                 backgroundColor: [
-                                    'rgb(59, 130, 246)',
-                                    'rgb(16, 185, 129)',
-                                    'rgb(251, 146, 60)',
-                                    'rgb(244, 63, 94)'
-                                ]
+                                    '#dc2626',
+                                    '#1f2937',
+                                    '#9ca3af',
+                                    '#f3f4f6'
+                                ],
+                                borderWeight: 0,
+                                hoverOffset: 10
                             }]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
+                            cutout: '75%',
                             plugins: {
                                 legend: {
-                                    position: 'bottom'
+                                    position: 'bottom',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 20,
+                                        font: { size: 11, weight: 'bold' },
+                                        color: '#4b5563'
+                                    }
                                 }
                             }
                         }
@@ -381,8 +417,6 @@
                 },
                 
                 refreshRealtimeData() {
-                    // This would typically make an AJAX call to refresh real-time data
-                    // For now, we'll just reload the page
                     location.reload();
                 }
             }
