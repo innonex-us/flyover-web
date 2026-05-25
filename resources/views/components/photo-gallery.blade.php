@@ -12,7 +12,7 @@
 <div id="{{ $wrapId }}" class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
     @if($showPhotoGallery)
     <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 p-2 sm:p-4 items-start">
-        <figure class="relative m-0 min-w-0 flex-1 aspect-video bg-gray-100 rounded-xl overflow-hidden order-1">
+        <figure class="relative m-0 min-w-0 flex-1 aspect-video max-h-[500px] bg-gray-100 rounded-xl overflow-hidden order-1">
             <img id="{{ $mainId }}" src="{{ $images[0] }}" alt="{{ $alt }}" class="w-full h-full object-cover" decoding="async" fetchpriority="high">
         </figure>
         <aside class="order-2 w-full sm:w-[5.25rem] md:w-28 flex-none gap-3 sm:flex-col overflow-x-auto sm:overflow-y-auto mt-3 sm:mt-0">
@@ -50,7 +50,7 @@
         })();
     </script>
     @else
-    <figure class="relative m-0 aspect-video bg-gray-100">
+    <figure class="relative m-0 aspect-video max-h-[500px] bg-gray-100">
         <img id="{{ $mainId }}" src="{{ $images[0] }}" alt="{{ $alt }}" class="w-full h-full object-cover" decoding="async">
     </figure>
     @endif

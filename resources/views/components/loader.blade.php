@@ -1,25 +1,27 @@
 {{-- ═══════════════════════════════════════════════════════════
-     FlyoverBD - Cinematic Loader  v3 (same-to-same SVG logo)
+     FlyoverBD — Cinematic Loader  v4 (pixel-perfect logo.png)
      File: resources/views/components/loader.blade.php
 
+     Logo: 400×130 px  |  Globe cx=200 cy=48 r=42  |  Scale=0.75
+
+     Each letter is a SVG <image> of the real logo.png masked to
+     its exact pixel-column region → 100% shape accuracy.
+
      Animation sequence:
-       0.00 s  White screen
-       0.10 s  "FLY" letters drop in from top  (stagger)
-       0.35 s  Globe "O" pops in with spring
-       0.55 s  "VER" letters drop in
-       0.70 s  Orbit arc draws itself
-       0.85 s  Plane flies in from off-screen → lands on orbit
-       1.10 s  Plane starts orbiting the globe (rAF loop)
+       0.10 s  "F L Y" clip-regions drop in from top (stagger)
+       0.35 s  Globe "O" scales in from center (JS easeOutBack)
+       0.58 s  "V E R" clip-regions drop in
+       0.75 s  Orbit ellipse fades in
+       0.85 s  Plane flies in → lands on orbit
+       1.10 s  Plane orbits the globe (rAF loop)
        1.30 s  Tagline + dots appear
        ~load   Plane blasts off top-right with trail
-       +0.15s  Smoke puffs burst
-       +0.40s  Smoke clears, logo.png fades in (identical to SVG)
-       +0.90s  Loader fades away
+       +0.15 s Smoke puffs burst
+       +0.40 s SVG fades, real logo.png fades in
+       +0.90 s Loader fades away
 ═══════════════════════════════════════════════════════════ --}}
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800;900&display=swap');
-
 /* ── Overlay ───────────────────────────────────────────────────── */
 #flyover-loader {
     position: fixed;
@@ -45,9 +47,7 @@
     line-height: 0;
 }
 
-/* ── SVG logo (shown during loading) ────────────────────────────
- *  viewBox matches logo proportions: 400 × 130 → displayed 300 × 97.5
- */
+/* ── SVG logo ───────────────────────────────────────────────────── */
 #fol-svg-logo {
     display: block;
     width: 300px;
@@ -55,32 +55,19 @@
     overflow: visible;
 }
 
-/* letter groups - drop in from above */
+/* ── Letter groups — drop in from above ────────────────────────── */
 .fol-ltr {
     opacity: 0;
-    transform: translateY(-28px);
-    transition: opacity 0.38s ease, transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
+    transform: translateY(-30px);
+    transition: opacity 0.38s ease,
+                transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
 }
-.fol-ltr.fol-in { opacity: 1; transform: translateY(0); }
-
-/* globe group - scale in */
-#fol-ggrp {
-    opacity: 0;
-    transform-origin: 200px 55px;   /* globe centre in viewBox */
-    transform: scale(0);
-    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+.fol-ltr.fol-in {
+    opacity: 1;
+    transform: translateY(0);
 }
-#fol-ggrp.fol-in { opacity: 1; transform: scale(1); }
 
-/* orbit arc draw */
-#fol-arc {
-    stroke-dasharray: 115;
-    stroke-dashoffset: 115;
-    transition: stroke-dashoffset 0.65s ease-out;
-}
-#fol-arc.fol-draw { stroke-dashoffset: 0; }
-
-/* ── Real logo image (hidden → revealed after blast-off) ──────── */
+/* ── Real logo image (hidden until blast-off) ─────────────────── */
 #fol-logo-real {
     position: absolute;
     left: 0; top: 0;
@@ -92,7 +79,7 @@
 }
 #fol-logo-real.fol-visible { opacity: 1; }
 
-/* ── Orbit ellipse overlay (SVG, full stage) ────────────────────── */
+/* ── Orbit ellipse overlay ──────────────────────────────────────── */
 #fol-orbit-svg {
     position: absolute;
     inset: 0;
@@ -107,7 +94,7 @@
 }
 #fol-orb-ell.fol-show { opacity: 0.45; }
 
-/* ── Animated plane (absolute in #flyover-loader) ────────────── */
+/* ── Animated plane ─────────────────────────────────────────────── */
 #fol-plane {
     position: absolute;
     left: 0; top: 0;
@@ -118,7 +105,7 @@
     will-change: transform, opacity;
 }
 
-/* ── Smoke puffs (absolute in #flyover-loader, created by JS) ── */
+/* ── Smoke puffs ──────────────────────────────────────────────── */
 .fol-puff {
     position: absolute;
     border-radius: 50%;
@@ -130,10 +117,10 @@
 /* ── Tagline ────────────────────────────────────────────────────── */
 .fol-tagline {
     margin-top: 7px;
-    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 4.5px;
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 3.5px;
     color: #1a1a1a;
     text-transform: uppercase;
     opacity: 0;
@@ -191,117 +178,94 @@
 
     <div class="fol-stage" id="fol-stage">
 
-        {{-- ══════════════════════════════════════════════════════
-             SVG LOGO - exact replica of logo.png
-             viewBox = 400 × 130 (natural dimensions of PNG)
-             Red: #C8102E  |  Font: approximated with SVG paths
-             The font used in the original is a wide bold sans.
-             We use geometric SVG paths for letter-perfect shapes.
-        ══════════════════════════════════════════════════════ --}}
+        {{-- ══════════════════════════════════════════════════════════
+             SVG LOGO — each letter = clipPath window onto logo.png
+             Logo PNG: 400×130 px (exact match, preserveAspectRatio=none)
+
+             Letter x-boundaries (from PNG pixel analysis):
+               F  :   0–50   (active red:   8–49)
+               L  :  50–106  (active red:  63–105)
+               Y  : 106–158  (active red: 106–155)
+               O  : circle cx=200 cy=48 r=45  (actual globe)
+               V  : 244–278  (active red: 248–277)
+               E  : 278–335  (active red: 285–327)
+               R  : 335–400  (active red: 340–396)
+
+             Static white plane in logo covered by #C8102E circle
+             so animated plane can replace it visually.
+        ══════════════════════════════════════════════════════════ --}}
         <svg id="fol-svg-logo"
              viewBox="0 0 400 130"
              xmlns="http://www.w3.org/2000/svg"
              aria-label="FlyoverBD"
              overflow="visible">
 
-            {{-- ─── F ─── --}}
-            <g id="fol-F" class="fol-ltr">
-                <rect x="2"  y="8"  width="13" height="72" rx="2" fill="#C8102E"/>
-                <rect x="2"  y="8"  width="44" height="13" rx="2" fill="#C8102E"/>
-                <rect x="2"  y="38" width="34" height="12" rx="2" fill="#C8102E"/>
-            </g>
+            <defs>
+                {{-- height=95 clips out the tagline row (y=106–123) --}}
+                <clipPath id="cp-F"><rect x="0"   y="0" width="50"  height="95"/></clipPath>
+                <clipPath id="cp-L"><rect x="50"  y="0" width="56"  height="95"/></clipPath>
+                <clipPath id="cp-Y"><rect x="106" y="0" width="52"  height="95"/></clipPath>
+                <clipPath id="cp-O"><circle cx="200" cy="48" r="45"/></clipPath>
+                <clipPath id="cp-V"><rect x="244" y="0" width="34"  height="95"/></clipPath>
+                <clipPath id="cp-E"><rect x="278" y="0" width="57"  height="95"/></clipPath>
+                <clipPath id="cp-R"><rect x="335" y="0" width="65"  height="95"/></clipPath>
+            </defs>
 
-            {{-- ─── L ─── --}}
-            <g id="fol-L" class="fol-ltr">
-                <rect x="52" y="8"  width="13" height="72" rx="2" fill="#C8102E"/>
-                <rect x="52" y="68" width="44" height="12" rx="2" fill="#C8102E"/>
-            </g>
-
-            {{-- ─── Y ─── --}}
-            <g id="fol-Y" class="fol-ltr">
-                {{-- Left arm --}}
-                <path d="M102 8 L122 44 L109 44 L102 8 Z" fill="#C8102E"/>
-                {{-- Right arm --}}
-                <path d="M152 8 L132 44 L145 44 L152 8 Z" fill="#C8102E"/>
-                {{-- Stem --}}
-                <rect x="116" y="41" width="13" height="39" rx="2" fill="#C8102E"/>
-            </g>
-
-            {{-- ─── O - the GLOBE (animated separately) ─── --}}
-            {{-- Globe centre: (200, 53) in viewBox, radius 44 --}}
-            <g id="fol-ggrp">
-                {{-- Red globe circle --}}
-                <circle cx="200" cy="53" r="44" fill="#C8102E"/>
-
-                {{-- White swoosh arc (lower-left → upper-right) --}}
-                <path id="fol-arc"
-                      d="M 165 72 Q 200 18 235 38"
-                      fill="none"
-                      stroke="white"
-                      stroke-width="4"
-                      stroke-linecap="round"/>
-
-                {{-- White airplane in upper-right of globe --}}
-                <g transform="translate(228,30) rotate(-38)">
-                    {{-- Body --}}
-                    <path d="M-13,0 L14,-4 L14,4 Z" fill="white"/>
-                    {{-- Top wing --}}
-                    <path d="M0,-4 L-8,-17 L-13,-15 L-5,0 Z" fill="white" opacity="0.92"/>
-                    {{-- Bottom wing --}}
-                    <path d="M0,4 L-8,17 L-13,15 L-5,0 Z" fill="white" opacity="0.92"/>
-                    {{-- Tail fin top --}}
-                    <path d="M-10,0 L-17,-6 L-18,-4 L-12,1 Z" fill="white" opacity="0.75"/>
-                    {{-- Tail fin bottom --}}
-                    <path d="M-10,0 L-17,6 L-18,4 L-12,-1 Z" fill="white" opacity="0.75"/>
-                    {{-- Nose tip --}}
-                    <circle cx="14" cy="0" r="2.5" fill="white"/>
+            {{-- F --}}
+            <g clip-path="url(#cp-F)">
+                <g id="fol-F" class="fol-ltr">
+                    <image href="{{ asset('logo.png') }}" x="0" y="0" width="400" height="130" preserveAspectRatio="none"/>
                 </g>
-
-                {{-- Outer dashed orbit ring --}}
-                <ellipse cx="200" cy="53" rx="41" ry="16"
-                         fill="none" stroke="white"
-                         stroke-width="1.8"
-                         stroke-dasharray="7 5"
-                         opacity="0.28"
-                         transform="rotate(-15,200,53)"/>
             </g>
 
-            {{-- ─── V ─── --}}
-            <g id="fol-V" class="fol-ltr">
-                {{-- Left leg --}}
-                <path d="M250 8 L270 80 L257 80 L237 8 Z" fill="#C8102E"/>
-                {{-- Right leg --}}
-                <path d="M300 8 L280 80 L267 80 L287 8 Z" fill="#C8102E"/>
+            {{-- L --}}
+            <g clip-path="url(#cp-L)">
+                <g id="fol-L" class="fol-ltr">
+                    <image href="{{ asset('logo.png') }}" x="0" y="0" width="400" height="130" preserveAspectRatio="none"/>
+                </g>
             </g>
 
-            {{-- ─── E ─── --}}
-            <g id="fol-E" class="fol-ltr">
-                <rect x="308" y="8"  width="13" height="72" rx="2" fill="#C8102E"/>
-                <rect x="308" y="8"  width="54" height="13" rx="2" fill="#C8102E"/>
-                <rect x="308" y="38" width="42" height="12" rx="2" fill="#C8102E"/>
-                <rect x="308" y="67" width="54" height="13" rx="2" fill="#C8102E"/>
+            {{-- Y --}}
+            <g clip-path="url(#cp-Y)">
+                <g id="fol-Y" class="fol-ltr">
+                    <image href="{{ asset('logo.png') }}" x="0" y="0" width="400" height="130" preserveAspectRatio="none"/>
+                </g>
             </g>
 
-            {{-- ─── R ─── --}}
-            <g id="fol-R" class="fol-ltr">
-                {{-- Vertical stem --}}
-                <rect x="370" y="8"  width="13" height="72" rx="2" fill="#C8102E"/>
-                {{-- Top bar --}}
-                <rect x="370" y="8"  width="26" height="13" rx="2" fill="#C8102E"/>
-                {{-- Middle bar --}}
-                <rect x="370" y="36" width="26" height="12" rx="2" fill="#C8102E"/>
-                {{-- Top-right bump --}}
-                <rect x="383" y="8"  width="14" height="40" rx="7" fill="#C8102E"/>
-                {{-- Diagonal leg --}}
-                <path d="M378 48 L398 80 L385 80 L365 48 Z" fill="#C8102E"/>
+            {{-- O / Globe — JS-driven scale from cx=200,cy=48 --}}
+            <g clip-path="url(#cp-O)">
+                <g id="fol-ggrp" style="opacity:0" transform="translate(200 48) scale(0)">
+                    <image href="{{ asset('logo.png') }}" x="0" y="0" width="400" height="130" preserveAspectRatio="none"/>
+                    {{-- Red circle covers the static white plane so animated
+                         plane can orbit without visual doubling           --}}
+                    <circle id="fol-plane-cover" cx="228" cy="30" r="17" fill="#C8102E"/>
+                </g>
             </g>
 
-            {{-- ─── Tagline text (inside SVG, bottom area) ─── --}}
-            {{-- We do NOT draw tagline in SVG; it's in HTML below --}}
+            {{-- V --}}
+            <g clip-path="url(#cp-V)">
+                <g id="fol-V" class="fol-ltr">
+                    <image href="{{ asset('logo.png') }}" x="0" y="0" width="400" height="130" preserveAspectRatio="none"/>
+                </g>
+            </g>
+
+            {{-- E --}}
+            <g clip-path="url(#cp-E)">
+                <g id="fol-E" class="fol-ltr">
+                    <image href="{{ asset('logo.png') }}" x="0" y="0" width="400" height="130" preserveAspectRatio="none"/>
+                </g>
+            </g>
+
+            {{-- R --}}
+            <g clip-path="url(#cp-R)">
+                <g id="fol-R" class="fol-ltr">
+                    <image href="{{ asset('logo.png') }}" x="0" y="0" width="400" height="130" preserveAspectRatio="none"/>
+                </g>
+            </g>
 
         </svg>
 
-        {{-- Real logo.png - revealed from smoke after blast-off --}}
+        {{-- Real logo.png revealed from smoke after blast-off --}}
         <img id="fol-logo-real"
              src="{{ asset('logo.png') }}"
              alt="FlyoverBD"
@@ -318,23 +282,17 @@
 
     </div>
 
-    {{-- Animated plane (absolute within #flyover-loader) --}}
+    {{-- Animated plane --}}
     <div id="fol-plane" aria-hidden="true">
         <svg viewBox="0 0 34 34"
              xmlns="http://www.w3.org/2000/svg"
              overflow="visible">
             <g transform="translate(17,17)">
-                {{-- Body --}}
                 <path d="M-11,0 L11,-3 L11,3 Z" fill="#C8102E"/>
-                {{-- Top wing --}}
                 <path d="M-1,-3 L-6,-12.5 L-9.5,-11 L-4,0 Z" fill="#C8102E" opacity="0.9"/>
-                {{-- Bottom wing --}}
                 <path d="M-1,3 L-6,12.5 L-9.5,11 L-4,0 Z" fill="#C8102E" opacity="0.9"/>
-                {{-- Tail top --}}
                 <path d="M-8,0 L-13.5,-5 L-14,-3.5 L-9,0.5 Z" fill="#C8102E" opacity="0.75"/>
-                {{-- Tail bottom --}}
                 <path d="M-8,0 L-13.5,5 L-14,3.5 L-9,-0.5 Z" fill="#C8102E" opacity="0.75"/>
-                {{-- Nose --}}
                 <circle cx="11" cy="0" r="2.2" fill="#C8102E"/>
             </g>
         </svg>
@@ -361,56 +319,49 @@
 (function () {
     'use strict';
 
-    /* ── Elements ─────────────────────────────────────── */
-    var loader    = document.getElementById('flyover-loader');
-    var stage     = document.getElementById('fol-stage');
-    var svgLogo   = document.getElementById('fol-svg-logo');
-    var realLogo  = document.getElementById('fol-logo-real');
-    var gGrp      = document.getElementById('fol-ggrp');
-    var arc       = document.getElementById('fol-arc');
-    var orbEll    = document.getElementById('fol-orb-ell');
-    var plane     = document.getElementById('fol-plane');
-    var tagline   = document.getElementById('fol-tagline');
-    var dots      = document.getElementById('fol-dots');
+    /* ── Elements ─────────────────────────────────────────── */
+    var loader  = document.getElementById('flyover-loader');
+    var stage   = document.getElementById('fol-stage');
+    var svgLogo = document.getElementById('fol-svg-logo');
+    var realLogo= document.getElementById('fol-logo-real');
+    var gGrp    = document.getElementById('fol-ggrp');
+    var orbEll  = document.getElementById('fol-orb-ell');
+    var plane   = document.getElementById('fol-plane');
+    var tagline = document.getElementById('fol-tagline');
+    var dots    = document.getElementById('fol-dots');
     if (!loader) return;
 
-    /* ── Globe position in the SVG viewBox (400×130) ─────────────
-     * Globe centre: cx=200, cy=53, r=44
-     * SVG displayed at 300px wide → scale = 300/400 = 0.75
-     * In display px (relative to SVG/stage top-left):
-     *   cx_display = 200 * 0.75 = 150
-     *   cy_display = 53  * 0.75 = 39.75
-     *   r_display  = 44  * 0.75 = 33
-     * Orbit (in display px): rx = 46, ry = 18, tilt = -15°
-     ────────────────────────────────────────────────────────────── */
-    var SVG_VB_W  = 400, SVG_VB_H = 130;
-    var SVG_DISP  = 300; /* display width */
-    var SCALE     = SVG_DISP / SVG_VB_W; /* 0.75 */
+    /* ── Globe constants (pixel-exact from logo.png) ──────────
+     * Logo: 400×130 px  |  Globe: cx=200, cy=48, r=42
+     * SVG displayed 300px wide  →  SCALE = 300/400 = 0.75
+     * Globe centre in display-px (rel. SVG top-left):
+     *   cx_disp = 200 * 0.75 = 150 px
+     *   cy_disp =  48 * 0.75 =  36 px
+     ──────────────────────────────────────────────────────── */
+    var SVG_VB_W = 400;
+    var SVG_DISP = 300;
+    var SCALE    = SVG_DISP / SVG_VB_W;   /* 0.75 */
 
-    /* Globe centre in viewBox coords */
-    var GCX_VB = 200, GCY_VB = 53;
+    var GCX_VB = 200;   /* globe cx in viewBox units */
+    var GCY_VB = 48;    /* globe cy in viewBox units (pixel-exact) */
 
-    /* Orbit parameters in display-px */
-    var ORB_RX   = 48 * SCALE;  /* 36 px */
-    var ORB_RY   = 19 * SCALE;  /* ~14 px */
-    var ORB_TILT = -15;         /* degrees */
+    /* Orbit ellipse in display-px */
+    var ORB_RX   = 46 * SCALE;   /* 34.5 px */
+    var ORB_RY   = 18 * SCALE;   /* 13.5 px */
+    var ORB_TILT = -15;           /* degrees, matches logo dashed ring */
 
-    /* Plane element half-size */
-    var PH = 17; /* half of 34px */
+    var PH = 17;   /* plane element half-size */
 
-    /* Globe centre in loader-relative coords (computed after layout) */
+    /* Globe centre in loader-relative px (set by measureGlobe) */
     var gCxL = 0, gCyL = 0;
 
     function measureGlobe() {
-        var loaderR = loader.getBoundingClientRect();
-        var stageR  = stage.getBoundingClientRect();
-        /* SVG sits at top-left of stage */
-        var svgLeft = stageR.left - loaderR.left;
-        var svgTop  = stageR.top  - loaderR.top;
-        gCxL = svgLeft + GCX_VB * SCALE;
-        gCyL = svgTop  + GCY_VB * SCALE;
+        var lr = loader.getBoundingClientRect();
+        var sr = stage.getBoundingClientRect();
+        gCxL = (sr.left - lr.left) + GCX_VB * SCALE;
+        gCyL = (sr.top  - lr.top)  + GCY_VB * SCALE;
 
-        /* Set orbit ellipse on the overlay SVG (stage coords) */
+        /* Position orbit ellipse in stage-coordinate space */
         var gCxS = GCX_VB * SCALE;
         var gCyS = GCY_VB * SCALE;
         orbEll.setAttribute('cx', '' + gCxS);
@@ -421,20 +372,17 @@
             'rotate(' + ORB_TILT + ',' + gCxS + ',' + gCyS + ')');
     }
 
-    /* ── Math helpers ─────────────────────────────────────────── */
+    /* ── Math helpers ─────────────────────────────────────── */
     function toRad(d) { return d * Math.PI / 180; }
 
-    /* Returns {x,y,h} of plane on orbit ellipse at angle deg.
-     * x,y are in loader-relative coords. h = heading in degrees. */
+    /* Point + heading on the tilted orbit ellipse */
     function orbitPt(deg) {
         var a  = toRad(deg);
         var t  = toRad(ORB_TILT);
         var ex = ORB_RX * Math.cos(a);
         var ey = ORB_RY * Math.sin(a);
-        /* rotate by tilt */
         var rx = ex * Math.cos(t) - ey * Math.sin(t);
         var ry = ex * Math.sin(t) + ey * Math.cos(t);
-        /* tangent heading */
         var dx = -ORB_RX * Math.sin(a);
         var dy =  ORB_RY * Math.cos(a);
         var h  = Math.atan2(
@@ -452,9 +400,36 @@
             ' scale(' + sc + ')';
     }
 
-    /* ── Orbit rAF loop ───────────────────────────────────────── */
-    var angle    = -90; /* start at top (12 o'clock) */
-    var speed    = 2.5; /* deg/frame */
+    /* ── Globe scale animation (SVG transform, viewBox-exact) ──
+     * Scale around (GCX_VB, GCY_VB) using SVG transform attribute.
+     * Equivalent to: translate(cx,cy) scale(s) translate(-cx,-cy)
+     * Simplified:    translate(cx*(1-s), cy*(1-s)) scale(s)
+     ──────────────────────────────────────────────────────────── */
+    function easeOutBack(x) {
+        var c1 = 1.70158, c3 = c1 + 1;
+        return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+    }
+
+    function animateGlobe() {
+        var t0  = null;
+        var dur = 430;
+        function frame(ts) {
+            if (!t0) t0 = ts;
+            var p  = Math.min(1, (ts - t0) / dur);
+            var s  = easeOutBack(p);
+            var tx = GCX_VB * (1 - s);
+            var ty = GCY_VB * (1 - s);
+            gGrp.setAttribute('transform',
+                'translate(' + tx + ' ' + ty + ') scale(' + s + ')');
+            gGrp.style.opacity = '' + Math.min(1, p * 2.5);
+            if (p < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+    }
+
+    /* ── Orbit rAF loop ───────────────────────────────────── */
+    var angle    = -90;    /* 12 o'clock start */
+    var speed    = 2.5;    /* deg / frame */
     var orbiting = false;
     var rafId    = null;
 
@@ -466,17 +441,16 @@
         rafId = requestAnimationFrame(tick);
     }
 
-    /* ── Phase 1 - letters drop in (CSS class stagger) ────────── */
+    /* ── Phase 1 — F L Y drop in ────────────────────────────── */
     function phase1Letters() {
-        var ids = ['fol-F','fol-L','fol-Y','fol-V','fol-E','fol-R'];
-        ids.slice(0,3).forEach(function (id, i) {
+        ['fol-F', 'fol-L', 'fol-Y'].forEach(function (id, i) {
             setTimeout(function () {
                 var el = document.getElementById(id);
                 if (el) el.classList.add('fol-in');
             }, i * 90);
         });
-        /* V E R come in after globe */
-        ids.slice(3).forEach(function (id, i) {
+        /* V E R after globe */
+        ['fol-V', 'fol-E', 'fol-R'].forEach(function (id, i) {
             setTimeout(function () {
                 var el = document.getElementById(id);
                 if (el) el.classList.add('fol-in');
@@ -484,28 +458,23 @@
         });
     }
 
-    /* ── Phase 2 - globe pops in ──────────────────────────────── */
+    /* ── Phase 2 — globe scales in ──────────────────────────── */
     function phase2Globe() {
-        if (gGrp) gGrp.classList.add('fol-in');
+        animateGlobe();
     }
 
-    /* ── Phase 3 - arc draws + plane flies in ─────────────────── */
+    /* ── Phase 3 — plane flies in → orbit ──────────────────── */
     function phase3Plane() {
-        /* Draw arc */
-        if (arc) arc.classList.add('fol-draw');
-
         measureGlobe();
 
-        var loaderR = loader.getBoundingClientRect();
-        var startX  = loaderR.width  * 0.82;
-        var startY  = loaderR.height * 0.80;
+        var lr     = loader.getBoundingClientRect();
+        var startX = lr.width  * 0.82;
+        var startY = lr.height * 0.80;
 
-        /* Place plane at start position */
         plane.style.transition = 'none';
         plane.style.opacity    = '1';
         setPlane(startX, startY, -35, 0.3);
 
-        /* Target: top of orbit (12 o'clock) */
         var p0 = orbitPt(-90);
 
         requestAnimationFrame(function () {
@@ -517,12 +486,10 @@
             });
         });
 
-        /* Show orbit ellipse */
         setTimeout(function () {
             orbEll.classList.add('fol-show');
         }, 380);
 
-        /* Start rAF orbit */
         setTimeout(function () {
             plane.style.transition = 'none';
             orbiting = true;
@@ -530,7 +497,7 @@
         }, 720);
     }
 
-    /* ── Phase 4 - blast-off, smoke, logo reveal ──────────────── */
+    /* ── Phase 4 — blast-off, smoke, logo reveal ────────────── */
     var blasted = false;
     function blastOff() {
         if (blasted) return;
@@ -538,62 +505,52 @@
         if (rafId) cancelAnimationFrame(rafId);
         orbiting = false;
 
-        /* Freeze plane at current orbit position */
-        var p = orbitPt(angle);
-
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
-                var loaderR = loader.getBoundingClientRect();
+                var lr = loader.getBoundingClientRect();
                 plane.style.transition =
                     'transform 0.55s cubic-bezier(0.55,0,1,0.45),' +
                     'opacity 0.35s ease-in 0.14s';
                 plane.style.opacity = '0';
-                /* Blast upper-right */
-                setPlane(
-                    loaderR.width * 0.88,
-                    -PH - 50,
-                    -42, 0.18
-                );
+                setPlane(lr.width * 0.88, -PH - 50, -42, 0.18);
             });
         });
 
-        /* ── Smoke puffs ──────────────────────────────────────── */
+        /* Smoke puffs centred on globe */
         var cx = gCxL, cy = gCyL;
-        var puffData = [
-            { r: 50, dx: -10, dy: -8,  delay: 80  },
-            { r: 40, dx:  14, dy:-18,  delay: 140 },
-            { r: 32, dx: -18, dy: 12,  delay: 200 },
-            { r: 24, dx:  20, dy:  4,  delay: 260 },
-            { r: 18, dx:   2, dy:-24,  delay: 320 },
-            { r: 14, dx: -22, dy:-14,  delay: 380 }
-        ];
-        puffData.forEach(function (cfg) {
+        [
+            { r: 50, dx: -10, dy:  -8, delay:  80 },
+            { r: 40, dx:  14, dy: -18, delay: 140 },
+            { r: 32, dx: -18, dy:  12, delay: 200 },
+            { r: 24, dx:  20, dy:   4, delay: 260 },
+            { r: 18, dx:   2, dy: -24, delay: 320 },
+            { r: 14, dx: -22, dy: -14, delay: 380 }
+        ].forEach(function (cfg) {
             var el = document.createElement('div');
             el.className = 'fol-puff';
             var d = cfg.r * 2;
             el.style.cssText =
-                'width:'  + d + 'px;' +
-                'height:' + d + 'px;' +
+                'width:'  + d + 'px;height:' + d + 'px;' +
                 'left:'   + (cx - cfg.r) + 'px;' +
                 'top:'    + (cy - cfg.r) + 'px;' +
                 'background:radial-gradient(circle,' +
-                    'rgba(165,165,165,0.9) 0%,' +
-                    'rgba(215,215,215,0) 70%);';
+                    'rgba(165,165,165,0.9) 0%,rgba(215,215,215,0) 70%);';
             loader.appendChild(el);
-
             setTimeout(function () {
-                el.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
+                el.style.transition = 'transform 1s ease-out,opacity 1s ease-out';
                 el.style.opacity    = '0.85';
-                el.style.transform  = 'scale(1) translate(' + cfg.dx + 'px,' + cfg.dy + 'px)';
+                el.style.transform  =
+                    'scale(1) translate(' + cfg.dx + 'px,' + cfg.dy + 'px)';
                 setTimeout(function () {
                     el.style.opacity   = '0';
                     el.style.transform =
-                        'scale(3) translate(' + (cfg.dx * 1.4) + 'px,' + (cfg.dy * 1.4) + 'px)';
+                        'scale(3) translate(' +
+                        (cfg.dx * 1.4) + 'px,' + (cfg.dy * 1.4) + 'px)';
                 }, 220);
             }, cfg.delay);
         });
 
-        /* ── Hide SVG logo + reveal real logo.png ─────────────── */
+        /* Fade SVG, reveal logo.png */
         setTimeout(function () {
             svgLogo.style.transition = 'opacity 0.4s ease';
             svgLogo.style.opacity    = '0';
@@ -604,32 +561,24 @@
             realLogo.classList.add('fol-visible');
         }, 420);
 
-        /* Show tagline + dots (if not already shown) */
         tagline.classList.add('fol-in');
         dots.classList.add('fol-in');
 
-        /* Fade out loader */
         setTimeout(function () {
             loader.classList.add('fol-hide');
         }, 1000);
     }
 
-    /* ── Boot sequence ─────────────────────────────────────────── */
-    var t0   = Date.now();
-    var MIN  = 2800; /* minimum show time ms */
+    /* ── Boot sequence ────────────────────────────────────── */
+    var t0  = Date.now();
+    var MIN = 2800;
 
-    /* T=0: F L Y drop in */
     setTimeout(phase1Letters, 100);
-    /* T=350: Globe pops in */
     setTimeout(phase2Globe,   350);
-    /* T=700: V E R drop in + plane flies in */
     setTimeout(phase3Plane,   750);
-    /* T=1300: tagline */
     setTimeout(function () { tagline.classList.add('fol-in'); }, 1300);
-    /* T=1550: dots */
     setTimeout(function () { dots.classList.add('fol-in');    }, 1550);
 
-    /* Blast off when page ready (min 2.8 s) */
     function scheduleBlast() {
         var wait = Math.max(0, MIN - (Date.now() - t0));
         setTimeout(blastOff, wait);
@@ -640,8 +589,7 @@
     } else {
         window.addEventListener('load', scheduleBlast);
     }
-    /* Hard cap */
-    setTimeout(blastOff, 7000);
+    setTimeout(blastOff, 7000);   /* hard cap */
 
 }());
 </script>

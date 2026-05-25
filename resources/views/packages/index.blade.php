@@ -5,11 +5,11 @@
 
 {{-- ── Hero ─────────────────────────────── --}}
 <section style="background:#F9F6EF;border-bottom:1px solid #E4DCC9;" class="px-4 py-14 text-center">
-    <p class="section-eyebrow mb-2">Handpicked for you</p>
+    <!-- <p class="section-eyebrow mb-2">Handpicked for you</p>
     <h1 class="font-extrabold text-4xl md:text-5xl text-gray-900 mb-3" style="font-family:'Merriweather',Georgia,serif;">
         Tour Packages
     </h1>
-    <p class="text-gray-500 max-w-md mx-auto mb-8">From quick weekend getaways to epic multi-country adventures - find and book the perfect trip.</p>
+    <p class="text-gray-500 max-w-md mx-auto mb-8">From quick weekend getaways to epic multi-country adventures - find and book the perfect trip.</p> -->
 
     {{-- Search --}}
     <form action="{{ route('packages.index') }}" method="GET" class="flex max-w-xl mx-auto gap-2">
