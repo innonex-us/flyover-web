@@ -154,6 +154,7 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
 
     // In-App Notifications
     Route::get('/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/lazy', [\App\Http\Controllers\Admin\NotificationController::class, 'lazy'])->name('notifications.lazy');
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllRead'])->name('notifications.read-all');
     Route::delete('/notifications/{id}', [\App\Http\Controllers\Admin\NotificationController::class, 'destroy'])->name('notifications.destroy');

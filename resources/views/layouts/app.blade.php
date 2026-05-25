@@ -394,7 +394,7 @@
     (function(){
         if(!('serviceWorker' in navigator) || !('PushManager' in window)) return;
 
-        const VAPID_PUBLIC = '{{ env('VAPID_PUBLIC_KEY') }}';
+        const VAPID_PUBLIC = '{{ config('services.vapid.public_key') }}';
 
         // Only attempt push subscription if VAPID key is configured
         if (!VAPID_PUBLIC || VAPID_PUBLIC.trim() === '') return;

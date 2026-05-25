@@ -6,12 +6,6 @@ return [
     |--------------------------------------------------------------------------
     | Third Party Services
     |--------------------------------------------------------------------------
-    |
-    | This file is for storing the credentials for third party services such
-    | as Mailgun, Postmark, AWS and more. This file provides the de facto
-    | location for this type of information, allowing packages to have
-    | a conventional file to locate the various service credentials.
-    |
     */
 
     'postmark' => [
@@ -48,6 +42,16 @@ return [
         'currency' => env('BKASH_CURRENCY', 'BDT'),
         'webhook_secret' => env('BKASH_WEBHOOK_SECRET'),
         'allowed_ips' => array_filter(array_map('trim', explode(',', env('BKASH_ALLOWED_IPS', '')))),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Web Push (VAPID)
+    |--------------------------------------------------------------------------
+    */
+    'vapid' => [
+        'public_key' => env('VAPID_PUBLIC_KEY'),
+        'private_key' => env('VAPID_PRIVATE_KEY'),
     ],
 
 ];

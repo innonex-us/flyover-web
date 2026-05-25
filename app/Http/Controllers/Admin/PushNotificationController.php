@@ -15,8 +15,8 @@ class PushNotificationController extends Controller
         return new WebPush([
             'VAPID' => [
                 'subject'    => config('app.url'),
-                'publicKey'  => env('VAPID_PUBLIC_KEY'),
-                'privateKey' => env('VAPID_PRIVATE_KEY'),
+                'publicKey'  => config('services.vapid.public_key'),
+                'privateKey' => config('services.vapid.private_key'),
             ],
         ]);
     }
@@ -40,7 +40,7 @@ class PushNotificationController extends Controller
             'title' => $validated['title'],
             'body'  => $validated['body'],
             'url'   => $validated['url'] ?? config('app.url'),
-            'icon'  => $validated['icon'] ?? asset('images/logo.png'),
+            'icon'  => $validated['icon'] ?? asset('logo.png'),
         ]);
 
         $subscriptions = PushSubscription::all();

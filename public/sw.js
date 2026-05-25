@@ -5,8 +5,8 @@ self.addEventListener('push', function (event) {
     const title   = data.title || 'FlyoverBD';
     const options = {
         body:  data.body  || '',
-        icon:  data.icon  || '/images/logo.png',
-        badge: '/images/logo.png',
+        icon:  data.icon  || '/logo.png',
+        badge: '/logo.png',
         data:  { url: data.url || '/' },
     };
 
