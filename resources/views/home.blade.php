@@ -523,28 +523,71 @@
 
                 {{-- ── Real-time suggestions dropdown ── --}}
                 <div x-show="show && suggestions.length > 0 && calOpen === ''"
-                     x-transition:enter="transition ease-out duration-150"
-                     x-transition:enter-start="opacity-0 translate-y-2"
-                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-3 scale-[0.98]"
+                     x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                     x-transition:leave-end="opacity-0 translate-y-2 scale-[0.98]"
                      @click.outside="show=false"
-                     class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl shadow-black/20 border border-gray-100 overflow-hidden z-50"
+                     class="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-2xl shadow-black/25 border border-gray-100 overflow-hidden z-50"
                      style="display:none;">
-                    <div class="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-b border-gray-100">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest" x-text="query ? 'Results for &quot;' + query + '&quot;' : 'Popular'"></span>
-                        <div x-show="loading" class="w-3 h-3 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                    {{-- Header --}}
+                    <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            <span class="text-xs font-semibold text-gray-600" x-text="query ? 'Search results for &quot;' + query + '&quot;' : 'Popular destinations'"></span>
+                        </div>
+                        <div x-show="loading" class="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                     </div>
-                    <ul class="max-h-64 overflow-y-auto">
-                        <template x-for="item in suggestions" :key="item.url">
-                            <li @click="go(item.url)" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 cursor-pointer transition-all group border-b border-gray-50 last:border-0">
-                                <img :src="item.image" alt="" class="w-10 h-10 object-cover rounded-xl flex-shrink-0 bg-gray-100">
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-semibold text-gray-800 truncate group-hover:text-red-600" x-text="item.text"></p>
-                                    <p class="text-xs text-gray-400 truncate" x-text="item.subtext"></p>
+                    {{-- Results list --}}
+                    <ul class="max-h-[320px] overflow-y-auto py-2">
+                        <template x-for="(item, index) in suggestions" :key="item.url">
+                            <li @click="go(item.url)"
+                                class="group mx-2 rounded-xl cursor-pointer transition-all duration-200 border border-transparent hover:border-red-100 hover:bg-red-50/50 hover:shadow-sm"
+                                :class="{'bg-red-50/30': index === 0}">
+                                <div class="flex items-center gap-3 px-3 py-2.5">
+                                    {{-- Image with category badge --}}
+                                    <div class="relative flex-shrink-0">
+                                        <img :src="item.image || 'https://via.placeholder.com/120x80?text=' + tab.charAt(0).toUpperCase() + tab.slice(1)"
+                                             alt=""
+                                             class="w-16 h-12 object-cover rounded-lg bg-gray-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                                        <span class="absolute -bottom-1 -right-1 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md"
+                                              :class="{
+                                                  'bg-emerald-500 text-white': tab === 'tours',
+                                                  'bg-blue-500 text-white': tab === 'visas',
+                                                  'bg-purple-500 text-white': tab === 'hotels',
+                                                  'bg-orange-500 text-white': tab === 'transfers'
+                                              }"
+                                              x-text="tab === 'transfers' ? 'Transfer' : tab.charAt(0).toUpperCase() + tab.slice(1, -1)"></span>
+                                    </div>
+                                    {{-- Content --}}
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold text-gray-800 truncate group-hover:text-red-600 transition-colors" x-text="item.text"></p>
+                                        <div class="flex items-center gap-1.5 mt-0.5">
+                                            <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                            <p class="text-xs text-gray-500 truncate" x-text="item.subtext"></p>
+                                        </div>
+                                    </div>
+                                    {{-- Price or arrow --}}
+                                    <div class="flex-shrink-0 flex items-center gap-2">
+                                        <span x-show="item.price" class="text-sm font-bold text-red-600" x-text="item.price ? '৳' + item.price : ''"></span>
+                                        <div class="w-7 h-7 rounded-full bg-gray-100 group-hover:bg-red-500 flex items-center justify-center transition-colors">
+                                            <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                        </div>
+                                    </div>
                                 </div>
-                                <svg class="w-4 h-4 text-gray-300 group-hover:text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </li>
                         </template>
                     </ul>
+                    {{-- Footer --}}
+                    <div class="px-4 py-2 bg-gray-50 border-t border-gray-100">
+                        <a :href="tab === 'tours' ? '{{ route('packages.index') }}?search=' + encodeURIComponent(query) : (tab === 'visas' ? '{{ route('visas.index') }}?search=' + encodeURIComponent(query) : (tab === 'hotels' ? '{{ route('hotels.index') }}?search=' + encodeURIComponent(query) : '{{ route('transfers.index') }}'))"
+                           class="flex items-center justify-center gap-2 text-xs font-semibold text-gray-600 hover:text-red-600 transition-colors py-1">
+                            <span>View all results</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </a>
+                    </div>
                 </div>
 
             </div>

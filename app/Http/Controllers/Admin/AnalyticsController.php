@@ -164,14 +164,14 @@ class AnalyticsController extends Controller
             ->get();
         
         // Average time on page
-        $avgTimeOnPage = VisitorPageView::whereBetween('viewed_at', [$startDate, $endDate])
+        $avgTimeOnPage = (float) (VisitorPageView::whereBetween('viewed_at', [$startDate, $endDate])
             ->where('time_on_page', '>', 0)
-            ->avg('time_on_page');
+            ->avg('time_on_page') ?? 0);
         
         return [
             'top_pages' => $topPages,
             'categories' => $pageCategories,
-            'avg_time_on_page' => round($avgTimeOnPage ?? 0),
+            'avg_time_on_page' => round($avgTimeOnPage),
         ];
     }
     
@@ -211,7 +211,7 @@ class AnalyticsController extends Controller
         [$startDate, $endDate] = $dateRange;
         
         $deviceTypes = Visitor::selectRaw('
-                CASE 
+                CASE
                     WHEN is_mobile = 1 THEN "Mobile"
                     WHEN is_tablet = 1 THEN "Tablet"
                     WHEN is_desktop = 1 THEN "Desktop"
@@ -220,7 +220,14 @@ class AnalyticsController extends Controller
                 COUNT(*) as count
             ')
             ->whereBetween('first_visit_at', [$startDate, $endDate])
-            ->groupBy('device_type')
+            ->groupByRaw('
+                CASE
+                    WHEN is_mobile = 1 THEN "Mobile"
+                    WHEN is_tablet = 1 THEN "Tablet"
+                    WHEN is_desktop = 1 THEN "Desktop"
+                    ELSE "Unknown"
+                END
+            ')
             ->get();
         
         $browsers = Visitor::select('browser', DB::raw('COUNT(*) as count'))
@@ -289,11 +296,11 @@ class AnalyticsController extends Controller
     {
         [$startDate, $endDate] = $dateRange;
         
-        $avgDuration = VisitorSession::whereBetween('started_at', [$startDate, $endDate])
+        $avgDuration = (float) (VisitorSession::whereBetween('started_at', [$startDate, $endDate])
             ->where('duration', '>', 0)
-            ->avg('duration');
+            ->avg('duration') ?? 0);
         
-        return round($avgDuration ?? 0);
+        return (int) round($avgDuration);
     }
     
     private function getBounceRate(array $dateRange): float

@@ -1,47 +1,58 @@
-@extends('layouts.app')
-
-@section('title', 'Analytics Dashboard')
-
-@section('meta')
-    <meta name="robots" content="noindex, nofollow">
-@endsection
+<x-admin-layout pageTitle="Analytics Dashboard">
 
 @push('styles')
     <style>
         .analytics-card {
-            @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6;
+            background: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,.07);
+            border: 1px solid #f3f4f6;
+            padding: 1.5rem;
         }
         .metric-card {
-            @apply bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100;
+            background: linear-gradient(135deg, #eff6ff, #eef2ff);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid #bfdbfe;
         }
         .metric-value {
-            @apply text-3xl font-bold text-gray-900;
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #111827;
         }
         .metric-label {
-            @apply text-sm text-gray-600 mt-1;
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-top: 0.25rem;
         }
         .metric-change {
-            @apply text-sm font-medium mt-2;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
         }
-        .metric-change.positive {
-            @apply text-green-600;
-        }
-        .metric-change.negative {
-            @apply text-red-600;
-        }
+        .metric-change.positive { color: #16a34a; }
+        .metric-change.negative { color: #dc2626; }
         .chart-container {
-            @apply h-64 w-full;
+            height: 16rem;
+            width: 100%;
         }
         .realtime-indicator {
-            @apply inline-block w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse;
+            display: inline-block;
+            width: 0.5rem;
+            height: 0.5rem;
+            background: #22c55e;
+            border-radius: 9999px;
+            margin-right: 0.5rem;
+            animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
         }
-        .table-hover tbody tr:hover {
-            @apply bg-gray-50;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
         }
+        .table-hover tbody tr:hover { background: #f9fafb; }
     </style>
 @endpush
 
-@section('content')
 <div class="min-h-screen bg-gray-50" x-data="analyticsDashboard()">
     <!-- Header -->
     <div class="bg-white border-b border-gray-200">
@@ -275,7 +286,6 @@
         </div>
     </div>
 </div>
-@endsection
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -364,3 +374,5 @@
         }
     </script>
 @endpush
+
+</x-admin-layout>

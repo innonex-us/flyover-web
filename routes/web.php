@@ -111,6 +111,17 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     // Analytics
     Route::get('/analytics', [\App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
     Route::get('/analytics/export', [\App\Http\Controllers\Admin\AnalyticsController::class, 'export'])->name('analytics.export');
+    
+    // New Pages
+    Route::get('/analytics-advanced', function () { return view('admin.analytics'); })->name('analytics.advanced');
+    Route::get('/reports', function () { return view('admin.reports'); })->name('reports.index');
+    Route::get('/reports/sales', function () { return view('admin.reports'); })->name('reports.sales');
+    Route::get('/reports/visitors', function () { return view('admin.reports'); })->name('reports.visitors');
+    Route::get('/users', function () { return view('admin.users'); })->name('users.index');
+    Route::get('/settings/general', function () { return view('admin.settings'); })->name('settings.general');
+    Route::get('/settings/email', function () { return view('admin.settings'); })->name('settings.email');
+    Route::get('/system/logs', function () { return view('admin.system'); })->name('system.logs');
+    Route::get('/system/backup', function () { return view('admin.system'); })->name('system.backup');
 
     Route::resource('packages', \App\Http\Controllers\Admin\PackageController::class);
     Route::resource('visas', \App\Http\Controllers\Admin\VisaController::class);

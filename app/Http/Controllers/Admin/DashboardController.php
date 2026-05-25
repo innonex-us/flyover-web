@@ -164,9 +164,9 @@ class DashboardController extends Controller
         $totalPageViews = VisitorPageView::whereBetween('viewed_at', [$startDate, $endDate])->count();
         $totalSessions = VisitorSession::whereBetween('started_at', [$startDate, $endDate])->count();
         
-        $avgSessionDuration = VisitorSession::whereBetween('started_at', [$startDate, $endDate])
+        $avgSessionDuration = (float) (VisitorSession::whereBetween('started_at', [$startDate, $endDate])
             ->where('duration', '>', 0)
-            ->avg('duration') ?? 0;
+            ->avg('duration') ?? 0);
         
         $bounceRate = $this->calculateBounceRate($dateRange);
         
@@ -262,9 +262,9 @@ class DashboardController extends Controller
         $conversionRate = $totalVisitors > 0 ? min(round(($totalBookings / $totalVisitors) * 100, 2), 100) : 0;
         
         // Average booking value
-        $avgBookingValue = Booking::whereIn('status', ['confirmed', 'completed'])
+        $avgBookingValue = (float) (Booking::whereIn('status', ['confirmed', 'completed'])
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->avg('total_amount') ?? 0;
+            ->avg('total_amount') ?? 0);
         
         // Revenue per visitor
         $totalRevenue = Booking::whereIn('status', ['confirmed', 'completed'])

@@ -7,6 +7,8 @@ use App\Models\Package;
 use App\Models\TransferRoute;
 use App\Models\Visa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class SearchController extends Controller
 {
@@ -35,13 +37,14 @@ class SearchController extends Controller
                 })
                 ->latest()
                 ->limit(5)
-                ->get(['title', 'slug', 'location', 'thumbnail'])
+                ->get(['title', 'slug', 'location', 'thumbnail', 'price', 'duration_days'])
                 ->map(function ($package) {
                     return [
                         'text' => $package->title,
-                        'subtext' => $package->location,
+                        'subtext' => $package->location . ($package->duration_days ? ' · ' . $package->duration_days . ' days' : ''),
                         'url' => route('packages.show', $package->slug),
-                        'image' => $package->thumbnail ? \Storage::url($package->thumbnail) : 'https://via.placeholder.com/100x100?text=Tour',
+                        'image' => $package->thumbnail ? (Str::startsWith($package->thumbnail, 'http') ? $package->thumbnail : Storage::disk('public')->url($package->thumbnail)) : 'https://via.placeholder.com/100x100?text=Tour',
+                        'price' => $package->price,
                     ];
                 });
         } elseif ($type === 'visas') {
@@ -51,13 +54,14 @@ class SearchController extends Controller
                 })
                 ->latest()
                 ->limit(5)
-                ->get(['country', 'slug', 'thumbnail'])
+                ->get(['country', 'slug', 'thumbnail', 'validity', 'maximum_stay', 'price'])
                 ->map(function ($visa) {
                     return [
                         'text' => $visa->country,
-                        'subtext' => 'Visa Service',
+                        'subtext' => 'Visa Service' . ($visa->validity ? ' · Valid ' . $visa->validity : ''),
                         'url' => route('visas.show', $visa->slug),
-                        'image' => $visa->thumbnail ? \Storage::url($visa->thumbnail) : 'https://via.placeholder.com/100x100?text=Visa',
+                        'image' => $visa->thumbnail ? (Str::startsWith($visa->thumbnail, 'http') ? $visa->thumbnail : Storage::disk('public')->url($visa->thumbnail)) : 'https://via.placeholder.com/100x100?text=Visa',
+                        'price' => $visa->price,
                     ];
                 });
         } elseif ($type === 'transfers') {
@@ -71,13 +75,14 @@ class SearchController extends Controller
                 })
                 ->latest()
                 ->limit(5)
-                ->get(['id', 'name', 'pickup_location', 'drop_location', 'thumbnail'])
+                ->get(['id', 'name', 'pickup_location', 'drop_location', 'thumbnail', 'base_price'])
                 ->map(function ($route) {
                     return [
                         'text'    => $route->name,
                         'subtext' => $route->pickup_location . ' → ' . $route->drop_location,
                         'url'     => route('transfers.index'),
-                        'image'   => $route->thumbnail ? \Storage::url($route->thumbnail) : null,
+                        'image'   => $route->thumbnail ? (Str::startsWith($route->thumbnail, 'http') ? $route->thumbnail : Storage::disk('public')->url($route->thumbnail)) : null,
+                        'price'   => $route->base_price,
                     ];
                 });
         } elseif ($type === 'hotels') {
@@ -90,13 +95,14 @@ class SearchController extends Controller
                 })
                 ->latest()
                 ->limit(5)
-                ->get(['id', 'name', 'slug', 'location', 'thumbnail'])
+                ->get(['id', 'name', 'slug', 'location', 'thumbnail', 'price_per_night'])
                 ->map(function ($hotel) {
                     return [
                         'text'    => $hotel->name,
                         'subtext' => $hotel->location,
                         'url'     => route('hotels.show', $hotel->slug),
-                        'image'   => $hotel->thumbnail ? \Storage::url($hotel->thumbnail) : null,
+                        'image'   => $hotel->thumbnail ? (Str::startsWith($hotel->thumbnail, 'http') ? $hotel->thumbnail : Storage::disk('public')->url($hotel->thumbnail)) : null,
+                        'price'   => $hotel->price_per_night,
                     ];
                 });
         }

@@ -47,7 +47,7 @@ class VisitorSession extends Model
 
     public function pageViews(): HasMany
     {
-        return $this->hasMany(VisitorPageView::class);
+        return $this->hasMany(VisitorPageView::class, 'session_id', 'id');
     }
 
     public function updateActivity(): void

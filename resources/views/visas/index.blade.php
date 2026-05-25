@@ -27,21 +27,126 @@
         </span>
     </div>
 
-    {{-- Search --}}
-    <form action="{{ route('visas.index') }}" method="GET" class="flex max-w-xl mx-auto gap-2">
-        <div class="flex-1 relative">
-            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" name="search" value="{{ request('search') }}"
-                   placeholder="Search by country…"
-                   class="search-field pl-11 py-3.5">
+    {{-- Real-time Search --}}
+    <div class="max-w-xl mx-auto relative"
+         x-data="{
+             query: '{{ request('search') }}',
+             suggestions: [],
+             show: false,
+             loading: false,
+             timer: null,
+             fetchSuggestions() {
+                 if (this.query.length < 1) {
+                     this.suggestions = [];
+                     this.show = false;
+                     return;
+                 }
+                 this.loading = true;
+                 clearTimeout(this.timer);
+                 this.timer = setTimeout(() => {
+                     fetch(`{{ route('search.suggestions') }}?type=visas&query=${encodeURIComponent(this.query)}`)
+                         .then(r => r.json())
+                         .then(data => {
+                             this.suggestions = data;
+                             this.show = data.length > 0;
+                             this.loading = false;
+                         })
+                         .catch(() => { this.loading = false; });
+                 }, 180);
+             },
+             go(url) { window.location.href = url; },
+             viewAll() {
+                 window.location.href = '{{ route('visas.index') }}?search=' + encodeURIComponent(this.query);
+             }
+         }"
+         @keydown.escape.window="show = false">
+
+        <div class="flex gap-2">
+            <div class="flex-1 relative">
+                <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text"
+                       x-model="query"
+                       @input="fetchSuggestions()"
+                       @focus="fetchSuggestions()"
+                       placeholder="Search by country…"
+                       class="search-field pl-11 py-3.5 w-full"
+                       autocomplete="off">
+                <div x-show="loading" class="absolute right-3 top-1/2 -translate-y-1/2">
+                    <div class="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            </div>
+            <button @click="viewAll()" class="btn-primary px-7 py-3.5 rounded-xl">Search</button>
+            @if(request('search'))
+            <a href="{{ route('visas.index') }}" class="flex items-center px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-500 hover:text-gray-700 transition">
+                Clear
+            </a>
+            @endif
         </div>
-        <button type="submit" class="btn-primary px-7 py-3.5 rounded-xl">Search</button>
-        @if(request('search'))
-        <a href="{{ route('visas.index') }}" class="flex items-center px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-500 hover:text-gray-700 transition">
-            Clear
-        </a>
-        @endif
-    </form>
+
+        {{-- Search Dropdown --}}
+        <div x-show="show && suggestions.length > 0"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-3 scale-[0.98]"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+             x-transition:leave-end="opacity-0 translate-y-2 scale-[0.98]"
+             @click.outside="show = false"
+             class="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-2xl shadow-black/25 border border-gray-100 overflow-hidden z-50"
+             style="display:none;">
+
+            {{-- Header --}}
+            <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-50 to-white border-b border-gray-100">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span class="text-xs font-semibold text-gray-600" x-text="query ? 'Visa results for &quot;' + query + '&quot;' : 'Popular visa services'"></span>
+                </div>
+                <div x-show="loading" class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+
+            {{-- Results --}}
+            <ul class="max-h-[320px] overflow-y-auto py-2">
+                <template x-for="(item, index) in suggestions" :key="item.url">
+                    <li @click="go(item.url)"
+                        class="group mx-2 rounded-xl cursor-pointer transition-all duration-200 border border-transparent hover:border-blue-100 hover:bg-blue-50/50 hover:shadow-sm"
+                        :class="{'bg-blue-50/30': index === 0}">
+                        <div class="flex items-center gap-3 px-3 py-2.5">
+                            {{-- Image with visa badge --}}
+                            <div class="relative flex-shrink-0">
+                                <img :src="item.image || 'https://via.placeholder.com/120x80?text=Visa'"
+                                     alt=""
+                                     class="w-16 h-12 object-cover rounded-lg bg-gray-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                                <span class="absolute -bottom-1 -right-1 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md bg-blue-500 text-white">Visa</span>
+                            </div>
+                            {{-- Content --}}
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-gray-800 truncate group-hover:text-blue-600 transition-colors" x-text="item.text"></p>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <p class="text-xs text-gray-500 truncate" x-text="item.subtext"></p>
+                                </div>
+                            </div>
+                            {{-- Price or arrow --}}
+                            <div class="flex-shrink-0 flex items-center gap-2">
+                                <span x-show="item.price" class="text-sm font-bold text-blue-600" x-text="item.price ? '৳' + item.price.toLocaleString() : ''"></span>
+                                <div class="w-7 h-7 rounded-full bg-gray-100 group-hover:bg-blue-500 flex items-center justify-center transition-colors">
+                                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </template>
+            </ul>
+
+            {{-- Footer --}}
+            <div class="px-4 py-2 bg-gray-50 border-t border-gray-100">
+                <button @click="viewAll()" class="w-full flex items-center justify-center gap-2 text-xs font-semibold text-gray-600 hover:text-blue-600 transition-colors py-1">
+                    <span>View all visa results</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
 
     {{-- Popular countries --}}
     <div class="flex flex-wrap justify-center gap-2 mt-5">

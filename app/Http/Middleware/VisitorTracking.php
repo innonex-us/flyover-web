@@ -217,7 +217,7 @@ class VisitorTracking
             'title' => null, // Will be updated by client-side script
             'path' => $request->path(),
             'query_params' => $request->getQueryString(),
-            'hash' => $request->getFragment(),
+            'hash' => null,
             'viewed_at' => now(),
             'time_on_page' => 0,
             'scroll_depth' => 0,

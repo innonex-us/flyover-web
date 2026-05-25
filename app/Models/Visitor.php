@@ -90,7 +90,7 @@ class Visitor extends Model
 
     public function getAverageSessionDuration(): int
     {
-        return $this->sessions()->avg('duration') ?? 0;
+        return (int) round((float) ($this->sessions()->avg('duration') ?? 0));
     }
 
     public function getBounceRate(): float
