@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Hotel;
+use App\Models\Package;
+use App\Models\Post;
+use App\Models\TransferRoute;
 use App\Models\Visitor;
 use App\Models\VisitorSession;
 use App\Models\VisitorPageView;
+use App\Models\Visa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -301,7 +306,7 @@ class AnalyticsController extends Controller
             $locationLabel = ! empty($locationParts)
                 ? implode(', ', $locationParts)
                 : 'Unknown location';
-            $pageTitle = data_get($latestPageView, 'title') ?: data_get($latestPageView, 'url') ?: 'Unknown page';
+            $pageTitle = $this->resolvePageTitle($latestPageView);
             $pagePath = data_get($latestPageView, 'path') ?: parse_url((string) data_get($latestPageView, 'url', '/'), PHP_URL_PATH) ?: '/';
             $pageUrl = data_get($latestPageView, 'url') ?: $pagePath;
 
@@ -327,6 +332,63 @@ class AnalyticsController extends Controller
             'active_visitors' => $activeVisitors,
             'current_sessions' => $sessions,
         ];
+    }
+
+    private function resolvePageTitle(?VisitorPageView $pageView): string
+    {
+        if (! $pageView) {
+            return 'Unknown page';
+        }
+
+        $storedTitle = trim((string) $pageView->title);
+        $storedUrl = trim((string) $pageView->url);
+        $path = '/' . ltrim((string) $pageView->path, '/');
+
+        if ($storedTitle !== '' && ! in_array(Str::lower($storedTitle), ['unknown', 'unknown page'], true) && $storedTitle !== $storedUrl) {
+            return $storedTitle;
+        }
+
+        if (preg_match('~^/tours/([^/?#]+)~', $path, $matches)) {
+            $package = Package::query()->where('slug', $matches[1])->first();
+            if ($package) {
+                return 'Package | ' . $package->title;
+            }
+        }
+
+        if (preg_match('~^/visas/([^/?#]+)~', $path, $matches)) {
+            $visa = Visa::query()->where('slug', $matches[1])->first();
+            if ($visa) {
+                return 'Visa | ' . trim($visa->country . ' ' . $visa->type);
+            }
+        }
+
+        if (preg_match('~^/hotels/([^/?#]+)~', $path, $matches)) {
+            $hotel = Hotel::query()->where('slug', $matches[1])->first();
+            if ($hotel) {
+                return 'Hotel | ' . $hotel->name;
+            }
+        }
+
+        if (preg_match('~^/blog/([^/?#]+)~', $path, $matches)) {
+            $post = Post::query()->where('slug', $matches[1])->first();
+            if ($post) {
+                return 'Blog | ' . ($post->seo_title ?? $post->title);
+            }
+        }
+
+        if (preg_match('~^/transfers(?:/|$)~', $path)) {
+            return 'Transfer | Pick & Drop Transfer Service';
+        }
+
+        if ($path === '/' || $path === '/home') {
+            return 'Home';
+        }
+
+        $segments = collect(explode('/', trim($path, '/')))
+            ->filter()
+            ->map(fn ($segment) => Str::headline(str_replace(['-', '_'], ' ', $segment)));
+
+        return $segments->isNotEmpty() ? $segments->implode(' | ') : 'Unknown page';
     }
     
     private function getAverageSessionDuration(array $dateRange): int
