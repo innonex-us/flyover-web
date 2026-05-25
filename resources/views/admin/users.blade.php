@@ -2,156 +2,329 @@
 
 @push('styles')
     <style>
-        .user-card {
-            background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            border: 1px solid rgb(243 244 246);
+        /* Stats Cards */
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2e8f0;
             padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .table-container {
-            overflow-x: auto;
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
         }
-        .table-container table {
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Table Styles */
+        .users-table-container {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .users-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
         }
-        .table-container th,
-        .table-container td {
-            padding: 0.75rem;
+        .users-table th {
+            background: #f8fafc;
+            padding: 1rem 1.25rem;
             text-align: left;
-            border-bottom: 1px solid rgb(229 231 235);
-        }
-        .table-container th {
-            background-color: rgb(249 250 251);
-            font-weight: 600;
-            color: rgb(55 65 81);
-        }
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.375rem;
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
         }
-        .badge-success {
-            background-color: rgb(34 197 94);
+        .users-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+        .users-table tr:hover td {
+            background: #f8fafc;
+        }
+        .users-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Avatar */
+        .user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C8102E 0%, #a00d26 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
             color: white;
-        }
-        .badge-warning {
-            background-color: rgb(251 146 60);
-            color: white;
-        }
-        .badge-danger {
-            background-color: rgb(239 68 68);
-            color: white;
-        }
-        .badge-gray {
-            background-color: rgb(107 114 128);
-            color: white;
-        }
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
             font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
+        }
+        
+        /* Badges */
+        .badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-        .btn-primary {
-            background-color: rgb(59 130 246);
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: rgb(37 99 235);
-        }
-        .btn-secondary {
-            background-color: rgb(107 114 128);
-            color: white;
-        }
-        .btn-secondary:hover {
-            background-color: rgb(75 85 99);
-        }
-        .btn-danger {
-            background-color: rgb(239 68 68);
-            color: white;
-        }
-        .btn-danger:hover {
-            background-color: rgb(220 38 38);
-        }
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
             font-size: 0.75rem;
+            font-weight: 500;
         }
-        .user-avatar {
-            width: 40px;
-            height: 40px;
+        .badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            background-color: rgb(229 231 235);
-            display: flex;
+        }
+        .badge-admin {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        .badge-admin::before { background: #dc2626; }
+        .badge-manager {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+        .badge-manager::before { background: #ea580c; }
+        .badge-user {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .badge-user::before { background: #64748b; }
+        .badge-active {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        .badge-active::before { background: #16a34a; }
+        .badge-inactive {
+            background: #fefce8;
+            color: #ca8a04;
+        }
+        .badge-inactive::before { background: #ca8a04; }
+        .badge-suspended {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        .badge-suspended::before { background: #dc2626; }
+        
+        /* Action Buttons */
+        .action-btn {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.5rem;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            color: rgb(55 65 81);
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
         }
-        .modal {
+        .action-btn-edit {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .action-btn-edit:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .action-btn-toggle {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        .action-btn-toggle:hover {
+            background: #dcfce7;
+        }
+        .action-btn-toggle.inactive {
+            background: #fefce8;
+            color: #ca8a04;
+        }
+        .action-btn-toggle.inactive:hover {
+            background: #fef9c3;
+        }
+        .action-btn-delete {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        .action-btn-delete:hover {
+            background: #fee2e2;
+        }
+        
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            padding: 1rem 1.25rem;
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.625rem 1rem 0.625rem 2.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #C8102E;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+        }
+        .filter-select {
+            padding: 0.625rem 2.5rem 0.625rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            background: #f8fafc;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25rem;
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: #C8102E;
+            box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+        }
+        
+        /* Modal */
+        .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
             z-index: 50;
+            padding: 1rem;
         }
-        .modal.show {
+        .modal-overlay.show {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .modal-content {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
+        .modal-panel {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 28rem;
+            max-height: calc(100vh - 2rem);
             overflow-y: auto;
         }
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+        }
+        .modal-body {
+            padding: 1.5rem;
+        }
+        .modal-footer {
+            padding: 0 1.5rem 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
+            font-size: 0.875rem;
             font-weight: 500;
-            color: rgb(55 65 81);
+            color: #374151;
         }
         .form-input {
             width: 100%;
-            padding: 0.5rem;
-            border: 1px solid rgb(209 213 219);
-            border-radius: 0.375rem;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
             font-size: 0.875rem;
+            transition: all 0.2s;
         }
         .form-input:focus {
             outline: none;
-            border-color: rgb(59 130 246);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #C8102E;
+            box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: #C8102E;
+            color: white;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary:hover {
+            background: #a00d26;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
+        }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1.5rem;
+        }
+        .empty-icon {
+            width: 4rem;
+            height: 4rem;
+            background: #f1f5f9;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
         }
         
         /* Responsive */
-        @media (max-width: 767px) {
-            .table-container {
-                margin: 0 -1rem;
-                padding: 0 1rem;
+        @media (max-width: 1024px) {
+            .users-table-container {
+                overflow-x: auto;
             }
-            .user-grid {
-                grid-template-columns: 1fr;
+        }
+        @media (max-width: 640px) {
+            .stat-card {
+                padding: 1rem;
             }
         }
     </style>
@@ -159,79 +332,78 @@
 
 <div x-data="userManagement()" class="space-y-6">
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">User Management</h1>
-            <p class="text-gray-600 mt-1">Manage system users and permissions</p>
+            <p class="text-gray-500 mt-1">Manage system users and their permissions</p>
         </div>
         <div class="flex items-center gap-3">
-            <button @click="showAddUserModal = true" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-5 rounded-xl transition shadow-sm hover:shadow-md flex items-center gap-2 text-sm">
+            <button @click="showAddUserModal = true" class="btn-primary py-2.5 px-5">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 Add User
             </button>
-            <button @click="refreshUsers()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2.5 px-5 rounded-xl transition shadow-sm hover:shadow-md flex items-center gap-2 text-sm">
+            <button @click="refreshUsers()" class="btn-secondary py-2.5 px-4">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                 </svg>
-                Refresh
             </button>
         </div>
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="user-card">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <div class="text-2xl font-bold text-gray-900" x-text="userStats.total"></div>
-                    <div class="text-sm text-gray-600">Total Users</div>
+                    <div class="text-3xl font-bold text-gray-900" x-text="userStats.total"></div>
+                    <div class="text-sm text-gray-500 mt-0.5">Total Users</div>
                 </div>
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="stat-icon bg-blue-50 text-blue-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
                 </div>
             </div>
         </div>
 
-        <div class="user-card">
+        <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <div class="text-2xl font-bold text-gray-900" x-text="userStats.active"></div>
-                    <div class="text-sm text-gray-600">Active Users</div>
+                    <div class="text-3xl font-bold text-gray-900" x-text="userStats.active"></div>
+                    <div class="text-sm text-gray-500 mt-0.5">Active Users</div>
                 </div>
-                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="stat-icon bg-green-50 text-green-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
             </div>
         </div>
 
-        <div class="user-card">
+        <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <div class="text-2xl font-bold text-gray-900" x-text="userStats.admins"></div>
-                    <div class="text-sm text-gray-600">Admin Users</div>
+                    <div class="text-3xl font-bold text-gray-900" x-text="userStats.admins"></div>
+                    <div class="text-sm text-gray-500 mt-0.5">Admins</div>
                 </div>
-                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="stat-icon bg-red-50 text-red-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                     </svg>
                 </div>
             </div>
         </div>
 
-        <div class="user-card">
+        <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <div class="text-2xl font-bold text-gray-900" x-text="userStats.newThisMonth"></div>
-                    <div class="text-sm text-gray-600">New This Month</div>
+                    <div class="text-3xl font-bold text-gray-900" x-text="userStats.newThisMonth"></div>
+                    <div class="text-sm text-gray-500 mt-0.5">New This Month</div>
                 </div>
-                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="stat-icon bg-orange-50 text-orange-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                     </svg>
                 </div>
@@ -240,24 +412,27 @@
     </div>
 
     <!-- Filters and Search -->
-    <div class="user-card">
+    <div class="filter-bar">
         <div class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1">
+            <div class="flex-1 relative">
+                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
                 <input 
                     type="text" 
                     x-model="searchTerm" 
                     @input="filterUsers()"
                     placeholder="Search users by name or email..." 
-                    class="form-input"
+                    class="search-input"
                 >
             </div>
-            <select x-model="roleFilter" @change="filterUsers()" class="form-input md:w-48">
+            <select x-model="roleFilter" @change="filterUsers()" class="filter-select md:w-40">
                 <option value="">All Roles</option>
                 <option value="admin">Admin</option>
                 <option value="user">User</option>
                 <option value="manager">Manager</option>
             </select>
-            <select x-model="statusFilter" @change="filterUsers()" class="form-input md:w-48">
+            <select x-model="statusFilter" @change="filterUsers()" class="filter-select md:w-40">
                 <option value="">All Status</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
@@ -267,9 +442,9 @@
     </div>
 
     <!-- Users Table -->
-    <div class="user-card">
-        <div class="table-container">
-            <table>
+    <div class="users-table-container">
+        <div class="overflow-x-auto">
+            <table class="users-table">
                 <thead>
                     <tr>
                         <th>User</th>
@@ -278,7 +453,7 @@
                         <th>Status</th>
                         <th>Joined</th>
                         <th>Last Active</th>
-                        <th>Actions</th>
+                        <th class="text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -288,41 +463,45 @@
                                 <div class="flex items-center gap-3">
                                     <div class="user-avatar" x-text="user.name.charAt(0).toUpperCase()"></div>
                                     <div>
-                                        <div class="font-medium text-gray-900" x-text="user.name"></div>
-                                        <div class="text-xs text-gray-500" x-text="'ID: ' + user.id"></div>
+                                        <div class="font-semibold text-gray-900" x-text="user.name"></div>
+                                        <div class="text-xs text-gray-400" x-text="'ID: ' + user.id"></div>
                                     </div>
                                 </div>
                             </td>
-                            <td x-text="user.email"></td>
+                            <td class="text-gray-600" x-text="user.email"></td>
                             <td>
                                 <span class="badge" :class="{
-                                    'badge-danger': user.role === 'admin',
-                                    'badge-warning': user.role === 'manager',
-                                    'badge-gray': user.role === 'user'
+                                    'badge-admin': user.role === 'admin',
+                                    'badge-manager': user.role === 'manager',
+                                    'badge-user': user.role === 'user'
                                 }" x-text="user.role.charAt(0).toUpperCase() + user.role.slice(1)"></span>
                             </td>
                             <td>
                                 <span class="badge" :class="{
-                                    'badge-success': user.status === 'active',
-                                    'badge-warning': user.status === 'inactive',
-                                    'badge-danger': user.status === 'suspended'
+                                    'badge-active': user.status === 'active',
+                                    'badge-inactive': user.status === 'inactive',
+                                    'badge-suspended': user.status === 'suspended'
                                 }" x-text="user.status.charAt(0).toUpperCase() + user.status.slice(1)"></span>
                             </td>
-                            <td x-text="user.joinedDate"></td>
-                            <td x-text="user.lastActive"></td>
+                            <td class="text-gray-500 text-sm" x-text="user.joinedDate"></td>
+                            <td class="text-gray-500 text-sm" x-text="user.lastActive"></td>
                             <td>
-                                <div class="flex items-center gap-2">
-                                    <button @click="editUser(user)" class="btn btn-sm btn-secondary">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="flex items-center justify-end gap-2">
+                                    <button @click="editUser(user)" class="action-btn action-btn-edit" title="Edit">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
                                     </button>
                                     <button @click="toggleUserStatus(user)" 
-                                            :class="user.status === 'active' ? 'btn btn-sm btn-warning' : 'btn btn-sm btn-success'"
-                                            x-text="user.status === 'active' ? 'Deactivate' : 'Activate'">
+                                            :class="user.status === 'active' ? 'action-btn action-btn-toggle' : 'action-btn action-btn-toggle inactive'"
+                                            :title="user.status === 'active' ? 'Deactivate' : 'Activate'">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path x-show="user.status === 'active'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            <path x-show="user.status !== 'active'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
                                     </button>
-                                    <button @click="deleteUser(user)" class="btn btn-sm btn-danger">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <button @click="deleteUser(user)" class="action-btn action-btn-delete" title="Delete">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                         </svg>
                                     </button>
@@ -333,44 +512,62 @@
                 </tbody>
             </table>
         </div>
+        
+        <!-- Empty State -->
+        <div x-show="filteredUsers.length === 0" class="empty-state" x-cloak>
+            <div class="empty-icon">
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900">No users found</h3>
+            <p class="text-gray-500 mt-1">Try adjusting your search or filters</p>
+        </div>
     </div>
 
     <!-- Add/Edit User Modal -->
-    <div class="modal" :class="{ 'show': showAddUserModal || showEditUserModal }">
-        <div class="modal-content">
-            <h2 class="text-xl font-bold text-gray-900 mb-4" x-text="showEditUserModal ? 'Edit User' : 'Add New User'"></h2>
+    <div class="modal-overlay" :class="{ 'show': showAddUserModal || showEditUserModal }" @click.self="closeModal()">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold text-gray-900" x-text="showEditUserModal ? 'Edit User' : 'Add New User'"></h2>
+                <p class="text-sm text-gray-500 mt-1" x-text="showEditUserModal ? 'Update user details and permissions' : 'Create a new user account'"></p>
+            </div>
             <form @submit.prevent="saveUser()">
-                <div class="form-group">
-                    <label class="form-label">Name</label>
-                    <input type="text" x-model="currentUser.name" class="form-input" required>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" x-model="currentUser.name" class="form-input" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" x-model="currentUser.email" class="form-input" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group" x-show="!showEditUserModal">
+                        <label class="form-label">Password</label>
+                        <input type="password" x-model="currentUser.password" class="form-input" placeholder="••••••••" x-bind:required="!showEditUserModal">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group mb-0">
+                            <label class="form-label">Role</label>
+                            <select x-model="currentUser.role" class="form-input" required>
+                                <option value="user">User</option>
+                                <option value="manager">Manager</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="form-label">Status</label>
+                            <select x-model="currentUser.status" class="form-input" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" x-model="currentUser.email" class="form-input" required>
-                </div>
-                <div class="form-group" x-show="!showEditUserModal">
-                    <label class="form-label">Password</label>
-                    <input type="password" x-model="currentUser.password" class="form-input" x-bind:required="!showEditUserModal">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Role</label>
-                    <select x-model="currentUser.role" class="form-input" required>
-                        <option value="user">User</option>
-                        <option value="manager">Manager</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Status</label>
-                    <select x-model="currentUser.status" class="form-input" required>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="suspended">Suspended</option>
-                    </select>
-                </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" @click="closeModal()" class="btn btn-secondary">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save User</button>
+                <div class="modal-footer">
+                    <button type="button" @click="closeModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save User</button>
                 </div>
             </form>
         </div>
