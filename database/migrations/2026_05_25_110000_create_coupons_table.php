@@ -41,7 +41,6 @@ return new class extends Migration
             $table->timestamps();
             
             $table->index(['coupon_id', 'user_id']);
-            $table->index(['booking_type', 'booking_id']);
         });
 
         // Add discount fields to bookings
