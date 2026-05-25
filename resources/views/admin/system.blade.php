@@ -169,12 +169,7 @@
             color: rgb(59 130 246);
             border-bottom-color: rgb(59 130 246);
         }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
+        /* tab-content visibility is managed by Alpine x-show */
         .status-indicator {
             width: 8px;
             height: 8px;
@@ -288,7 +283,7 @@
     </div>
 
     <!-- System Logs -->
-    <div x-show="activeTab === 'logs'" class="tab-content active">
+    <div x-show="activeTab === 'logs'">
         <div class="system-card">
             <div class="system-header">
                 <h2 class="text-xl font-semibold text-gray-900">System Logs</h2>
@@ -318,7 +313,7 @@
     </div>
 
     <!-- Backup & Restore -->
-    <div x-show="activeTab === 'backup'" class="tab-content">
+    <div x-show="activeTab === 'backup'" style="display:none;">
         <div class="system-card">
             <div class="system-header">
                 <h2 class="text-xl font-semibold text-gray-900">Backup & Restore</h2>
@@ -364,7 +359,7 @@
     </div>
 
     <!-- Cache Management -->
-    <div x-show="activeTab === 'cache'" class="tab-content">
+    <div x-show="activeTab === 'cache'" style="display:none;">
         <div class="system-card">
             <div class="system-header">
                 <h2 class="text-xl font-semibold text-gray-900">Cache Management</h2>
@@ -415,7 +410,7 @@
     </div>
 
     <!-- Maintenance -->
-    <div x-show="activeTab === 'maintenance'" class="tab-content">
+    <div x-show="activeTab === 'maintenance'" style="display:none;">
         <div class="system-card">
             <div class="system-header">
                 <h2 class="text-xl font-semibold text-gray-900">Maintenance Tools</h2>

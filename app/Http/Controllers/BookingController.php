@@ -29,25 +29,27 @@ class BookingController extends Controller
             'quantity' => 'required|integer|min:1',
             'notes' => 'nullable|string|max:1000',
             'details' => 'nullable|array',
-            'g-recaptcha-response' => 'required|string',
+            'g-recaptcha-response' => app()->isLocal() ? 'nullable|string' : 'required|string',
         ]);
 
-        // Verify reCAPTCHA
-        $recaptchaSecret = env('RECAPTCHA_SECRET_KEY');
-        $recaptchaResponse = $request->input('g-recaptcha-response');
+        // Verify reCAPTCHA (skipped in local environment)
+        if (!app()->isLocal()) {
+            $recaptchaSecret = env('RECAPTCHA_SECRET_KEY');
+            $recaptchaResponse = $request->input('g-recaptcha-response');
 
-        if (!$recaptchaSecret) {
-            abort(500, 'reCAPTCHA not configured');
-        }
+            if (!$recaptchaSecret) {
+                abort(500, 'reCAPTCHA not configured');
+            }
 
-        $verification = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret' => $recaptchaSecret,
-            'response' => $recaptchaResponse,
-            'remoteip' => $request->ip(),
-        ]);
+            $verification = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => $recaptchaSecret,
+                'response' => $recaptchaResponse,
+                'remoteip' => $request->ip(),
+            ]);
 
-        if (!$verification->json('success') || $verification->json('score') < 0.5) {
-            return back()->withErrors(['g-recaptcha-response' => 'The reCAPTCHA verification failed. Please try again.'])->withInput();
+            if (!$verification->json('success') || $verification->json('score') < 0.5) {
+                return back()->withErrors(['g-recaptcha-response' => 'The reCAPTCHA verification failed. Please try again.'])->withInput();
+            }
         }
 
         $bookingData = [

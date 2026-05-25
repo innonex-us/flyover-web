@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\VisaController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -88,9 +89,9 @@ Route::get('/contact', function () {
 Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
 Route::view('/privacy', 'pages.privacy')->name('privacy');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'two-factor'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified', 'two-factor'])
+    ->name('dashboard');
 
 Route::middleware(['auth', 'two-factor'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -128,8 +129,11 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::get('/settings', fn() => redirect()->route('admin.settings.show', 'general'))->name('settings.index');
     Route::get('/settings/{group}', [\App\Http\Controllers\Admin\SettingsController::class, 'show'])->name('settings.show');
     Route::post('/settings/{group}', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
+    Route::get('/system', fn() => redirect()->route('admin.system.logs'))->name('system.index');
     Route::get('/system/logs', function () { return view('admin.system'); })->name('system.logs');
     Route::get('/system/backup', function () { return view('admin.system'); })->name('system.backup');
+    Route::get('/system/cache', function () { return view('admin.system'); })->name('system.cache');
+    Route::get('/system/maintenance', function () { return view('admin.system'); })->name('system.maintenance');
 
     Route::delete('/packages/{package}/thumbnail', [\App\Http\Controllers\Admin\PackageController::class, 'removeThumbnail'])->name('packages.thumbnail.destroy');
     Route::delete('/packages/{package}/images/{index}', [\App\Http\Controllers\Admin\PackageController::class, 'removeImage'])->name('packages.images.destroy');

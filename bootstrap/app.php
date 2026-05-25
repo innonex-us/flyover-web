@@ -1,5 +1,19 @@
 <?php
 
+// Load config/config.php and populate environment variables (replaces .env)
+(static function (): void {
+    $configFile = dirname(__DIR__) . '/config/config.php';
+    if (file_exists($configFile)) {
+        foreach (require $configFile as $key => $value) {
+            if (! isset($_ENV[$key]) && ! isset($_SERVER[$key])) {
+                putenv("$key=$value");
+                $_ENV[$key]    = $value;
+                $_SERVER[$key] = $value;
+            }
+        }
+    }
+})();
+
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;

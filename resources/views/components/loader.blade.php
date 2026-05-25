@@ -58,9 +58,9 @@
 /* ── Letter groups — drop in from above ────────────────────────── */
 .fol-ltr {
     opacity: 0;
-    transform: translateY(-30px);
-    transition: opacity 0.38s ease,
-                transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
+    transform: translateY(-24px);
+    transition: opacity 0.42s ease,
+                transform 0.42s cubic-bezier(0.22,1,0.36,1);
 }
 .fol-ltr.fol-in {
     opacity: 1;
@@ -92,14 +92,14 @@
     opacity: 0;
     transition: opacity 0.4s ease;
 }
-#fol-orb-ell.fol-show { opacity: 0.45; }
+#fol-orb-ell.fol-show { opacity: 0.28; }
 
 /* ── Animated plane ─────────────────────────────────────────────── */
 #fol-plane {
     position: absolute;
     left: 0; top: 0;
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     pointer-events: none;
     opacity: 0;
     will-change: transform, opacity;
@@ -116,15 +116,15 @@
 
 /* ── Tagline ────────────────────────────────────────────────────── */
 .fol-tagline {
-    margin-top: 7px;
-    font-family: Arial, sans-serif;
-    font-size: 9px;
-    font-weight: 900;
-    letter-spacing: 3.5px;
-    color: #1a1a1a;
+    margin-top: 6px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 8.5px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    color: #333333;
     text-transform: uppercase;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.6s ease;
 }
 .fol-tagline.fol-in { opacity: 1; }
 
@@ -201,14 +201,15 @@
              overflow="visible">
 
             <defs>
-                {{-- height=95 clips out the tagline row (y=106–123) --}}
-                <clipPath id="cp-F"><rect x="0"   y="0" width="50"  height="95"/></clipPath>
-                <clipPath id="cp-L"><rect x="50"  y="0" width="56"  height="95"/></clipPath>
-                <clipPath id="cp-Y"><rect x="106" y="0" width="52"  height="95"/></clipPath>
-                <clipPath id="cp-O"><circle cx="200" cy="48" r="45"/></clipPath>
-                <clipPath id="cp-V"><rect x="244" y="0" width="34"  height="95"/></clipPath>
-                <clipPath id="cp-E"><rect x="278" y="0" width="57"  height="95"/></clipPath>
-                <clipPath id="cp-R"><rect x="335" y="0" width="65"  height="95"/></clipPath>
+                {{-- height=97 clips tagline (y=106–123). Adjacent clips overlap 2px
+                     so antialiased edges never leave hairline white gaps.        --}}
+                <clipPath id="cp-F"><rect x="0"   y="0" width="52"  height="97"/></clipPath>
+                <clipPath id="cp-L"><rect x="48"  y="0" width="62"  height="97"/></clipPath>
+                <clipPath id="cp-Y"><rect x="104" y="0" width="56"  height="97"/></clipPath>
+                <clipPath id="cp-O"><circle cx="200" cy="48" r="46"/></clipPath>
+                <clipPath id="cp-V"><rect x="240" y="0" width="42"  height="97"/></clipPath>
+                <clipPath id="cp-E"><rect x="276" y="0" width="61"  height="97"/></clipPath>
+                <clipPath id="cp-R"><rect x="333" y="0" width="67"  height="97"/></clipPath>
             </defs>
 
             {{-- F --}}
@@ -236,9 +237,6 @@
             <g clip-path="url(#cp-O)">
                 <g id="fol-ggrp" style="opacity:0" transform="translate(200 48) scale(0)">
                     <image href="{{ asset('logo.png') }}" x="0" y="0" width="400" height="130" preserveAspectRatio="none"/>
-                    {{-- Red circle covers the static white plane so animated
-                         plane can orbit without visual doubling           --}}
-                    <circle id="fol-plane-cover" cx="228" cy="30" r="17" fill="#C8102E"/>
                 </g>
             </g>
 
@@ -282,18 +280,33 @@
 
     </div>
 
-    {{-- Animated plane --}}
+    {{-- Animated plane — white + red glow so visible on both globe and bg --}}
     <div id="fol-plane" aria-hidden="true">
-        <svg viewBox="0 0 34 34"
+        <svg viewBox="0 0 44 44"
              xmlns="http://www.w3.org/2000/svg"
              overflow="visible">
-            <g transform="translate(17,17)">
-                <path d="M-11,0 L11,-3 L11,3 Z" fill="#C8102E"/>
-                <path d="M-1,-3 L-6,-12.5 L-9.5,-11 L-4,0 Z" fill="#C8102E" opacity="0.9"/>
-                <path d="M-1,3 L-6,12.5 L-9.5,11 L-4,0 Z" fill="#C8102E" opacity="0.9"/>
-                <path d="M-8,0 L-13.5,-5 L-14,-3.5 L-9,0.5 Z" fill="#C8102E" opacity="0.75"/>
-                <path d="M-8,0 L-13.5,5 L-14,3.5 L-9,-0.5 Z" fill="#C8102E" opacity="0.75"/>
-                <circle cx="11" cy="0" r="2.2" fill="#C8102E"/>
+            <defs>
+                <filter id="plane-glow" x="-60%" y="-60%" width="220%" height="220%">
+                    <feDropShadow dx="0" dy="0" stdDeviation="2.5"
+                                  flood-color="#C8102E" flood-opacity="0.85"/>
+                </filter>
+            </defs>
+            <g transform="translate(22,22)" filter="url(#plane-glow)">
+                {{-- Body --}}
+                <path d="M-14,0 L15,-4 L15,4 Z"
+                      fill="white" stroke="#C8102E" stroke-width="0.8" stroke-linejoin="round"/>
+                {{-- Top wing --}}
+                <path d="M1,-4 L-8,-17 L-13,-14 L-6,0 Z"
+                      fill="white" stroke="#C8102E" stroke-width="0.6" stroke-linejoin="round"/>
+                {{-- Bottom wing --}}
+                <path d="M1,4 L-8,17 L-13,14 L-6,0 Z"
+                      fill="white" stroke="#C8102E" stroke-width="0.6" stroke-linejoin="round"/>
+                {{-- Tail top --}}
+                <path d="M-10,0 L-17,-7 L-19,-4.5 L-12,0.5 Z"
+                      fill="white" stroke="#C8102E" stroke-width="0.5" stroke-linejoin="round"/>
+                {{-- Tail bottom --}}
+                <path d="M-10,0 L-17,7 L-19,4.5 L-12,-0.5 Z"
+                      fill="white" stroke="#C8102E" stroke-width="0.5" stroke-linejoin="round"/>
             </g>
         </svg>
     </div>
@@ -361,11 +374,11 @@
     var GCY_VB = 48;    /* globe cy in viewBox units (pixel-exact) */
 
     /* Orbit ellipse in display-px */
-    var ORB_RX   = 46 * SCALE;   /* 34.5 px */
-    var ORB_RY   = 18 * SCALE;   /* 13.5 px */
+    var ORB_RX   = 52 * SCALE;   /* 39 px — slightly outside globe edge */
+    var ORB_RY   = 20 * SCALE;   /* 15 px */
     var ORB_TILT = -15;           /* degrees, matches logo dashed ring */
 
-    var PH = 17;   /* plane element half-size */
+    var PH = 22;   /* plane element half-size (44px / 2) */
 
     /* Globe centre in loader-relative px (set by measureGlobe) */
     var gCxL = 0, gCyL = 0;
@@ -421,13 +434,13 @@
      * Simplified:    translate(cx*(1-s), cy*(1-s)) scale(s)
      ──────────────────────────────────────────────────────────── */
     function easeOutBack(x) {
-        var c1 = 1.70158, c3 = c1 + 1;
+        var c1 = 0.8, c3 = c1 + 1;   /* gentle overshoot — clipped cleanly by circle */
         return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
     }
 
     function animateGlobe() {
         var t0  = null;
-        var dur = 430;
+        var dur = 480;
         function frame(ts) {
             if (!t0) t0 = ts;
             var p  = Math.min(1, (ts - t0) / dur);
@@ -444,7 +457,7 @@
 
     /* ── Orbit rAF loop ───────────────────────────────────── */
     var angle    = -90;    /* 12 o'clock start */
-    var speed    = 2.5;    /* deg / frame */
+    var speed    = 1.6;    /* deg / frame — ~3.7s full orbit at 60fps */
     var orbiting = false;
     var rafId    = null;
 
@@ -464,12 +477,13 @@
                 if (el) el.classList.add('fol-in');
             }, i * 90);
         });
-        /* V E R after globe */
+        /* V E R — start after globe finishes (globe: 350ms + 430ms = 780ms;
+           phase1 called at 100ms → offset = 780-100 = 680ms + 60ms buffer) */
         ['fol-V', 'fol-E', 'fol-R'].forEach(function (id, i) {
             setTimeout(function () {
                 var el = document.getElementById(id);
                 if (el) el.classList.add('fol-in');
-            }, 580 + i * 90);
+            }, 740 + i * 100);
         });
     }
 
@@ -588,11 +602,18 @@
     var t0  = Date.now();
     var MIN = 2800;
 
+    /* Timeline (all relative to boot):
+       100ms  F drop | 190ms L | 280ms Y
+       350ms  Globe scale start (done ~780ms)
+       840ms  V drop | 940ms E | 1040ms R  (after globe, inside phase1)
+       1000ms Plane flies in
+       1450ms Tagline
+       1650ms Dots                                                      */
     setTimeout(phase1Letters, 100);
     setTimeout(phase2Globe,   350);
-    setTimeout(phase3Plane,   750);
-    setTimeout(function () { tagline.classList.add('fol-in'); }, 1300);
-    setTimeout(function () { dots.classList.add('fol-in');    }, 1550);
+    setTimeout(phase3Plane,   1000);
+    setTimeout(function () { tagline.classList.add('fol-in'); }, 1450);
+    setTimeout(function () { dots.classList.add('fol-in');    }, 1650);
 
     function scheduleBlast() {
         var wait = Math.max(0, MIN - (Date.now() - t0));
