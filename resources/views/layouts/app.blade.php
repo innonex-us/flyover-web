@@ -6,8 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @php
+        $siteName = config('app.name', 'FlyoverBD');
+        $routeName = request()->route()?->getName();
+        $derivedTitle = null;
+
+        if ($routeName) {
+            $parts = array_values(array_filter(explode('.', $routeName), function ($part) {
+                return ! in_array($part, ['index', 'show', 'create', 'edit', 'store', 'update', 'destroy', 'dashboard'], true);
+            }));
+
+            if (! empty($parts)) {
+                $derivedTitle = collect($parts)->map(fn ($part) => \Illuminate\Support\Str::headline($part))->implode(' ');
+            }
+        }
+
+        $resolvedTitle = $title ?? $pageTitle ?? $derivedTitle ?? $siteName;
+        $browserTitle = $resolvedTitle;
+    @endphp
+
     <!-- SEO Meta Tags -->
-    <title>{{ $title ?? config('app.name', 'FlyoverBD') }}</title>
+    <title>{{ $browserTitle }}</title>
     <meta name="description" content="{{ $meta_description ?? 'FlyoverBD is your trusted partner for visa processing, tour packages, and travel consulting in Bangladesh.' }}">
     <meta name="keywords" content="{{ $meta_keywords ?? 'visa processing, tour packages, travel agency bangladesh, flyoverbd, tourist visa, business visa' }}">
     <meta name="robots" content="index, follow">
@@ -17,14 +36,14 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="{{ $og_type ?? 'website' }}">
     <meta property="og:url" content="{{ $canonical_url ?? url()->current() }}">
-    <meta property="og:title" content="{{ $title ?? config('app.name', 'FlyoverBD') }}">
+    <meta property="og:title" content="{{ $browserTitle }}">
     <meta property="og:description" content="{{ $meta_description ?? 'Your trusted partner for hassle-free visa processing and unforgettable tour packages.' }}">
     <meta property="og:image" content="{{ $meta_image ?? asset('logo.png') }}">
     <meta property="og:image:secure_url" content="{{ $meta_image ?? asset('logo.png') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="{{ $title ?? config('app.name', 'FlyoverBD') }}">
-    <meta property="og:site_name" content="{{ config('app.name', 'FlyoverBD') }}">
+    <meta property="og:image:alt" content="{{ $browserTitle }}">
+    <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:locale" content="en_BD">
 
     <!-- Twitter -->
@@ -32,13 +51,13 @@
     <meta name="twitter:site" content="@flyoverbd">
     <meta name="twitter:creator" content="@flyoverbd">
     <meta name="twitter:url" content="{{ $canonical_url ?? url()->current() }}">
-    <meta name="twitter:title" content="{{ $title ?? config('app.name', 'FlyoverBD') }}">
+    <meta name="twitter:title" content="{{ $browserTitle }}">
     <meta name="twitter:description" content="{{ $meta_description ?? 'Your trusted partner for hassle-free visa processing and unforgettable tour packages.' }}">
     <meta name="twitter:image" content="{{ $meta_image ?? asset('logo.png') }}">
-    <meta name="twitter:image:alt" content="{{ $title ?? config('app.name', 'FlyoverBD') }}">
+    <meta name="twitter:image:alt" content="{{ $browserTitle }}">
 
     <!-- Additional SEO -->
-    <meta property="fb:app_id" content="{{ env('FACEBOOK_APP_ID', '') }}">
+    <meta property="fb:app_id" content="{{ config('services.facebook.app_id', '') }}">
 
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
 

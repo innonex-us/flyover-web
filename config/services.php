@@ -29,6 +29,10 @@ return [
         ],
     ],
 
+    'facebook' => [
+        'app_id' => env('FACEBOOK_APP_ID'),
+    ],
+
     'bkash' => [
         'sandbox' => env('BKASH_SANDBOX', true),
         'base_url' => env('BKASH_BASE_URL', env('BKASH_SANDBOX', true)

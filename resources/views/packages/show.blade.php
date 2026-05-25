@@ -29,7 +29,7 @@
 @endphp
 
 <x-app-layout
-    :title="$package->title . ' | Tour Package | FlyoverBD'"
+    :title="$title"
     :meta_description="$metaDescription"
     :meta_image="$mainImage"
     :og_type="'product'"

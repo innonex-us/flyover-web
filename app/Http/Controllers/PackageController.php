@@ -11,7 +11,7 @@ class PackageController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Package::where('is_active', true);
+        $query = Package::query()->where('is_active', true);
 
         if ($request->has('search')) {
             $query->where('title', 'like', '%' . $request->search . '%')
@@ -24,16 +24,20 @@ class PackageController extends Controller
 
     public function show($slug)
     {
-        $package = Package::where('slug', $slug)->where('is_active', true)->firstOrFail();
+        $package = Package::query()
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
 
         // SEO Data
-        $title = $package->title . ' - Tour Package | FlyoverBD';
+        $title = 'Package | ' . $package->title;
         $meta_description = \Illuminate\Support\Str::limit(strip_tags($package->description), 155);
         $meta_image = $package->thumbnail 
             ? (\Illuminate\Support\Str::startsWith($package->thumbnail, 'http') ? $package->thumbnail : \Illuminate\Support\Facades\Storage::url($package->thumbnail))
             : asset('logo.png');
 
-        $relatedPackages = Package::where('is_active', true)
+        $relatedPackages = Package::query()
+            ->where('is_active', true)
             ->where('id', '!=', $package->id)
             ->where('location', 'like', '%' . $package->location . '%')
             ->limit(4)
@@ -41,7 +45,8 @@ class PackageController extends Controller
 
         // If not enough related packages from same location, get some others
         if ($relatedPackages->count() < 4) {
-            $extraPackages = Package::where('is_active', true)
+            $extraPackages = Package::query()
+                ->where('is_active', true)
                 ->where('id', '!=', $package->id)
                 ->whereNotIn('id', $relatedPackages->pluck('id'))
                 ->limit(4 - $relatedPackages->count())
@@ -92,7 +97,7 @@ class PackageController extends Controller
             ],
         ]);
 
-        $admins = User::where('role', 'admin')->get();
+        $admins = User::query()->where('role', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(new NewCustomizationRequestNotification($customization));
         }

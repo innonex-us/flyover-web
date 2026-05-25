@@ -4,7 +4,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $pageTitle ?? 'Admin Panel' }} - FlyoverBD</title>
+
+    @php
+        $siteName = config('app.name', 'FlyoverBD');
+        $routeName = request()->route()?->getName();
+        $derivedTitle = null;
+
+        if ($routeName) {
+            $parts = array_values(array_filter(explode('.', $routeName), function ($part) {
+                return ! in_array($part, ['index', 'show', 'create', 'edit', 'store', 'update', 'destroy', 'dashboard'], true);
+            }));
+
+            if (! empty($parts)) {
+                $derivedTitle = collect($parts)->map(fn ($part) => \Illuminate\Support\Str::headline($part))->implode(' ');
+            }
+        }
+
+        $resolvedTitle = $pageTitle ?? $derivedTitle ?? 'Admin Panel';
+        $browserTitle = $resolvedTitle;
+    @endphp
+
+    <title>{{ $browserTitle }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
