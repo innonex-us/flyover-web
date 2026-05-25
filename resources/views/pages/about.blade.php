@@ -152,7 +152,7 @@
                     <div>
                         <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-0.5">Phone</p>
                         <a href="tel:09611677989" class="block text-sm text-gray-700 hover:text-red-600 transition">09611-677989</a>
-                        <a href="tel:+8801335111370" class="block text-sm text-gray-700 hover:text-red-600 transition">+880 1335-111370</a>
+                        <a href="tel:{{ $site['phone'] }}" class="block text-sm text-gray-700 hover:text-red-600 transition">{{ $site['phone'] }}</a>
                     </div>
                 </div>
                 <div class="flex items-start gap-3">

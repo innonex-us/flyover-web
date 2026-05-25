@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 
 class SettingsController extends Controller
 {
-    private array $groups = ['general', 'email', 'security', 'payment', 'social', 'stats'];
+    private array $groups = ['general', 'email', 'security', 'payment', 'social', 'stats', 'banners'];
 
     private array $defaults = [
         'general' => [
@@ -65,6 +65,18 @@ class SettingsController extends Controller
             'stat_travellers_display'    => '1.2M+',
             'stat_destinations'          => '62',
         ],
+        'banners' => [
+            'enabled'       => '0',
+            'type'          => 'promo',
+            'title'         => 'Special Offer!',
+            'message'       => 'Get 20% off on all bookings this week. Use code SUMMER20',
+            'button_text'   => 'Book Now',
+            'link'          => '/tours',
+            'image'         => '',
+            'delay'         => '1',
+            'frequency'     => 'once',
+            'pages'         => 'home',
+        ],
     ];
 
     public function show(string $group = 'general')
@@ -90,6 +102,13 @@ class SettingsController extends Controller
 
         $allowed = array_keys($this->defaults[$group] ?? []);
         $data    = $request->only($allowed);
+
+        // Handle banner image upload
+        if ($group === 'banners' && $request->hasFile('image_upload')) {
+            $file = $request->file('image_upload');
+            $path = $file->store('banners', 'public');
+            $data['image'] = asset('storage/' . $path);
+        }
 
         foreach ($allowed as $key) {
             $value = $data[$key] ?? ($group === 'security' ? '0' : '');

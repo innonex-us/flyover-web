@@ -62,6 +62,7 @@
                         'payment'  => ['label'=>'Payment',  'icon'=>'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'],
                         'social'   => ['label'=>'Social',   'icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'],
                         'stats'    => ['label'=>'Stats',    'icon'=>'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
+                        'banners'  => ['label'=>'Banners',  'icon'=>'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                     ];
                     @endphp
                     @foreach($tabs as $key => $tab)
@@ -122,7 +123,7 @@
                         <textarea name="site_description" rows="3" class="s-input" style="resize:vertical;" placeholder="Describe your travel business...">{{ old('site_description', $settings['general']['site_description'] ?? '') }}</textarea>
                     </div>
                     <p class="s-section-title">System</p>
-                    <div class="toggle-wrap">
+                    <div class="toggle-wrap mb-6">
                         <label class="toggle">
                             <input type="hidden" name="maintenance_mode" value="0">
                             <input type="checkbox" name="maintenance_mode" value="1" {{ ($settings['general']['maintenance_mode'] ?? '0') === '1' ? 'checked' : '' }}>
@@ -131,6 +132,62 @@
                         <div>
                             <p class="text-sm font-semibold text-gray-700">Maintenance Mode</p>
                             <p class="text-xs text-gray-400">Disable public access while you make updates</p>
+                        </div>
+                    </div>
+
+                    {{-- Banner Modal Section --}}
+                    <p class="s-section-title">Banner Modal</p>
+                    <div class="space-y-4">
+                        <div class="toggle-wrap">
+                            <label class="toggle">
+                                <input type="hidden" name="banner_enabled" value="0">
+                                <input type="checkbox" name="banner_enabled" value="1" {{ ($settings['general']['banner_enabled'] ?? '0') === '1' ? 'checked' : '' }}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-700">Enable Banner Modal</p>
+                                <p class="text-xs text-gray-400">Show popup modal when visitors first arrive</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="s-label">Modal Variant</label>
+                                <select name="banner_variant" class="s-input">
+                                    <option value="promo" {{ ($settings['general']['banner_variant'] ?? 'promo') === 'promo' ? 'selected' : '' }}>Promotional (Red)</option>
+                                    <option value="info" {{ ($settings['general']['banner_variant'] ?? '') === 'info' ? 'selected' : '' }}>Information (Blue)</option>
+                                    <option value="success" {{ ($settings['general']['banner_variant'] ?? '') === 'success' ? 'selected' : '' }}>Success (Green)</option>
+                                    <option value="dark" {{ ($settings['general']['banner_variant'] ?? '') === 'dark' ? 'selected' : '' }}>Dark Mode</option>
+                                    <option value="image" {{ ($settings['general']['banner_variant'] ?? '') === 'image' ? 'selected' : '' }}>Image Background</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="s-label">Button Text</label>
+                                <input type="text" name="banner_button" value="{{ old('banner_button', $settings['general']['banner_button'] ?? 'Book Now') }}" class="s-input" placeholder="Book Now">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="s-label">Banner Title</label>
+                            <input type="text" name="banner_title" value="{{ old('banner_title', $settings['general']['banner_title'] ?? 'Special Offer!') }}" class="s-input" placeholder="Special Offer!">
+                        </div>
+
+                        <div>
+                            <label class="s-label">Banner Message</label>
+                            <textarea name="banner_message" rows="2" class="s-input" style="resize:vertical;" placeholder="Enter your promotional message...">{{ old('banner_message', $settings['general']['banner_message'] ?? '') }}</textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="s-label">Button Link</label>
+                                <input type="text" name="banner_link" value="{{ old('banner_link', $settings['general']['banner_link'] ?? '/tours') }}" class="s-input" placeholder="/tours">
+                                <p class="s-hint">URL or path (e.g., /tours, /hotels, https://example.com)</p>
+                            </div>
+                            <div>
+                                <label class="s-label">Background Image URL (Optional)</label>
+                                <input type="url" name="banner_image" value="{{ old('banner_image', $settings['general']['banner_image'] ?? '') }}" class="s-input" placeholder="https://example.com/image.jpg">
+                                <p class="s-hint">Used for "Image Background" variant</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -362,6 +419,251 @@
                 </div>
                 <div class="flex justify-end mt-4">
                     <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save Stats Settings</button>
+                </div>
+            </form>
+            @endif
+
+            {{-- ── BANNERS ── --}}
+            @if($g === 'banners')
+            @php
+                $bannerTypes = [
+                    'promo' => [
+                        'name' => 'Special Promotion',
+                        'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+                        'color' => 'from-red-600 to-red-700',
+                        'bg' => 'bg-red-600',
+                        'preview' => 'Limited Time: 20% OFF',
+                        'desc' => 'Red gradient header with bold promotional messaging'
+                    ],
+                    'newsletter' => [
+                        'name' => 'Newsletter Signup',
+                        'icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+                        'color' => 'from-blue-600 to-blue-700',
+                        'bg' => 'bg-blue-600',
+                        'preview' => 'Join 10,000+ Travelers',
+                        'desc' => 'Blue gradient with email collection focus'
+                    ],
+                    'offer' => [
+                        'name' => 'Limited Offer',
+                        'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+                        'color' => 'from-amber-500 to-orange-600',
+                        'bg' => 'bg-amber-500',
+                        'preview' => 'Flash Sale: 48 Hours Only!',
+                        'desc' => 'Urgent amber/orange countdown style'
+                    ],
+                    'discount' => [
+                        'name' => 'Big Discount',
+                        'icon' => 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z',
+                        'color' => 'from-emerald-600 to-emerald-700',
+                        'bg' => 'bg-emerald-600',
+                        'preview' => 'Up to 50% OFF Packages',
+                        'desc' => 'Green success style for discounts'
+                    ],
+                    'announcement' => [
+                        'name' => 'Announcement',
+                        'icon' => 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z',
+                        'color' => 'from-gray-800 to-gray-900',
+                        'bg' => 'bg-gray-800',
+                        'preview' => 'New: Visa Services Available!',
+                        'desc' => 'Dark professional for important news'
+                    ],
+                ];
+                $selectedType = $settings['banners']['type'] ?? 'promo';
+                $isEnabled = ($settings['banners']['enabled'] ?? '0') === '1';
+            @endphp
+
+            <form method="POST" action="{{ route('admin.settings.update', 'banners') }}" enctype="multipart/form-data" x-data="{ selected: '{{ $selectedType }}', enabled: {{ $isEnabled ? 'true' : 'false' }} }">
+                @csrf
+
+                {{-- Enable Toggle --}}
+                <div class="s-card p-6 mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-lg font-bold text-gray-900">Banner Modal</p>
+                            <p class="text-sm text-gray-500">Show a popup modal to visitors when they first arrive</p>
+                        </div>
+                        <div class="toggle-wrap !bg-transparent !border-0 !p-0">
+                            <label class="toggle !w-14 !h-7">
+                                <input type="hidden" name="enabled" value="0">
+                                <input type="checkbox" name="enabled" value="1" x-model="enabled" {{ $isEnabled ? 'checked' : '' }}>
+                                <span class="toggle-slider !bg-gray-300 before:!w-5 before:!h-5"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Template Selection --}}
+                <div class="s-card p-6 mb-6" x-show="enabled" x-cloak>
+                    <p class="s-section-title">Choose Template</p>
+                    <p class="text-xs text-gray-400 mb-4">Click any template to select it</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @foreach($bannerTypes as $key => $type)
+                        <label class="cursor-pointer group">
+                            <input type="radio" name="type" value="{{ $key }}" class="hidden" x-model="selected" {{ $selectedType === $key ? 'checked' : '' }}>
+                            <div class="relative rounded-xl border-2 transition-all overflow-hidden"
+                                 :class="selected === '{{ $key }}' ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-200 hover:border-gray-300'">
+
+                                {{-- Preview Mini --}}
+                                <div class="h-24 bg-gradient-to-r {{ $type['color'] }} flex items-center justify-center">
+                                    <svg class="w-10 h-10 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $type['icon'] }}"/>
+                                    </svg>
+                                </div>
+
+                                {{-- Info --}}
+                                <div class="p-3 bg-white">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <div class="w-2 h-2 rounded-full {{ $type['bg'] }}"></div>
+                                        <p class="font-semibold text-gray-900 text-sm">{{ $type['name'] }}</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500">{{ $type['desc'] }}</p>
+                                </div>
+
+                                {{-- Selected Badge --}}
+                                <div x-show="selected === '{{ $key }}'" class="absolute top-2 right-2 bg-white rounded-full p-1 shadow-lg" x-cloak>
+                                    <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                            </div>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Customization --}}
+                <div class="s-card p-6 mb-6" x-show="enabled" x-cloak>
+                    <p class="s-section-title">Customize Content</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                        <div>
+                            <label class="s-label">Modal Title</label>
+                            <input type="text" name="title" value="{{ old('title', $settings['banners']['title'] ?? 'Special Offer!') }}" class="s-input" placeholder="Enter modal title">
+                        </div>
+                        <div>
+                            <label class="s-label">Button Text</label>
+                            <input type="text" name="button_text" value="{{ old('button_text', $settings['banners']['button_text'] ?? 'Get Started') }}" class="s-input" placeholder="e.g. Book Now, Learn More">
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="s-label">Message Content</label>
+                        <textarea name="message" rows="3" class="s-input" style="resize:vertical;" placeholder="Enter your promotional message...">{{ old('message', $settings['banners']['message'] ?? 'Don\'t miss out on our exclusive deal. Limited time only!') }}</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="s-label">Button Link</label>
+                            <input type="text" name="link" value="{{ old('link', $settings['banners']['link'] ?? '/tours') }}" class="s-input" placeholder="/tours or https://example.com">
+                            <p class="s-hint">Can be internal path (/tours) or full URL</p>
+                        </div>
+                        <div x-data="{ imageType: '{{ ($settings['banners']['image'] ?? '') && str_starts_with($settings['banners']['image'], url('/')) ? 'upload' : 'url' }}' }">
+                            <label class="s-label">Background Image</label>
+                            
+                            <div class="flex gap-2 mb-2">
+                                <button type="button" @click="imageType = 'url'" :class="imageType === 'url' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">URL</button>
+                                <button type="button" @click="imageType = 'upload'" :class="imageType === 'upload' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">Upload</button>
+                            </div>
+                            
+                            {{-- URL Input --}}
+                            <div x-show="imageType === 'url'">
+                                <input type="url" name="image" value="{{ old('image', $settings['banners']['image'] ?? '') }}" class="s-input" placeholder="https://example.com/banner.jpg">
+                                <p class="s-hint">Enter external image URL</p>
+                            </div>
+                            
+                            {{-- File Upload --}}
+                            <div x-show="imageType === 'upload'" x-cloak>
+                                <div class="relative">
+                                    <input type="file" name="image_upload" accept="image/*" class="s-input file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                                </div>
+                                @if($settings['banners']['image'] ?? '')
+                                <div class="mt-2 flex items-center gap-2">
+                                    <img src="{{ $settings['banners']['image'] }}" alt="Current banner" class="h-16 w-16 object-cover rounded-lg border">
+                                    <span class="text-xs text-gray-500">Current image</span>
+                                </div>
+                                @endif
+                                <p class="s-hint">Upload JPG, PNG or WebP (max 2MB)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Preview --}}
+                <div class="s-card p-6 mb-6" x-show="enabled" x-cloak>
+                    <p class="s-section-title">Live Preview</p>
+                    <p class="text-xs text-gray-400 mb-4">This is how your banner will appear to visitors</p>
+
+                    <div class="relative bg-gray-100 rounded-xl p-8 flex items-center justify-center min-h-[300px]">
+                        @foreach($bannerTypes as $key => $type)
+                        <template x-if="selected === '{{ $key }}'">
+                            <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden transform scale-95">
+                                @if($key === 'newsletter')
+                                {{-- Newsletter specific layout --}}
+                                <div class="h-32 bg-gradient-to-r {{ $type['color'] }} flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $type['icon'] }}"/></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="$refs.titleInput?.value || '{{ $settings['banners']['title'] ?? 'Join Our Newsletter' }}'"></h3>
+                                    <p class="text-gray-600 mb-4" x-text="$refs.messageInput?.value || '{{ $settings['banners']['message'] ?? 'Get exclusive deals delivered to your inbox' }}'"></p>
+                                    <div class="flex gap-2">
+                                        <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm" disabled>
+                                        <button class="px-4 py-2 {{ $type['bg'] }} text-white rounded-lg font-semibold text-sm" x-text="$refs.buttonInput?.value || 'Subscribe'"></button>
+                                    </div>
+                                </div>
+                                @else
+                                {{-- Standard layout --}}
+                                <div class="h-16 bg-gradient-to-r {{ $type['color'] }}"></div>
+                                <div class="p-6">
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-12 h-12 {{ $type['bg'] }} rounded-xl flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $type['icon'] }}"/></svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h3 class="text-lg font-bold text-gray-900 mb-1" x-text="$refs.titleInput?.value || '{{ $settings['banners']['title'] ?? 'Special Offer!' }}'"></h3>
+                                            <p class="text-gray-600 text-sm" x-text="$refs.messageInput?.value || '{{ $settings['banners']['message'] ?? 'Limited time offer - book now!' }}'"></p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex gap-3">
+                                        <button class="flex-1 {{ $type['bg'] }} text-white py-2.5 rounded-xl font-semibold" x-text="$refs.buttonInput?.value || 'Get Started'"></button>
+                                        <button class="px-4 py-2.5 text-gray-500 font-medium">Maybe later</button>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                        </template>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Timing Settings --}}
+                <div class="s-card p-6 mb-6" x-show="enabled" x-cloak>
+                    <p class="s-section-title">Display Settings</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div>
+                            <label class="s-label">Delay Before Showing (seconds)</label>
+                            <input type="number" name="delay" value="{{ old('delay', $settings['banners']['delay'] ?? '1') }}" class="s-input" min="0" max="10" step="0.5">
+                            <p class="s-hint">Wait time after page loads</p>
+                        </div>
+                        <div>
+                            <label class="s-label">Show Frequency</label>
+                            <select name="frequency" class="s-input">
+                                <option value="once" {{ ($settings['banners']['frequency'] ?? 'once') === 'once' ? 'selected' : '' }}>Once per session</option>
+                                <option value="always" {{ ($settings['banners']['frequency'] ?? '') === 'always' ? 'selected' : '' }}>Every page load</option>
+                                <option value="daily" {{ ($settings['banners']['frequency'] ?? '') === 'daily' ? 'selected' : '' }}>Once per day</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="s-label">Show On Pages</label>
+                            <select name="pages" class="s-input">
+                                <option value="home" {{ ($settings['banners']['pages'] ?? 'home') === 'home' ? 'selected' : '' }}>Homepage only</option>
+                                <option value="all" {{ ($settings['banners']['pages'] ?? '') === 'all' ? 'selected' : '' }}>All pages</option>
+                                <option value="tours" {{ ($settings['banners']['pages'] ?? '') === 'tours' ? 'selected' : '' }}>Tours page only</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-sm transition text-sm">Save Banner Settings</button>
                 </div>
             </form>
             @endif

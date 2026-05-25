@@ -167,6 +167,9 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::resource('hotels.rooms', \App\Http\Controllers\Admin\HotelRoomController::class);
     Route::resource('hotel-bookings', \App\Http\Controllers\Admin\HotelBookingController::class)->only(['index', 'show', 'update', 'destroy']);
 
+    // Payments
+    Route::resource('payments', \App\Http\Controllers\Admin\PaymentController::class)->only(['index', 'show']);
+
     // Coupons
     Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
     Route::patch('/coupons/{coupon}/toggle', [\App\Http\Controllers\Admin\CouponController::class, 'toggleStatus'])->name('coupons.toggle');

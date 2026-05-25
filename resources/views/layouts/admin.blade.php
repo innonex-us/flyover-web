@@ -87,7 +87,8 @@
 
                 $bookingsActive = request()->routeIs('admin.bookings.*')
                     || request()->routeIs('admin.transfer-bookings.*')
-                    || request()->routeIs('admin.hotel-bookings.*');
+                    || request()->routeIs('admin.hotel-bookings.*')
+                    || request()->routeIs('admin.payments.*');
 
                 $contentActive = request()->routeIs('admin.blog.*')
                     || request()->routeIs('admin.short-links.*');
@@ -115,6 +116,7 @@
                     ['label' => 'Tour & Visa Bookings', 'route' => 'admin.bookings.index',          'match' => 'admin.bookings.*',          'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
                     ['label' => 'Transfer Bookings',    'route' => 'admin.transfer-bookings.index', 'match' => 'admin.transfer-bookings.*', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
                     ['label' => 'Hotel Bookings',       'route' => 'admin.hotel-bookings.index',    'match' => 'admin.hotel-bookings.*',    'icon' => 'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z'],
+                    ['label' => 'Payment History',      'route' => 'admin.payments.index',          'match' => 'admin.payments.*',          'icon' => 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'],
                 ];
 
                 $contentItems = [
