@@ -39,7 +39,9 @@
         <div class="flex items-center justify-between pt-4 border-t border-gray-50">
             <div>
                 <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Visa Fee</p>
-                <p class="text-xl font-black text-red-600">৳{{ number_format($visa->price) }}</p>
+                <p class="text-xl font-black text-red-600"
+                   data-price-bdt="{{ $visa->price }}"
+                ><span data-currency-display>৳{{ number_format($visa->price) }}</span></p>
             </div>
             
             <div class="text-xs font-bold text-gray-900 flex items-center group-hover:text-red-600 transition-colors">

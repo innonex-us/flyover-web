@@ -330,7 +330,9 @@
                             <div class="text-center mb-6 pb-5 border-b border-gray-100">
                                 <h3 class="font-bold text-gray-900 mb-1">Book Your Holiday</h3>
                                 <p class="text-xs text-gray-400 mb-3">Secure your spot today</p>
-                                <p class="text-3xl font-extrabold" style="color:#C8102E;">৳{{ number_format($package->price) }}</p>
+                                <p class="text-3xl font-extrabold" style="color:#C8102E;"
+                                   data-price-bdt="{{ $package->price }}"
+                                ><span data-currency-display>৳{{ number_format($package->price) }}</span></p>
                                 <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">per person</p>
                             </div>
 
@@ -391,7 +393,7 @@
                                 {{-- Total --}}
                                 <div class="rounded-xl p-4 flex justify-between items-center" style="background:#FFF1F2;border:1px solid #FECDD3;">
                                     <span class="text-sm font-bold" style="color:#9F1239;">Total</span>
-                                    <span class="text-xl font-extrabold" style="color:#C8102E;" x-text="'৳' + total.toLocaleString()"></span>
+                                    <span class="text-xl font-extrabold" style="color:#C8102E;" x-text="window.FlyoverCurrency ? window.FlyoverCurrency.formatPrice(total) : ('৳' + total.toLocaleString())"></span>
                                 </div>
 
                                 <button type="submit" class="btn-primary w-full py-4 text-base">
@@ -452,7 +454,9 @@
                             <p class="text-[10px] font-bold uppercase tracking-widest mb-1" style="color:#C8102E;">{{ $rel->location }}</p>
                             <h3 class="font-bold text-gray-900 text-sm mb-3 line-clamp-2 flex-1 group-hover:text-red-600 transition">{{ $rel->title }}</h3>
                             <div class="flex items-center justify-between pt-3 border-t border-gray-50">
-                                <p class="font-extrabold text-sm" style="color:#C8102E;">৳{{ number_format($rel->price) }}</p>
+                                <p class="font-extrabold text-sm" style="color:#C8102E;"
+                                   data-price-bdt="{{ $rel->price }}"
+                                ><span data-currency-display>৳{{ number_format($rel->price) }}</span></p>
                                 <span class="text-xs font-bold text-gray-500 group-hover:text-red-600 transition flex items-center gap-0.5">
                                     View <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                                 </span>

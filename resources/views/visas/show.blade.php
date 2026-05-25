@@ -109,7 +109,9 @@
                 <div class="flex flex-wrap gap-5 md:gap-8 text-center md:text-right">
                     <div>
                         <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Fee</p>
-                        <p class="text-2xl font-extrabold" style="color:#C8102E;">৳{{ number_format($visa->price) }}</p>
+                        <p class="text-2xl font-extrabold" style="color:#C8102E;"
+                           data-price-bdt="{{ $visa->price }}"
+                        ><span data-currency-display>৳{{ number_format($visa->price) }}</span></p>
                         <p class="text-[10px] text-gray-400">per person</p>
                     </div>
                     @if($visa->processing_time)
@@ -335,7 +337,9 @@
                             {{-- Price --}}
                             <div class="text-center pb-5 mb-5 border-b border-gray-100">
                                 <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Visa Fee</p>
-                                <p class="text-4xl font-extrabold" style="color:#C8102E;">৳{{ number_format($visa->price) }}</p>
+                                <p class="text-4xl font-extrabold" style="color:#C8102E;"
+                                   data-price-bdt="{{ $visa->price }}"
+                                ><span data-currency-display>৳{{ number_format($visa->price) }}</span></p>
                                 <p class="text-xs text-gray-400 mt-1">per person</p>
                             </div>
 

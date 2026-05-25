@@ -573,7 +573,7 @@
                                     </div>
                                     {{-- Price or arrow --}}
                                     <div class="flex-shrink-0 flex items-center gap-2">
-                                        <span x-show="item.price" class="text-sm font-bold text-red-600" x-text="item.price ? '৳' + item.price : ''"></span>
+                                        <span x-show="item.price" class="text-sm font-bold text-red-600" x-text="item.price && window.FlyoverCurrency ? window.FlyoverCurrency.formatPrice(item.price) : (item.price ? '৳' + item.price : '')"></span>
                                         <div class="w-7 h-7 rounded-full bg-gray-100 group-hover:bg-red-500 flex items-center justify-center transition-colors">
                                             <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                                         </div>
@@ -699,7 +699,9 @@
                     <div class="flex items-center justify-between border-t border-gray-50 pt-2 sm:pt-3">
                         <div>
                             <span class="text-[9px] sm:text-[10px] text-gray-400 block">From</span>
-                            <span class="text-sm sm:text-lg font-extrabold text-red-600">৳{{ number_format($package->price) }}</span>
+                            <span class="text-sm sm:text-lg font-extrabold text-red-600"
+                                  data-price-bdt="{{ $package->price }}"
+                            ><span data-currency-display>৳{{ number_format($package->price) }}</span></span>
                         </div>
                         <span class="bg-gray-900 text-white text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg group-hover:bg-red-600 transition">
                             Book
@@ -813,7 +815,9 @@
                 <p class="text-[10px] text-gray-400 mt-1">{{ $visa->processing_time }}</p>
                 @endif
                 @if($visa->fee)
-                <p class="text-xs font-bold text-red-600 mt-1">৳{{ number_format($visa->fee) }}</p>
+                <p class="text-xs font-bold text-red-600 mt-1"
+                   data-price-bdt="{{ $visa->fee }}"
+                ><span data-currency-display>৳{{ number_format($visa->fee) }}</span></p>
                 @endif
             </a>
             @endforeach

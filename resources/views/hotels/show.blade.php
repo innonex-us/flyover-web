@@ -32,7 +32,9 @@
                 @php $minPrice = $hotel->rooms->min('price_per_night'); @endphp
                 <div class="flex-shrink-0 bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 text-white border border-white/20">
                     <p class="text-xs text-white/60 font-semibold uppercase tracking-wide">Starting from</p>
-                    <p class="text-3xl font-extrabold">৳{{ number_format($minPrice) }}</p>
+                    <p class="text-3xl font-extrabold"
+                       data-price-bdt="{{ $minPrice }}"
+                    ><span data-currency-display>৳{{ number_format($minPrice) }}</span></p>
                     <p class="text-xs text-white/60">per night</p>
                 </div>
                 @endif
@@ -59,7 +61,9 @@
                 @php $minPrice = $hotel->rooms->min('price_per_night'); @endphp
                 <div class="flex-shrink-0 text-right">
                     <p class="text-sm text-gray-400">from</p>
-                    <p class="text-3xl font-extrabold text-red-600">৳{{ number_format($minPrice) }}</p>
+                    <p class="text-3xl font-extrabold text-red-600"
+                       data-price-bdt="{{ $minPrice }}"
+                    ><span data-currency-display>৳{{ number_format($minPrice) }}</span></p>
                     <p class="text-xs text-gray-400">per night</p>
                 </div>
                 @endif
@@ -195,7 +199,9 @@
                                 @endif
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <p class="text-2xl font-extrabold text-red-600">৳{{ number_format($room->price_per_night) }}</p>
+                                        <p class="text-2xl font-extrabold text-red-600"
+                                           data-price-bdt="{{ $room->price_per_night }}"
+                                        ><span data-currency-display>৳{{ number_format($room->price_per_night) }}</span></p>
                                         <p class="text-xs text-gray-400">per night</p>
                                     </div>
                                     <button type="button"
@@ -285,11 +291,11 @@
                                 {{-- Dynamic total --}}
                                 <div x-show="nights > 0" class="bg-red-50 rounded-xl p-4 border border-red-100">
                                     <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-gray-600" x-text="`${nights} night${nights > 1 ? 's' : ''} × ৳${selectedRoom ? selectedRoom.price.toLocaleString() : 0}`"></span>
+                                        <span class="text-gray-600" x-text="`${nights} night${nights > 1 ? 's' : ''} × ${window.FlyoverCurrency ? window.FlyoverCurrency.formatPrice(selectedRoom ? selectedRoom.price : 0) : ('৳' + (selectedRoom ? selectedRoom.price.toLocaleString() : 0))}`"></span>
                                     </div>
                                     <div class="flex justify-between font-bold">
                                         <span class="text-gray-700">Total</span>
-                                        <span class="text-red-600 text-lg" x-text="`৳${total.toLocaleString()}`"></span>
+                                        <span class="text-red-600 text-lg" x-text="window.FlyoverCurrency ? window.FlyoverCurrency.formatPrice(total) : ('৳' + total.toLocaleString())"></span>
                                     </div>
                                 </div>
 

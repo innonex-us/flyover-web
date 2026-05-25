@@ -123,6 +123,38 @@
                     <!-- Right: Auth + Mobile Toggle -->
                     <div class="flex items-center gap-3">
 
+                        {{-- Currency Switcher: Desktop --}}
+                        <div class="hidden md:flex items-center"
+                             x-data="{ currOpen: false }"
+                             @click.outside="currOpen = false"
+                             @keydown.escape.window="currOpen = false">
+                            <div class="relative">
+                                <button type="button"
+                                        @click="currOpen = !currOpen"
+                                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 hover:border-red-300 hover:bg-red-50 transition text-sm font-semibold text-gray-700">
+                                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span data-currency-trigger-label class="min-w-[52px] text-left">🇧🇩 BDT</span>
+                                    <svg class="w-3 h-3 text-gray-400 transition-transform" :class="currOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                </button>
+                                <div x-show="currOpen"
+                                     data-currency-dropdown
+                                     x-transition:enter="transition ease-out duration-100"
+                                     x-transition:enter-start="opacity-0 scale-95"
+                                     x-transition:enter-end="opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-75"
+                                     x-transition:leave-start="opacity-100 scale-100"
+                                     x-transition:leave-end="opacity-0 scale-95"
+                                     @currency-close.window="currOpen = false"
+                                     style="display:none;"
+                                     class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 origin-top-right overflow-hidden">
+                                    <div class="px-4 py-2.5 border-b border-gray-100">
+                                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Select Currency</p>
+                                    </div>
+                                    <div data-currency-dropdown-content></div>
+                                </div>
+                            </div>
+                        </div>
+
                         {{-- Auth: Desktop --}}
                         <div class="hidden md:flex items-center gap-2">
                             @auth
@@ -594,6 +626,33 @@
                             <svg class="w-5 h-5 text-gray-500 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                             <span class="text-[10px] font-bold text-gray-600 group-hover:text-red-600">Contact</span>
                         </a>
+                    </div>
+
+                    {{-- Currency Switcher – mobile --}}
+                    <div class="mb-4" x-data="{ mobileCurrOpen: false }">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Currency</p>
+                        <button type="button"
+                                @click="mobileCurrOpen = !mobileCurrOpen"
+                                class="flex items-center justify-between w-full px-4 py-3 bg-gray-50 rounded-2xl text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span data-currency-trigger-label>🇧🇩 BDT</span>
+                            </span>
+                            <svg class="w-3.5 h-3.5 text-gray-400 transition-transform" :class="mobileCurrOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div x-show="mobileCurrOpen"
+                             data-currency-dropdown
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             @currency-close.window="mobileCurrOpen = false"
+                             style="display:none;"
+                             class="mt-1 bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
+                            <div class="px-3 py-2 border-b border-gray-50">
+                                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Select Currency</p>
+                            </div>
+                            <div data-currency-dropdown-content></div>
+                        </div>
                     </div>
                     @auth
                     <div class="space-y-1">

@@ -281,7 +281,9 @@
                     @endphp
                     @if($minPrice)
                     <p class="text-xs text-gray-400 mb-0.5">from</p>
-                    <p class="text-xl font-extrabold text-red-600 mb-4">৳{{ number_format($minPrice) }}<span class="text-xs text-gray-400 font-normal">/night</span></p>
+                    <p class="text-xl font-extrabold text-red-600 mb-4"
+                       data-price-bdt="{{ $minPrice }}"
+                    ><span data-currency-display>৳{{ number_format($minPrice) }}</span><span class="text-xs text-gray-400 font-normal">/night</span></p>
                     @endif
                     <a href="{{ route('hotels.show', array_merge(['hotel' => $hotel->slug], request()->only(['check_in','check_out','persons']))) }}"
                         class="block w-full text-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-xl transition text-sm">

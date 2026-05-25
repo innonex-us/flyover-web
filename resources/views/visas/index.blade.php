@@ -106,7 +106,7 @@
                             </div>
                             {{-- Price or arrow --}}
                             <div class="flex-shrink-0 flex items-center gap-2">
-                                <span x-show="item.price" class="text-sm font-bold text-blue-600" x-text="item.price ? '৳' + item.price.toLocaleString() : ''"></span>
+                                <span x-show="item.price" class="text-sm font-bold text-blue-600" x-text="item.price && window.FlyoverCurrency ? window.FlyoverCurrency.formatPrice(item.price) : (item.price ? '৳' + item.price.toLocaleString() : '')"></span>
                                 <div class="w-7 h-7 rounded-full bg-gray-100 group-hover:bg-blue-500 flex items-center justify-center transition-colors">
                                     <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                                 </div>

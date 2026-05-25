@@ -199,7 +199,9 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Price per person</p>
-                            <p class="text-2xl font-extrabold text-red-600">৳{{ number_format($route->price_per_person) }}</p>
+                            <p class="text-2xl font-extrabold text-red-600"
+                               data-price-bdt="{{ $route->price_per_person }}"
+                            ><span data-currency-display>৳{{ number_format($route->price_per_person) }}</span></p>
                         </div>
                         <a href="#booking-form" onclick="document.getElementById('route_id_input').value = '{{ $route->id }}'; document.getElementById('booking-form').scrollIntoView({behavior:'smooth'}); return false;"
                             class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-5 rounded-xl transition text-sm">
@@ -263,7 +265,7 @@
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 text-sm">
                             <option value="">Choose a route...</option>
                             @foreach($routes as $route)
-                            <option value="{{ $route->id }}">{{ $route->name }} - ৳{{ number_format($route->price_per_person) }}/person</option>
+                            <option value="{{ $route->id }}">{{ $route->name }} - BDT {{ number_format($route->price_per_person) }}/person</option>
                             @endforeach
                         </select>
                     </div>
