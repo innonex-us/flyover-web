@@ -20,6 +20,12 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'avatar',
+        'phone',
+        'bio',
+        'timezone',
+        'language',
+        'preferences',
         'password',
         'role',
         'google2fa_secret',
@@ -45,6 +51,39 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'preferences' => 'array',
         ];
+    }
+
+    /**
+     * Get the user's avatar URL or generate initials fallback.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        // Generate initials-based avatar using UI Avatars
+        $name = urlencode($this->name);
+        return "https://ui-avatars.com/api/?name={$name}&background=C8102E&color=fff&size=256&font-size=0.4&length=2";
+    }
+
+    /**
+     * Get user initials for avatar fallback.
+     */
+    public function getInitialsAttribute(): string
+    {
+        $words = explode(' ', $this->name);
+        $initials = '';
+
+        foreach ($words as $word) {
+            if (!empty($word)) {
+                $initials .= strtoupper(substr($word, 0, 1));
+                if (strlen($initials) >= 2) break;
+            }
+        }
+
+        return $initials ?: 'U';
     }
 }

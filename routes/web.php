@@ -100,6 +100,7 @@ Route::middleware(['auth', 'two-factor'])->group(function () {
     Route::post('/my/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('user.notifications.read-all');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
 
     // 2FA Routes
     Route::get('/2fa/setup', [App\Http\Controllers\TwoFactorController::class, 'enable'])->name('two-factor.enable');
