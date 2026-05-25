@@ -138,11 +138,23 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::get('/settings', fn() => redirect()->route('admin.settings.show', 'general'))->name('settings.index');
     Route::get('/settings/{group}', [\App\Http\Controllers\Admin\SettingsController::class, 'show'])->name('settings.show');
     Route::post('/settings/{group}', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
-    Route::get('/system', fn() => redirect()->route('admin.system.logs'))->name('system.index');
-    Route::get('/system/logs', function () { return view('admin.system'); })->name('system.logs');
-    Route::get('/system/backup', function () { return view('admin.system'); })->name('system.backup');
-    Route::get('/system/cache', function () { return view('admin.system'); })->name('system.cache');
-    Route::get('/system/maintenance', function () { return view('admin.system'); })->name('system.maintenance');
+    Route::get('/system', [\App\Http\Controllers\Admin\SystemController::class, 'index'])->name('system.index');
+    Route::get('/system/logs', [\App\Http\Controllers\Admin\SystemController::class, 'index'])->name('system.logs');
+    Route::get('/system/backup', [\App\Http\Controllers\Admin\SystemController::class, 'index'])->name('system.backup');
+    Route::get('/system/cache', [\App\Http\Controllers\Admin\SystemController::class, 'index'])->name('system.cache');
+    Route::get('/system/maintenance', [\App\Http\Controllers\Admin\SystemController::class, 'index'])->name('system.maintenance');
+    // System API endpoints
+    Route::prefix('system/api')->name('system.api.')->group(function () {
+        Route::get('info',                   [\App\Http\Controllers\Admin\SystemController::class, 'info'])->name('info');
+        Route::get('logs',                   [\App\Http\Controllers\Admin\SystemController::class, 'logs'])->name('logs');
+        Route::post('logs/clear',            [\App\Http\Controllers\Admin\SystemController::class, 'clearLogs'])->name('logs.clear');
+        Route::get('logs/download',          [\App\Http\Controllers\Admin\SystemController::class, 'downloadLogs'])->name('logs.download');
+        Route::post('cache/clear',           [\App\Http\Controllers\Admin\SystemController::class, 'clearCache'])->name('cache.clear');
+        Route::get('maintenance',            [\App\Http\Controllers\Admin\SystemController::class, 'maintenanceStatus'])->name('maintenance.status');
+        Route::post('maintenance/toggle',    [\App\Http\Controllers\Admin\SystemController::class, 'toggleMaintenance'])->name('maintenance.toggle');
+        Route::post('optimize',              [\App\Http\Controllers\Admin\SystemController::class, 'optimizeDb'])->name('optimize');
+        Route::post('sessions/cleanup',      [\App\Http\Controllers\Admin\SystemController::class, 'cleanupSessions'])->name('sessions.cleanup');
+    });
 
     Route::delete('/packages/{package}/thumbnail', [\App\Http\Controllers\Admin\PackageController::class, 'removeThumbnail'])->name('packages.thumbnail.destroy');
     Route::delete('/packages/{package}/images/{index}', [\App\Http\Controllers\Admin\PackageController::class, 'removeImage'])->name('packages.images.destroy');

@@ -74,6 +74,14 @@
 
 <div x-data="systemAdmin()" x-init="init()" class="max-w-6xl mx-auto">
 
+    {{-- Toast --}}
+    <div x-show="toast" x-transition
+        class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-xl text-sm font-semibold"
+        :class="toast?.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'"
+        x-cloak>
+        <span x-text="toast?.msg"></span>
+    </div>
+
     {{-- Page header --}}
     <div class="flex items-center justify-between mb-8">
         <div>
@@ -153,12 +161,12 @@
                         <div class="info-value" x-text="systemInfo.diskUsage"></div>
                     </div>
                     <div class="info-card">
-                        <div class="info-label">CPU Usage</div>
-                        <div class="info-value" x-text="systemInfo.cpuUsage"></div>
+                        <div class="info-label">Log File Size</div>
+                        <div class="info-value" x-text="systemInfo.logSize"></div>
                     </div>
                     <div class="info-card">
-                        <div class="info-label">Active Connections</div>
-                        <div class="info-value" x-text="systemInfo.activeConnections"></div>
+                        <div class="info-label">Environment</div>
+                        <div class="info-value" x-text="systemInfo.environment"></div>
                     </div>
                 </div>
             </div>
@@ -328,178 +336,119 @@
 
 @push('scripts')
 <script>
+const CSRF = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
+async function api(url, method = 'GET', body = null) {
+    const opts = {
+        method,
+        headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(url, opts);
+    return res.json();
+}
+
 function systemAdmin() {
     return {
         activeTab: 'logs',
         logLevel: 'all',
         maintenanceMode: false,
-        systemStatus: {
-            overall: 'online'
-        },
+        toast: null,
+        systemStatus: { overall: 'online' },
         systemInfo: {
-            phpVersion: '8.2.15',
-            lararavelVersion: '10.45.1',
-            database: 'MySQL 8.0.33',
-            uptime: '15 days, 7 hours',
-            memoryUsage: '256 MB / 2 GB',
-            diskUsage: '45.2 GB / 100 GB',
-            cpuUsage: '12.5%',
-            activeConnections: '24'
+            phpVersion: '—', laravelVersion: '—', database: '—',
+            uptime: '—', memoryUsage: '—', diskUsage: '—',
+            logSize: '—', environment: '—',
         },
         logs: [],
         filteredLogs: [],
         backups: [],
-        backupProgress: {
-            show: false,
-            percentage: 0
-        },
-        
+        backupProgress: { show: false, percentage: 0 },
+
         init() {
+            this.refreshSystemInfo();
             this.loadSystemLogs();
-            this.loadBackups();
-            this.checkMaintenanceMode();
         },
-        
+
+        showToast(msg, type = 'success') {
+            this.toast = { msg, type };
+            setTimeout(() => { this.toast = null; }, 3500);
+        },
+
+        async refreshSystemInfo() {
+            const data = await api('{{ route('admin.system.api.info') }}');
+            this.systemInfo = data;
+            this.maintenanceMode = data.maintenanceMode ?? false;
+            this.systemStatus.overall = 'online';
+        },
+
         async loadSystemLogs() {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            this.logs = [
-                { id: 1, timestamp: '2024-05-24 22:30:15', level: 'info', message: 'Application started successfully' },
-                { id: 2, timestamp: '2024-05-24 22:30:16', level: 'info', message: 'Database connection established' },
-                { id: 3, timestamp: '2024-05-24 22:30:17', level: 'info', message: 'Cache initialized' },
-                { id: 4, timestamp: '2024-05-24 22:30:20', level: 'warning', message: 'High memory usage detected: 85%' },
-                { id: 5, timestamp: '2024-05-24 22:30:25', level: 'error', message: 'Failed to send email notification' },
-                { id: 6, timestamp: '2024-05-24 22:30:30', level: 'info', message: 'User login: admin@example.com' },
-                { id: 7, timestamp: '2024-05-24 22:30:35', level: 'debug', message: 'Processing booking #12345' },
-                { id: 8, timestamp: '2024-05-24 22:30:40', level: 'info', message: 'Booking #12345 completed successfully' },
-                { id: 9, timestamp: '2024-05-24 22:30:45', level: 'warning', message: 'Disk space running low: 90% used' },
-                { id: 10, timestamp: '2024-05-24 22:30:50', level: 'info', message: 'Scheduled backup completed' }
-            ];
-            
+            const data = await api('{{ route('admin.system.api.logs') }}');
+            this.logs = data.logs ?? [];
             this.filterLogs();
         },
-        
-        async loadBackups() {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            this.backups = [
-                { id: 1, name: 'flyoverbd_backup_2024_05_24_22_00.sql', date: '2024-05-24 22:00:00', size: '45.2 MB', type: 'Full Backup' },
-                { id: 2, name: 'flyoverbd_backup_2024_05_23_22_00.sql', date: '2024-05-23 22:00:00', size: '44.8 MB', type: 'Full Backup' },
-                { id: 3, name: 'flyoverbd_backup_2024_05_22_22_00.sql', date: '2024-05-22 22:00:00', size: '44.1 MB', type: 'Full Backup' },
-                { id: 4, name: 'flyoverdb_files_2024_05_24_22_00.zip', date: '2024-05-24 22:00:00', size: '125.3 MB', type: 'Files Backup' }
-            ];
-        },
-        
+
         filterLogs() {
-            if (this.logLevel === 'all') {
-                this.filteredLogs = [...this.logs];
-            } else {
-                this.filteredLogs = this.logs.filter(log => log.level === this.logLevel);
-            }
+            this.filteredLogs = this.logLevel === 'all'
+                ? [...this.logs]
+                : this.logs.filter(l => l.level === this.logLevel);
         },
-        
+
         async clearLogs() {
-            if (confirm('Are you sure you want to clear all system logs?')) {
-                this.logs = [];
-                this.filteredLogs = [];
-            }
+            if (!confirm('Clear all log entries? This cannot be undone.')) return;
+            await api('{{ route('admin.system.api.logs.clear') }}', 'POST');
+            this.logs = [];
+            this.filteredLogs = [];
+            this.showToast('Logs cleared.');
         },
-        
+
         downloadLogs() {
-            // Simulate download
-            alert('Log file download would be implemented here');
+            window.location.href = '{{ route('admin.system.api.logs.download') }}';
         },
-        
-        async createBackup() {
-            this.backupProgress.show = true;
-            this.backupProgress.percentage = 0;
-            
-            // Simulate backup progress
-            for (let i = 0; i <= 100; i += 10) {
-                await new Promise(resolve => setTimeout(resolve, 200));
-                this.backupProgress.percentage = i;
-            }
-            
-            this.backupProgress.show = false;
-            
-            // Add new backup to list
-            const newBackup = {
-                id: this.backups.length + 1,
-                name: `flyoverbd_backup_${new Date().toISOString().slice(0, 19).replace(/:/g, '_')}.sql`,
-                date: new Date().toLocaleString(),
-                size: '45.5 MB',
-                type: 'Full Backup'
-            };
-            
-            this.backups.unshift(newBackup);
-        },
-        
-        downloadBackup(backup) {
-            alert(`Download ${backup.name} would be implemented here`);
-        },
-        
-        async restoreBackup(backup) {
-            if (confirm(`Are you sure you want to restore ${backup.name}? This will overwrite current data.`)) {
-                alert(`Restore ${backup.name} would be implemented here`);
-            }
-        },
-        
-        async deleteBackup(backup) {
-            if (confirm(`Are you sure you want to delete ${backup.name}?`)) {
-                const index = this.backups.findIndex(b => b.id === backup.id);
-                if (index !== -1) {
-                    this.backups.splice(index, 1);
-                }
-            }
-        },
-        
+
         async clearCache(type) {
-            alert(`Clear ${type} cache would be implemented here`);
+            const data = await api('{{ route('admin.system.api.cache.clear') }}', 'POST', { type });
+            this.showToast(data.message ?? 'Cache cleared.');
         },
-        
+
         async clearAllCache() {
-            if (confirm('Are you sure you want to clear all cache?')) {
-                alert('Clear all cache would be implemented here');
-            }
+            if (!confirm('Clear all cache types?')) return;
+            const data = await api('{{ route('admin.system.api.cache.clear') }}', 'POST', { type: 'all' });
+            this.showToast(data.message ?? 'All cache cleared.');
         },
-        
+
         async optimizeDatabase() {
-            alert('Database optimization would be implemented here');
+            if (!confirm('Optimize all database tables? This may take a moment.')) return;
+            const data = await api('{{ route('admin.system.api.optimize') }}', 'POST');
+            this.showToast(data.message ?? (data.success ? 'Optimized.' : 'Failed.'), data.success ? 'success' : 'error');
         },
-        
+
         async cleanupSessions() {
-            if (confirm('Are you sure you want to clean up expired sessions?')) {
-                alert('Session cleanup would be implemented here');
-            }
+            if (!confirm('Remove sessions inactive for more than 7 days?')) return;
+            const data = await api('{{ route('admin.system.api.sessions.cleanup') }}', 'POST');
+            this.showToast(data.message ?? (data.success ? 'Done.' : 'Failed.'), data.success ? 'success' : 'error');
         },
-        
+
         async cleanupLogs() {
-            if (confirm('Are you sure you want to clean up old log files?')) {
-                alert('Log cleanup would be implemented here');
-            }
+            if (!confirm('Clear all log files?')) return;
+            await api('{{ route('admin.system.api.logs.clear') }}', 'POST');
+            this.logs = [];
+            this.filteredLogs = [];
+            this.showToast('Log files cleared.');
+            this.refreshSystemInfo();
         },
-        
+
         async toggleMaintenanceMode() {
-            this.maintenanceMode = !this.maintenanceMode;
-            alert(`Maintenance mode ${this.maintenanceMode ? 'enabled' : 'disabled'} would be implemented here`);
+            const data = await api('{{ route('admin.system.api.maintenance.toggle') }}', 'POST');
+            this.maintenanceMode = data.enabled;
+            this.showToast('Maintenance mode ' + (data.enabled ? 'enabled' : 'disabled') + '.');
         },
-        
-        async checkMaintenanceMode() {
-            // Check current maintenance mode status
-            this.maintenanceMode = false;
-        },
-        
-        async refreshSystemInfo() {
-            // Simulate refreshing system info
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            this.systemInfo.uptime = '15 days, 8 hours';
-            this.systemInfo.memoryUsage = '268 MB / 2 GB';
-            this.systemInfo.cpuUsage = '15.2%';
-            this.systemInfo.activeConnections = '27';
-        }
+
+        // Backup — stub (needs spatie/laravel-backup or mysqldump)
+        createBackup() { this.showToast('Backup feature requires mysqldump setup.', 'error'); },
+        downloadBackup(b) { this.showToast('Backup download not yet configured.', 'error'); },
+        restoreBackup(b)  { this.showToast('Restore not yet configured.', 'error'); },
+        deleteBackup(b)   { this.showToast('Delete not yet configured.', 'error'); },
     }
 }
 </script>

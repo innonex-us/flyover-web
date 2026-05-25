@@ -163,7 +163,7 @@
                                         <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Scheduled Activities</label>
                                         <template x-for="(activity, aIndex) in day.activities" :key="aIndex">
                                             <div class="flex gap-2">
-                                                <input type="text" :name="'itinerary[' + dIndex + '][activities][' + aIndex + ']'" x-model="day.activities[aIndex]" placeholder="Activity detail..." class="custom-input text-xs py-1.5" required>
+                                                <input type="text" :name="'itinerary[' + dIndex + '][activities][' + aIndex + ']'" x-model="day.activities[aIndex]" placeholder="Activity detail..." class="custom-input text-xs py-1.5">
                                                 <button type="button" @click="day.activities.splice(aIndex, 1)" x-show="day.activities.length > 1" class="text-gray-300 hover:text-red-400 transition">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                                 </button>
@@ -263,15 +263,11 @@
                                 <div class="relative mb-3 inline-block group">
                                     <img src="{{ filter_var($package->thumbnail, FILTER_VALIDATE_URL) ? $package->thumbnail : Storage::url($package->thumbnail) }}" alt="Current Thumbnail" class="w-48 h-32 object-cover rounded-xl border border-gray-100 shadow-sm">
                                     <button type="button" 
-                                        onclick="if(confirm('Remove this thumbnail?')) { document.getElementById('remove-thumbnail-form').submit(); }"
+                                        onclick="if(confirm('Remove this thumbnail?')) { document.getElementById('remove-thumbnail-form-out').submit(); }"
                                         class="absolute -top-2 -right-2 w-6 h-6 bg-white border border-gray-200 rounded-full text-red-500 shadow-sm flex items-center justify-center hover:bg-red-50 transition">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
                                     </button>
                                 </div>
-                                <form id="remove-thumbnail-form" action="{{ route('admin.packages.thumbnail.destroy', $package) }}" method="POST" class="hidden">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
                             @endif
                             <input type="file" name="thumbnail" id="thumbnail-input" @change="handleFileChange" accept="image/*" class="w-full text-[10px] text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-red-50 file:text-red-700 hover:file:bg-red-100 transition">
                             <div x-show="fileName" class="mt-2 p-2 bg-emerald-50 rounded-lg border border-emerald-100 flex items-center justify-between gap-2">
@@ -299,13 +295,6 @@
                                     @endforeach
                                 </div>
                                 
-                                {{-- Hidden forms for deletion --}}
-                                @foreach($package->images as $index => $img)
-                                    <form id="delete-image-{{ $index }}" action="{{ route('admin.packages.images.destroy', [$package, $index]) }}" method="POST" class="hidden">
-                                        @csrf
-                                        @method('DELETE')
-                                    </form>
-                                @endforeach
                             @endif
                             <input type="file" name="images[]" id="images-input" @change="handleFileChange" multiple accept="image/*" class="w-full text-[10px] text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-gray-100 file:text-gray-600 hover:file:bg-gray-200 transition">
                             <p class="text-[9px] text-gray-400 mt-2 font-bold uppercase tracking-tighter">Append new media to collection</p>
@@ -349,6 +338,22 @@
             </div>
         </div>
     </form>
+{{-- Delete forms must live OUTSIDE #package-form to avoid _method=DELETE contaminating FormData --}}
+@if($package->thumbnail)
+<form id="remove-thumbnail-form-out" action="{{ route('admin.packages.thumbnail.destroy', $package) }}" method="POST" class="hidden">
+    @csrf
+    @method('DELETE')
+</form>
+@endif
+@if($package->images)
+    @foreach($package->images as $index => $img)
+    <form id="delete-image-{{ $index }}" action="{{ route('admin.packages.images.destroy', [$package, $index]) }}" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+    @endforeach
+@endif
+
 </div>
 
 @push('scripts')
