@@ -243,6 +243,7 @@
                         <tr>
                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Visitor</th>
                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">IP Address</th>
                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Current Page</th>
                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Session Duration</th>
                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Last Activity</th>
@@ -259,24 +260,27 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <div class="font-medium text-gray-900">{{ $session->visitor->browser ?? 'Unknown' }}</div>
-                                        <div class="text-gray-500 text-xs">{{ $session->visitor->device_type ?? 'Unknown' }}</div>
+                                        <div class="font-medium text-gray-900">{{ $session['browser'] }}</div>
+                                        <div class="text-gray-500 text-xs">{{ $session['device_type'] }}</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <div class="text-gray-900">{{ $session->visitor->city ?? 'Unknown' }}</div>
-                                <div class="text-gray-500 text-xs">{{ $session->visitor->country ?? 'Unknown' }}</div>
+                                <div class="text-gray-900">{{ $session['location'] }}</div>
+                                <div class="text-gray-500 text-xs">Session #{{ $session['id'] }}</div>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <div class="text-gray-900">{{ $session->pageViews->first()->title ?? 'Unknown' }}</div>
-                                <div class="text-gray-500 text-xs">{{ $session->pageViews->first()->path ?? 'Unknown' }}</div>
+                                <div class="text-gray-900 font-medium">{{ $session['ip_address'] }}</div>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <div class="text-gray-900">{{ $session['page_title'] }}</div>
+                                <div class="text-gray-500 text-xs">{{ $session['page_path'] }}</div>
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-900">
-                                {{ gmdate('i:s', $session->duration) }}
+                                {{ gmdate('i:s', $session['duration']) }}
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-500">
-                                {{ $session->last_activity_at->diffForHumans() }}
+                                {{ $session['last_activity_at']->diffForHumans() }}
                             </td>
                         </tr>
                         @endforeach

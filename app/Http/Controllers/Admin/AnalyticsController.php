@@ -8,6 +8,7 @@ use App\Models\VisitorSession;
 use App\Models\VisitorPageView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class AnalyticsController extends Controller
@@ -68,20 +69,20 @@ class AnalyticsController extends Controller
     {
         [$startDate, $endDate] = $dateRange;
         
-        $totalVisitors = Visitor::whereBetween('first_visit_at', [$startDate, $endDate])->count();
-        $returningVisitors = Visitor::whereBetween('first_visit_at', [$startDate, $endDate])
+        $totalVisitors = Visitor::whereBetween('first_visit_at', [$startDate, $endDate], 'and', false)->count();
+        $returningVisitors = Visitor::whereBetween('first_visit_at', [$startDate, $endDate], 'and', false)
             ->where('total_visits', '>', 1)
             ->count();
-        $totalPageViews = VisitorPageView::whereBetween('viewed_at', [$startDate, $endDate])->count();
-        $totalSessions = VisitorSession::whereBetween('started_at', [$startDate, $endDate])->count();
+        $totalPageViews = VisitorPageView::whereBetween('viewed_at', [$startDate, $endDate], 'and', false)->count();
+        $totalSessions = VisitorSession::whereBetween('started_at', [$startDate, $endDate], 'and', false)->count();
         
         // Previous period for comparison
         $previousStart = $startDate->copy()->subDays($startDate->diffInDays($endDate));
         $previousEnd = $startDate->copy();
         
-        $previousVisitors = Visitor::whereBetween('first_visit_at', [$previousStart, $previousEnd])->count();
-        $previousPageViews = VisitorPageView::whereBetween('viewed_at', [$previousStart, $previousEnd])->count();
-        $previousSessions = VisitorSession::whereBetween('started_at', [$previousStart, $previousEnd])->count();
+        $previousVisitors = Visitor::whereBetween('first_visit_at', [$previousStart, $previousEnd], 'and', false)->count();
+        $previousPageViews = VisitorPageView::whereBetween('viewed_at', [$previousStart, $previousEnd], 'and', false)->count();
+        $previousSessions = VisitorSession::whereBetween('started_at', [$previousStart, $previousEnd], 'and', false)->count();
         
         return [
             'total_visitors' => $totalVisitors,
@@ -102,17 +103,17 @@ class AnalyticsController extends Controller
         [$startDate, $endDate] = $dateRange;
         
         // Daily visitors trend
-        $dailyVisitors = Visitor::selectRaw('DATE(first_visit_at) as date, COUNT(*) as count')
-            ->whereBetween('first_visit_at', [$startDate, $endDate])
+        $dailyVisitors = Visitor::selectRaw('DATE(first_visit_at) as date, COUNT(*) as count', [])
+            ->whereBetween('first_visit_at', [$startDate, $endDate], 'and', false)
             ->groupBy('date')
             ->orderBy('date')
             ->get();
         
         // New vs Returning visitors
-        $newVisitors = Visitor::whereBetween('first_visit_at', [$startDate, $endDate])
+        $newVisitors = Visitor::whereBetween('first_visit_at', [$startDate, $endDate], 'and', false)
             ->where('total_visits', 1)
             ->count();
-        $returningVisitors = Visitor::whereBetween('first_visit_at', [$startDate, $endDate])
+        $returningVisitors = Visitor::whereBetween('first_visit_at', [$startDate, $endDate], 'and', false)
             ->where('total_visits', '>', 1)
             ->count();
         
@@ -157,14 +158,14 @@ class AnalyticsController extends Controller
                     ELSE "other"
                 END as category,
                 COUNT(*) as views
-            ')
-            ->whereBetween('viewed_at', [$startDate, $endDate])
+            ', [])
+            ->whereBetween('viewed_at', [$startDate, $endDate], 'and', false)
             ->groupBy('category')
             ->orderByDesc('views')
             ->get();
         
         // Average time on page
-        $avgTimeOnPage = (float) (VisitorPageView::whereBetween('viewed_at', [$startDate, $endDate])
+        $avgTimeOnPage = (float) (VisitorPageView::whereBetween('viewed_at', [$startDate, $endDate], 'and', false)
             ->where('time_on_page', '>', 0)
             ->avg('time_on_page') ?? 0);
         
@@ -218,8 +219,8 @@ class AnalyticsController extends Controller
                     ELSE "Unknown"
                 END as device_type,
                 COUNT(*) as count
-            ')
-            ->whereBetween('first_visit_at', [$startDate, $endDate])
+            ', [])
+            ->whereBetween('first_visit_at', [$startDate, $endDate], 'and', false)
             ->groupByRaw('
                 CASE
                     WHEN is_mobile = 1 THEN "Mobile"
@@ -231,7 +232,7 @@ class AnalyticsController extends Controller
             ->get();
         
         $browsers = Visitor::select('browser', DB::raw('COUNT(*) as count'))
-            ->whereBetween('first_visit_at', [$startDate, $endDate])
+            ->whereBetween('first_visit_at', [$startDate, $endDate], 'and', false)
             ->whereNotNull('browser')
             ->groupBy('browser')
             ->orderByDesc('count')
@@ -239,7 +240,7 @@ class AnalyticsController extends Controller
             ->get();
         
         $platforms = Visitor::select('platform', DB::raw('COUNT(*) as count'))
-            ->whereBetween('first_visit_at', [$startDate, $endDate])
+            ->whereBetween('first_visit_at', [$startDate, $endDate], 'and', false)
             ->whereNotNull('platform')
             ->groupBy('platform')
             ->orderByDesc('count')
@@ -257,7 +258,7 @@ class AnalyticsController extends Controller
     {
         [$startDate, $endDate] = $dateRange;
         
-        $sessions = VisitorSession::whereBetween('started_at', [$startDate, $endDate])
+        $sessions = VisitorSession::whereBetween('started_at', [$startDate, $endDate], 'and', false)
             ->with(['visitor', 'pageViews'])
             ->orderByDesc('started_at')
             ->limit(100)
@@ -274,21 +275,47 @@ class AnalyticsController extends Controller
         $now = now();
         $fiveMinutesAgo = $now->copy()->subMinutes(5);
         
-        $activeVisitors = VisitorSession::where('last_activity_at', '>=', $fiveMinutesAgo)
+        $activeVisitors = VisitorSession::where('last_activity_at', '>=', $fiveMinutesAgo, 'and')
             ->distinct('visitor_id')
             ->count();
         
-        $currentSessions = VisitorSession::where('last_activity_at', '>=', $fiveMinutesAgo)
+        $currentSessions = VisitorSession::where('last_activity_at', '>=', $fiveMinutesAgo, 'and')
             ->with(['visitor', 'pageViews' => function($query) {
                 $query->orderBy('viewed_at', 'desc');
             }])
             ->orderByDesc('last_activity_at')
             ->limit(50)
             ->get();
+
+        $sessions = $currentSessions->map(function (VisitorSession $session) {
+            $visitor = $session->visitor;
+            $latestPageView = $session->pageViews->first();
+
+            $browserLabel = $visitor?->browser ?: ($visitor?->user_agent ? Str::limit($visitor->user_agent, 36) : 'Unknown browser');
+            $deviceLabel = $visitor?->device_type ?: ($visitor?->is_mobile ? 'mobile' : ($visitor?->is_tablet ? 'tablet' : ($visitor?->is_desktop ? 'desktop' : 'Unknown device')));
+            $locationLabel = trim(implode(', ', array_filter([
+                $visitor?->city,
+                $visitor?->country,
+            ]))) ?: 'Unknown location';
+            $pageTitle = data_get($latestPageView, 'title') ?: data_get($latestPageView, 'path') ?: 'Unknown page';
+            $pagePath = data_get($latestPageView, 'path') ?: '/';
+
+            return [
+                'id' => $session->id,
+                'browser' => $browserLabel,
+                'device_type' => $deviceLabel,
+                'location' => $locationLabel,
+                'ip_address' => $visitor?->ip_address ?: 'Unknown',
+                'page_title' => $pageTitle,
+                'page_path' => $pagePath,
+                'duration' => (int) $session->duration,
+                'last_activity_at' => $session->last_activity_at,
+            ];
+        });
         
         return [
             'active_visitors' => $activeVisitors,
-            'current_sessions' => $currentSessions,
+            'current_sessions' => $sessions,
         ];
     }
     
@@ -296,7 +323,7 @@ class AnalyticsController extends Controller
     {
         [$startDate, $endDate] = $dateRange;
         
-        $avgDuration = (float) (VisitorSession::whereBetween('started_at', [$startDate, $endDate])
+        $avgDuration = (float) (VisitorSession::whereBetween('started_at', [$startDate, $endDate], 'and', false)
             ->where('duration', '>', 0)
             ->avg('duration') ?? 0);
         
@@ -307,10 +334,10 @@ class AnalyticsController extends Controller
     {
         [$startDate, $endDate] = $dateRange;
         
-        $totalSessions = VisitorSession::whereBetween('started_at', [$startDate, $endDate])->count();
+        $totalSessions = VisitorSession::whereBetween('started_at', [$startDate, $endDate], 'and', false)->count();
         if ($totalSessions === 0) return 0;
         
-        $bounceSessions = VisitorSession::whereBetween('started_at', [$startDate, $endDate])
+        $bounceSessions = VisitorSession::whereBetween('started_at', [$startDate, $endDate], 'and', false)
             ->where('is_bounce', true)
             ->count();
         
