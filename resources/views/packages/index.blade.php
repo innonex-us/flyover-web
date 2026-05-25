@@ -9,7 +9,7 @@
     <h1 class="font-extrabold text-4xl md:text-5xl text-gray-900 mb-3" style="font-family:'Merriweather',Georgia,serif;">
         Tour Packages
     </h1>
-    <p class="text-gray-500 max-w-md mx-auto mb-8">From quick weekend getaways to epic multi-country adventures — find and book the perfect trip.</p>
+    <p class="text-gray-500 max-w-md mx-auto mb-8">From quick weekend getaways to epic multi-country adventures - find and book the perfect trip.</p>
 
     {{-- Search --}}
     <form action="{{ route('packages.index') }}" method="GET" class="flex max-w-xl mx-auto gap-2">
@@ -81,7 +81,7 @@
 <section class="py-14 text-center" style="background:#18130E;color:#FAF6EE;">
     <p class="section-eyebrow mb-3" style="color:#C8102E;">Can't find your dream trip?</p>
     <h2 class="font-extrabold text-3xl mb-3" style="font-family:'Merriweather',Georgia,serif;">We'll build it for you.</h2>
-    <p class="text-sm max-w-md mx-auto mb-6" style="color:#A09890;">Tell us your destination, dates, and budget — our travel experts craft a custom itinerary just for you.</p>
+    <p class="text-sm max-w-md mx-auto mb-6" style="color:#A09890;">Tell us your destination, dates, and budget - our travel experts craft a custom itinerary just for you.</p>
     <div class="flex flex-wrap justify-center gap-3">
         <a href="{{ route('customize.index') }}" class="ota-btn-primary">Plan My Trip</a>
         <a href="{{ route('contact') }}" style="border-color:#FAF6EE;color:#FAF6EE;" class="ota-btn-ghost">Contact Us</a>

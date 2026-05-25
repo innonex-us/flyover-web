@@ -22,7 +22,7 @@
             <h2 class="font-extrabold text-3xl text-gray-900 mb-5" style="font-family:'Merriweather',Georgia,serif;">Bangladesh's Premier Travel Agency</h2>
             <div class="space-y-4 text-gray-600 leading-relaxed text-sm md:text-base">
                 <p>FlyoverBD is a premier travel consultancy based in Dhaka, Bangladesh. Established with a vision to eliminate the complexities of travel, we specialise in visa processing, tailored tour packages, and expert travel advice.</p>
-                <p>We understand that every journey is unique. Whether you're a business traveler needing a quick visa turnaround, a family planning a vacation, or a student aspiring to study abroad — our dedicated team is here to guide you every step of the way.</p>
+                <p>We understand that every journey is unique. Whether you're a business traveler needing a quick visa turnaround, a family planning a vacation, or a student aspiring to study abroad - our dedicated team is here to guide you every step of the way.</p>
             </div>
         </div>
         <div class="grid grid-cols-1 gap-5">
@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     <h3 class="font-bold text-gray-900 mb-1">Our Mission</h3>
-                    <p class="text-sm text-gray-500 leading-relaxed">To empower travelers by providing accurate information, transparent processing, and stress-free services — making global travel accessible to everyone.</p>
+                    <p class="text-sm text-gray-500 leading-relaxed">To empower travelers by providing accurate information, transparent processing, and stress-free services - making global travel accessible to everyone.</p>
                 </div>
             </div>
             <div class="bg-gray-50 p-7 rounded-2xl border border-gray-100 flex items-start gap-4">

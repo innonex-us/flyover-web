@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">Transfer Booking Confirmed — FlyoverBD</x-slot>
+    <x-slot name="title">Transfer Booking Confirmed - FlyoverBD</x-slot>
 
     <section class="min-h-[60vh] flex items-center justify-center py-20 px-4">
         <div class="max-w-lg w-full">
@@ -48,7 +48,7 @@
                 </div>
                 @else
                 <div class="border-t border-gray-100 pt-3">
-                    <p class="text-xs text-gray-400 text-center">Custom transfer — our team will provide pricing shortly.</p>
+                    <p class="text-xs text-gray-400 text-center">Custom transfer - our team will provide pricing shortly.</p>
                 </div>
                 @endif
             </div>

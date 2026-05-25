@@ -114,9 +114,9 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     
     // New Pages
     Route::get('/analytics-advanced', function () { return view('admin.analytics'); })->name('analytics.advanced');
-    Route::get('/reports', function () { return view('admin.reports'); })->name('reports.index');
-    Route::get('/reports/sales', function () { return view('admin.reports'); })->name('reports.sales');
-    Route::get('/reports/visitors', function () { return view('admin.reports'); })->name('reports.visitors');
+    Route::get('/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'pdf'])->name('reports.pdf');
+    Route::get('/reports/print', [\App\Http\Controllers\Admin\ReportController::class, 'print'])->name('reports.print');
     Route::get('/users', function () { return view('admin.users'); })->name('users.index');
     Route::get('/settings/general', function () { return view('admin.settings'); })->name('settings.general');
     Route::get('/settings/email', function () { return view('admin.settings'); })->name('settings.email');

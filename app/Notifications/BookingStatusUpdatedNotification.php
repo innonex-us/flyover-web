@@ -43,7 +43,7 @@ class BookingStatusUpdatedNotification extends Notification
             'icon'         => 'calendar',
             'color'        => $color,
             'title'        => 'Booking Update: ' . ucfirst($this->status),
-            'message'      => ($statusLabels[$this->status] ?? 'Booking status changed.') . ' — ' . $this->serviceName,
+            'message'      => ($statusLabels[$this->status] ?? 'Booking status changed.') . ' - ' . $this->serviceName,
             'url'          => $this->url,
             'booking_type' => $this->bookingType,
             'booking_id'   => $this->bookingId,

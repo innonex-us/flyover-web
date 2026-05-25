@@ -103,7 +103,7 @@ class PaymentController extends Controller
             ->first();
 
         if (!$payment) {
-            // unknown payment — log and return 404 to caller
+            // unknown payment - log and return 404 to caller
             report(new \RuntimeException("bkash webhook for unknown payment: {$paymentId}"));
             return response()->json(['error' => 'unknown payment'], 404);
         }

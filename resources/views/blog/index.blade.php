@@ -20,7 +20,7 @@
     <section style="background:#FAF6EE;border-bottom:1px solid #E4DCC9;" class="px-5 py-16 text-center">
         <p class="fb-eyebrow mb-3">FlyoverBD Journal</p>
         <h1 class="fb-serif text-5xl md:text-6xl leading-[1.08] mb-4" style="color:#18130E;">Stories from<br><em>the road.</em></h1>
-        <p class="text-base max-w-md mx-auto" style="color:#7A7166;">Visa guides, trip diaries, and destination deep-dives — written for travellers by travellers.</p>
+        <p class="text-base max-w-md mx-auto" style="color:#7A7166;">Visa guides, trip diaries, and destination deep-dives - written for travellers by travellers.</p>
     </section>
 
     {{-- Grid --}}
@@ -73,7 +73,7 @@
                 @empty
                     <div class="col-span-3 text-center py-16" style="color:#7A7166;">
                         <p class="fb-serif text-2xl mb-2">Nothing here yet.</p>
-                        <p class="text-sm">Stay tuned — great stories are coming.</p>
+                        <p class="text-sm">Stay tuned - great stories are coming.</p>
                     </div>
                 @endforelse
             </div>

@@ -41,7 +41,7 @@
 
     @if(!$post->is_published)
     <div class="px-5 py-2.5 text-center text-xs font-bold" style="background:#FEF3C7;color:#92400E;border-bottom:1px solid #FDE68A;">
-        DRAFT — only visible to admins
+        DRAFT - only visible to admins
     </div>
     @endif
 
@@ -129,7 +129,7 @@
                     <div class="rounded-2xl p-7 text-center" style="background:#18130E;color:#FAF6EE;">
                         <p class="fb-eyebrow mb-2" style="color:#C8102E;">Ready to travel?</p>
                         <h3 class="fb-serif text-2xl mb-3">Plan your trip with us.</h3>
-                        <p class="text-sm mb-5" style="color:#7A7166;">Visas, packages, and pick & drop — all in one place.</p>
+                        <p class="text-sm mb-5" style="color:#7A7166;">Visas, packages, and pick & drop - all in one place.</p>
                         <a href="{{ route('packages.index') }}" class="ota-btn-primary block text-center">Browse Packages</a>
                     </div>
 

@@ -29,7 +29,7 @@
                                 <span class="text-sm font-mono text-red-600 font-semibold">{{ $shortUrl }}</span>
                             </div>
                         </td>
-                        <td class="px-5 py-3.5 text-sm text-gray-700">{{ $link->label ?: '—' }}</td>
+                        <td class="px-5 py-3.5 text-sm text-gray-700">{{ $link->label ?: '-' }}</td>
                         <td class="px-5 py-3.5">
                             <a href="{{ $link->url }}" target="_blank" class="text-sm text-blue-600 hover:underline max-w-xs truncate block" style="max-width:200px;">
                                 {{ Str::limit($link->url, 50) }}

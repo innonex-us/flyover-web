@@ -7,7 +7,7 @@
             </svg>
             Back to Rooms
         </a>
-        <h2 class="text-3xl font-bold text-gray-800">Add Room — {{ $hotel->name }}</h2>
+        <h2 class="text-3xl font-bold text-gray-800">Add Room - {{ $hotel->name }}</h2>
     </div>
 
     <form action="{{ route('admin.hotels.rooms.store', $hotel) }}" method="POST" enctype="multipart/form-data" class="max-w-2xl" x-data="formUploader" @submit.prevent="submitForm">

@@ -67,7 +67,7 @@
                             </div>
                         </td>
                         <td class="px-5 py-3.5 text-sm text-gray-500">
-                            {{ $post->custom_author ?? ($post->author->name ?? '—') }}
+                            {{ $post->custom_author ?? ($post->author->name ?? '-') }}
                         </td>
                         <td class="px-5 py-3.5 text-center">
                             <div class="flex flex-col items-center gap-1">
@@ -82,7 +82,7 @@
                             </div>
                         </td>
                         <td class="px-5 py-3.5 text-sm text-gray-500">
-                            {{ $post->published_at ? $post->published_at->format('M d, Y') : '—' }}
+                            {{ $post->published_at ? $post->published_at->format('M d, Y') : '-' }}
                         </td>
                         <td class="px-5 py-3.5">
                             <div class="flex items-center justify-center gap-1">

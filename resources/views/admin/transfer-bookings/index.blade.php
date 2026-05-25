@@ -66,7 +66,7 @@
                         <td class="px-5 py-3.5 text-center text-sm font-semibold text-gray-700">{{ $booking->passenger_count }}</td>
                         <td class="px-5 py-3.5 text-sm text-gray-600">{{ $booking->travel_date->format('M d, Y') }}</td>
                         <td class="px-5 py-3.5 text-right text-sm font-semibold text-gray-900">
-                            {{ $booking->total_amount > 0 ? '৳' . number_format($booking->total_amount) : '—' }}
+                            {{ $booking->total_amount > 0 ? '৳' . number_format($booking->total_amount) : '-' }}
                         </td>
                         <td class="px-5 py-3.5 text-center">
                             @php

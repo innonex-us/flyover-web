@@ -9,7 +9,7 @@
         <h1 class="font-extrabold text-4xl md:text-5xl text-gray-900 mb-3" style="font-family:'Merriweather',Georgia,serif;">
             Pick &amp; Drop Service
         </h1>
-        <p class="text-gray-500 max-w-md mx-auto mb-6">Comfortable transfers between airports, hotels, and destinations — fixed pricing, no surprises.</p>
+        <p class="text-gray-500 max-w-md mx-auto mb-6">Comfortable transfers between airports, hotels, and destinations - fixed pricing, no surprises.</p>
 
         {{-- Quick-search bar --}}
         <div class="max-w-4xl mx-auto mb-8"
@@ -220,7 +220,7 @@
                             class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200 text-sm">
                             <option value="">Choose a route...</option>
                             @foreach($routes as $route)
-                            <option value="{{ $route->id }}">{{ $route->name }} — ৳{{ number_format($route->price_per_person) }}/person</option>
+                            <option value="{{ $route->id }}">{{ $route->name }} - ৳{{ number_format($route->price_per_person) }}/person</option>
                             @endforeach
                         </select>
                     </div>

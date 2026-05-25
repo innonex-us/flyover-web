@@ -9,7 +9,7 @@
         <h1 class="font-extrabold text-4xl md:text-5xl text-gray-900 mb-3" style="font-family:'Merriweather',Georgia,serif;">
             Hotel Bookings
         </h1>
-        <p class="text-gray-500 max-w-md mx-auto mb-8">Handpicked hotels across Bangladesh's top destinations — book your perfect stay in minutes.</p>
+        <p class="text-gray-500 max-w-md mx-auto mb-8">Handpicked hotels across Bangladesh's top destinations - book your perfect stay in minutes.</p>
 
         {{-- Search --}}
         <form action="{{ route('hotels.index') }}" method="GET"

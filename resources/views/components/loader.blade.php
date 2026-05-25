@@ -1,5 +1,5 @@
 {{-- ═══════════════════════════════════════════════════════════
-     FlyoverBD — Cinematic Loader  v3 (same-to-same SVG logo)
+     FlyoverBD - Cinematic Loader  v3 (same-to-same SVG logo)
      File: resources/views/components/loader.blade.php
 
      Animation sequence:
@@ -55,7 +55,7 @@
     overflow: visible;
 }
 
-/* letter groups — drop in from above */
+/* letter groups - drop in from above */
 .fol-ltr {
     opacity: 0;
     transform: translateY(-28px);
@@ -63,7 +63,7 @@
 }
 .fol-ltr.fol-in { opacity: 1; transform: translateY(0); }
 
-/* globe group — scale in */
+/* globe group - scale in */
 #fol-ggrp {
     opacity: 0;
     transform-origin: 200px 55px;   /* globe centre in viewBox */
@@ -192,7 +192,7 @@
     <div class="fol-stage" id="fol-stage">
 
         {{-- ══════════════════════════════════════════════════════
-             SVG LOGO — exact replica of logo.png
+             SVG LOGO - exact replica of logo.png
              viewBox = 400 × 130 (natural dimensions of PNG)
              Red: #C8102E  |  Font: approximated with SVG paths
              The font used in the original is a wide bold sans.
@@ -227,7 +227,7 @@
                 <rect x="116" y="41" width="13" height="39" rx="2" fill="#C8102E"/>
             </g>
 
-            {{-- ─── O — the GLOBE (animated separately) ─── --}}
+            {{-- ─── O - the GLOBE (animated separately) ─── --}}
             {{-- Globe centre: (200, 53) in viewBox, radius 44 --}}
             <g id="fol-ggrp">
                 {{-- Red globe circle --}}
@@ -301,7 +301,7 @@
 
         </svg>
 
-        {{-- Real logo.png — revealed from smoke after blast-off --}}
+        {{-- Real logo.png - revealed from smoke after blast-off --}}
         <img id="fol-logo-real"
              src="{{ asset('logo.png') }}"
              alt="FlyoverBD"
@@ -466,7 +466,7 @@
         rafId = requestAnimationFrame(tick);
     }
 
-    /* ── Phase 1 — letters drop in (CSS class stagger) ────────── */
+    /* ── Phase 1 - letters drop in (CSS class stagger) ────────── */
     function phase1Letters() {
         var ids = ['fol-F','fol-L','fol-Y','fol-V','fol-E','fol-R'];
         ids.slice(0,3).forEach(function (id, i) {
@@ -484,12 +484,12 @@
         });
     }
 
-    /* ── Phase 2 — globe pops in ──────────────────────────────── */
+    /* ── Phase 2 - globe pops in ──────────────────────────────── */
     function phase2Globe() {
         if (gGrp) gGrp.classList.add('fol-in');
     }
 
-    /* ── Phase 3 — arc draws + plane flies in ─────────────────── */
+    /* ── Phase 3 - arc draws + plane flies in ─────────────────── */
     function phase3Plane() {
         /* Draw arc */
         if (arc) arc.classList.add('fol-draw');
@@ -530,7 +530,7 @@
         }, 720);
     }
 
-    /* ── Phase 4 — blast-off, smoke, logo reveal ──────────────── */
+    /* ── Phase 4 - blast-off, smoke, logo reveal ──────────────── */
     var blasted = false;
     function blastOff() {
         if (blasted) return;

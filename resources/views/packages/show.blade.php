@@ -152,7 +152,7 @@
                                     @if(!empty($item['label']) || !empty($item['content']))
                                     <div class="flex items-center gap-1.5 text-gray-600">
                                         <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">{{ $item['label'] ?? '' }}</span>
-                                        <span class="font-semibold text-gray-800">{{ $item['content'] ?? '—' }}</span>
+                                        <span class="font-semibold text-gray-800">{{ $item['content'] ?? '-' }}</span>
                                     </div>
                                     @endif
                                 @endforeach

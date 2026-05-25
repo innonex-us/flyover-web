@@ -22,7 +22,7 @@
                 <ul class="list-disc pl-6 space-y-1 text-gray-600">
                     <li><strong>Personal Identification:</strong> Name, email address, phone number, mailing address, and passport details.</li>
                     <li><strong>Travel Information:</strong> Travel dates, destination preferences, and accommodation details.</li>
-                    <li><strong>Payment Information:</strong> Billing details (processed securely via third-party gateways — we do not store card numbers).</li>
+                    <li><strong>Payment Information:</strong> Billing details (processed securely via third-party gateways - we do not store card numbers).</li>
                 </ul>
 
                 <h3 class="text-gray-900 font-bold mt-8">2. How We Use Your Information</h3>

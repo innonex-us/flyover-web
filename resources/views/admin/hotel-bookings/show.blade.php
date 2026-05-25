@@ -92,7 +92,7 @@
                     </div>
                     <div>
                         <p class="text-gray-500 mb-1">Phone</p>
-                        <p class="font-semibold text-gray-800">{{ $hotelBooking->guest_phone ?? '—' }}</p>
+                        <p class="font-semibold text-gray-800">{{ $hotelBooking->guest_phone ?? '-' }}</p>
                     </div>
                     <div>
                         <p class="text-gray-500 mb-1">Type</p>

@@ -58,7 +58,7 @@
                         </div>
                         <div>
                             <p class="text-gray-500 mb-1">Total Amount</p>
-                            <p class="font-semibold text-gray-800">{{ $transferBooking->total_amount > 0 ? '৳' . number_format($transferBooking->total_amount) : '—' }}</p>
+                            <p class="font-semibold text-gray-800">{{ $transferBooking->total_amount > 0 ? '৳' . number_format($transferBooking->total_amount) : '-' }}</p>
                         </div>
                     </div>
                     @if($transferBooking->special_request)
@@ -86,7 +86,7 @@
                     </div>
                     <div>
                         <p class="text-gray-500 mb-1">Phone</p>
-                        <p class="font-semibold text-gray-800">{{ $transferBooking->guest_phone ?? ($transferBooking->user->phone ?? '—') }}</p>
+                        <p class="font-semibold text-gray-800">{{ $transferBooking->guest_phone ?? ($transferBooking->user->phone ?? '-') }}</p>
                     </div>
                     <div>
                         <p class="text-gray-500 mb-1">Type</p>

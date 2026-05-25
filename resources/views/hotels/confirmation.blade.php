@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">Hotel Booking Confirmed — FlyoverBD</x-slot>
+    <x-slot name="title">Hotel Booking Confirmed - FlyoverBD</x-slot>
 
     <section class="min-h-[60vh] flex items-center justify-center py-20 px-4">
         <div class="max-w-lg w-full">

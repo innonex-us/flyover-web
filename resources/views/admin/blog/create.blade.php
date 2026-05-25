@@ -250,12 +250,12 @@
         if (titleInput) {
             titleInput.addEventListener('input', function() {
                 const slug = slugify(this.value);
-                if (slugPreview) slugPreview.textContent = slug || '—';
+                if (slugPreview) slugPreview.textContent = slug || '-';
                 if (serpSlug) serpSlug.textContent = slug || 'your-post-slug';
             });
             // Init
             const initSlug = slugify(titleInput.value);
-            if (slugPreview) slugPreview.textContent = initSlug || '—';
+            if (slugPreview) slugPreview.textContent = initSlug || '-';
             if (serpSlug) serpSlug.textContent = initSlug || 'your-post-slug';
         }
 
