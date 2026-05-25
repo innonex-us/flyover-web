@@ -6,7 +6,7 @@
 {{-- ── Hero ─────────────────────────────── --}}
 <section style="background:#F9F6EF;border-bottom:1px solid #E4DCC9;" class="px-4 py-16 text-center">
     <p class="section-eyebrow mb-3">Est. 2016 · Dhaka, Bangladesh</p>
-    <h1 class="font-extrabold text-4xl md:text-5xl mb-4" style="font-family:'Merriweather',Georgia,serif;color:#18130E;">
+    <h1 class="font-extrabold text-3xl sm:text-4xl md:text-5xl mb-4" style="font-family:'Merriweather',Georgia,serif;color:#18130E;">
         About FlyoverBD
     </h1>
     <p class="max-w-xl mx-auto text-base leading-relaxed" style="color:#7A7166;">
@@ -19,7 +19,7 @@
     <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         <div>
             <p class="section-eyebrow mb-3">Who We Are</p>
-            <h2 class="font-extrabold text-3xl text-gray-900 mb-5" style="font-family:'Merriweather',Georgia,serif;">A Travel Agency Built Around You</h2>
+            <h2 class="font-extrabold text-2xl sm:text-3xl text-gray-900 mb-5" style="font-family:'Merriweather',Georgia,serif;">A Travel Agency Built Around You</h2>
             <div class="space-y-4 text-gray-600 leading-relaxed text-sm md:text-base">
                 <p>FlyoverBD is a full-service travel consultancy based in Banani, Dhaka. We started with a simple goal: remove the frustration from travel planning. Today we handle everything from visa applications to complete holiday packages for thousands of Bangladeshis every year.</p>
                 <p>Whether you're a first-time traveller or a frequent flyer, a family planning a vacation or a student applying for a study visa — our experienced team is here to make it smooth, transparent, and stress-free.</p>
@@ -78,7 +78,7 @@
     <div class="max-w-6xl mx-auto px-4">
         <div class="mb-10">
             <p class="section-eyebrow mb-2">Our Services</p>
-            <h2 class="font-extrabold text-3xl text-gray-900" style="font-family:'Merriweather',Georgia,serif;">Everything Travel, Under One Roof</h2>
+            <h2 class="font-extrabold text-2xl sm:text-3xl text-gray-900" style="font-family:'Merriweather',Georgia,serif;">Everything Travel, Under One Roof</h2>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             @php $services = [
@@ -105,7 +105,7 @@
     <div class="max-w-6xl mx-auto px-4">
         <div class="mb-10">
             <p class="section-eyebrow mb-2">Why FlyoverBD</p>
-            <h2 class="font-extrabold text-3xl text-gray-900" style="font-family:'Merriweather',Georgia,serif;">What Sets Us Apart</h2>
+            <h2 class="font-extrabold text-2xl sm:text-3xl text-gray-900" style="font-family:'Merriweather',Georgia,serif;">What Sets Us Apart</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             @php $reasons = [
@@ -187,7 +187,7 @@
 {{-- ── CTA ────────────────────────────────── --}}
 <section class="py-14 text-center bg-white" style="border-top:1px solid #E4DCC9;">
     <p class="section-eyebrow mb-3">Get in touch</p>
-    <h2 class="font-extrabold text-3xl text-gray-900 mb-3" style="font-family:'Merriweather',Georgia,serif;">Ready to Plan Your Trip?</h2>
+    <h2 class="font-extrabold text-2xl sm:text-3xl text-gray-900 mb-3" style="font-family:'Merriweather',Georgia,serif;">Ready to Plan Your Trip?</h2>
     <p class="text-sm text-gray-500 max-w-sm mx-auto mb-6">Talk to our team for a free consultation on visa requirements, tour packages, or custom itineraries.</p>
     <div class="flex flex-wrap justify-center gap-3">
         <a href="{{ route('contact') }}" class="btn-primary">Contact Us</a>

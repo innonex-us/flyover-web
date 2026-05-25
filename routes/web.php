@@ -54,6 +54,8 @@ Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])
 Route::post('/bookings', [App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
 Route::get('/bookings/{booking}/confirmation', [App\Http\Controllers\BookingController::class, 'confirmation'])->name('bookings.confirmation');
 
+Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+
 Route::prefix('payments/bkash')->name('payments.bkash.')->group(function () {
     Route::get('/{payment}', [PaymentController::class, 'start'])->name('start');
     Route::get('/success', [PaymentController::class, 'success'])->name('success');
@@ -76,6 +78,13 @@ Route::prefix('api/analytics')->name('analytics.')->group(function () {
     Route::post('/visitor-update', [App\Http\Controllers\AnalyticsController::class, 'visitorUpdate'])->name('visitor-update');
     Route::post('/session-activity', [App\Http\Controllers\AnalyticsController::class, 'sessionActivity'])->name('session-activity');
     Route::post('/consent', [App\Http\Controllers\AnalyticsController::class, 'consent'])->name('consent');
+});
+
+// Coupon API Routes
+Route::prefix('api/coupons')->middleware(['auth'])->group(function () {
+    Route::post('/validate', [App\Http\Controllers\Api\CouponController::class, 'validate'])->name('api.coupons.validate');
+    Route::post('/remove', [App\Http\Controllers\Api\CouponController::class, 'remove'])->name('api.coupons.remove');
+    Route::get('/available', [App\Http\Controllers\Api\CouponController::class, 'available'])->name('api.coupons.available');
 });
 
 
@@ -157,6 +166,10 @@ Route::middleware(['auth', 'verified', 'admin', 'two-factor'])->prefix('cp')->na
     Route::resource('hotels', \App\Http\Controllers\Admin\HotelController::class);
     Route::resource('hotels.rooms', \App\Http\Controllers\Admin\HotelRoomController::class);
     Route::resource('hotel-bookings', \App\Http\Controllers\Admin\HotelBookingController::class)->only(['index', 'show', 'update', 'destroy']);
+
+    // Coupons
+    Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
+    Route::patch('/coupons/{coupon}/toggle', [\App\Http\Controllers\Admin\CouponController::class, 'toggleStatus'])->name('coupons.toggle');
 
     // Push Notifications (Marketing)
     Route::get('/push-notifications', [\App\Http\Controllers\Admin\PushNotificationController::class, 'index'])->name('push-notifications.index');

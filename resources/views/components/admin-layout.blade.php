@@ -56,7 +56,8 @@
                     || request()->routeIs('admin.visas.*')
                     || request()->routeIs('admin.transfer-routes.*')
                     || request()->routeIs('admin.hotels.*')
-                    || request()->routeIs('admin.customizations.*');
+                    || request()->routeIs('admin.customizations.*')
+                    || request()->routeIs('admin.coupons.*');
 
                 $bookingsActive = request()->routeIs('admin.bookings.*')
                     || request()->routeIs('admin.transfer-bookings.*')
@@ -82,6 +83,7 @@
                     ['label' => 'Pick & Drop',     'route' => 'admin.transfer-routes.index', 'match' => 'admin.transfer-routes.*', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
                     ['label' => 'Hotels',          'route' => 'admin.hotels.index',           'match' => 'admin.hotels.*',          'icon' => 'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z'],
                     ['label' => 'Custom Requests', 'route' => 'admin.customizations.index',  'match' => 'admin.customizations.*',  'icon' => 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'],
+                    ['label' => 'Coupons',         'route' => 'admin.coupons.index',          'match' => 'admin.coupons.*',         'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                 ];
 
                 $bookingItems = [

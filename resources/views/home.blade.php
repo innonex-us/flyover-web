@@ -282,7 +282,7 @@
                 </button>
                 <button @click="reset('transfers')" class="flex-shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5" :class="tab==='transfers' ? 'bg-white text-gray-900 shadow-lg' : 'text-white hover:bg-white/10'">
                     <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" :class="tab==='transfers'?'text-red-600':'text-current'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                    Pick &amp; Drop
+                    Pik &amp; Drop
                 </button>
             </div>
 
@@ -347,7 +347,7 @@
                             {{-- date row --}}
                             <div class="grid grid-cols-3 gap-2">
                                 <button type="button" @click.stop="openCal('checkIn')"
-                                        class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
+                                        class="flex items-center gap-1 px-2 py-2.5 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
                                         :class="calOpen==='checkIn' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
                                     <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     <div class="min-w-0">
@@ -356,7 +356,7 @@
                                     </div>
                                 </button>
                                 <button type="button" @click.stop="openCal('checkOut')"
-                                        class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
+                                        class="flex items-center gap-1 px-2 py-2.5 bg-gray-50 border rounded-xl transition-all text-left col-span-1"
                                         :class="calOpen==='checkOut' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
                                     <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     <div class="min-w-0">
@@ -364,7 +364,7 @@
                                         <p class="text-sm font-semibold text-gray-700 truncate" x-text="checkOut ? fmtDateShort(checkOut) : 'Select'"></p>
                                     </div>
                                 </button>
-                                <div class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border border-gray-200 rounded-xl col-span-1">
+                                <div class="flex items-center gap-1 px-2 py-2.5 bg-gray-50 border border-gray-200 rounded-xl col-span-1">
                                     <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Guests</p>
@@ -439,7 +439,7 @@
                             {{-- Pickup + Drop-off + Passengers in 3-column grid like Hotels --}}
                             <div class="grid grid-cols-3 gap-2">
                                 {{-- Pickup --}}
-                                <div class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all col-span-1">
+                                <div class="flex items-center gap-1 px-2 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all col-span-1">
                                     <svg class="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">Pickup</p>
@@ -448,7 +448,7 @@
                                     </div>
                                 </div>
                                 {{-- Drop-off --}}
-                                <div class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all col-span-1">
+                                <div class="flex items-center gap-1 px-2 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all col-span-1">
                                     <svg class="w-3.5 h-3.5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">Drop-off</p>
@@ -457,7 +457,7 @@
                                     </div>
                                 </div>
                                 {{-- Passengers --}}
-                                <div class="flex items-center gap-1.5 px-2.5 py-3 bg-gray-50 border border-gray-200 rounded-xl col-span-1">
+                                <div class="flex items-center gap-1 px-2 py-2.5 bg-gray-50 border border-gray-200 rounded-xl col-span-1">
                                     <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">Passengers</p>
@@ -515,7 +515,7 @@
                             <button @click="window.location='{{ route('transfers.index') }}?pickup='+encodeURIComponent(query)+'&travel_date='+fmtISO(travelDate)+'&passengers='+passengers"
                                     class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                                Book Transfer
+                                Book Pik & Drop
                             </button>
                         </div>
                     </div>
@@ -561,7 +561,7 @@
                                                   'bg-purple-500 text-white': tab === 'hotels',
                                                   'bg-orange-500 text-white': tab === 'transfers'
                                               }"
-                                              x-text="tab === 'transfers' ? 'Transfer' : tab.charAt(0).toUpperCase() + tab.slice(1, -1)"></span>
+                                              x-text="tab === 'transfers' ? 'Pik & Drop' : tab.charAt(0).toUpperCase() + tab.slice(1, -1)"></span>
                                     </div>
                                     {{-- Content --}}
                                     <div class="flex-1 min-w-0">
@@ -863,7 +863,7 @@
                     <svg class="w-5 h-5 sm:w-6 sm:h-6 {{ $color }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $icon }}"/></svg>
                 </div>
                 <h3 class="font-bold text-gray-900 text-sm sm:text-base mb-1.5 sm:mb-2">{{ $title }}</h3>
-                <p class="text-xs sm:text-sm text-gray-500 leading-relaxed hidden sm:block">{!! $desc !!}</p>
+                <p class="text-xs sm:text-sm text-gray-500 leading-relaxed">{!! $desc !!}</p>
             </div>
             @endforeach
         </div>
@@ -874,12 +874,12 @@
      BLOG
 ═══════════════════════════════════════ --}}
 @if(isset($recentPosts) && $recentPosts->count() > 0)
-<section class="bg-white py-14">
+<section class="bg-white py-8 sm:py-14">
     <div class="max-w-6xl mx-auto px-4">
-        <div class="flex items-end justify-between mb-8">
+        <div class="flex items-end justify-between mb-5 sm:mb-8">
             <div>
                 <p class="section-eyebrow mb-1.5">Travel insights</p>
-                <h2 class="text-3xl font-extrabold text-gray-900">Latest from our Blog</h2>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900">Latest from our Blog</h2>
             </div>
             <a href="{{ route('blog.index') }}" class="hidden md:flex items-center gap-1 text-sm font-semibold text-red-600 hover:text-red-700">
                 All articles <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>

@@ -61,7 +61,7 @@
              @keydown.escape.window="show=false; calOpen=''"
              @click.outside="calOpen=''; show=false">
 
-            <div class="bg-white rounded-3xl shadow-2xl shadow-black/10 p-4 text-left relative">
+            <div class="bg-white rounded-3xl shadow-2xl shadow-black/10 p-3 sm:p-4 text-left relative">
 
                 {{-- Destination --}}
                 <div class="flex items-center px-3 py-3 mb-3 bg-gray-50 border border-gray-200 rounded-2xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
@@ -74,10 +74,10 @@
                 </div>
 
                 {{-- Date + Guests row --}}
-                <div class="grid grid-cols-3 gap-2 mb-3">
+                <div class="grid grid-cols-3 sm:grid-cols-3 gap-2 mb-3">
                     {{-- Check-in --}}
                     <button type="button" @click.stop="openCal('checkIn')"
-                            class="flex items-center gap-1.5 px-3 py-3 bg-gray-50 border rounded-xl transition-all text-left"
+                            class="flex items-center gap-1 px-2 sm:px-3 py-2.5 sm:py-3 bg-gray-50 border rounded-xl transition-all text-left"
                             :class="calOpen==='checkIn' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
                         <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         <div class="min-w-0">
@@ -87,7 +87,7 @@
                     </button>
                     {{-- Check-out --}}
                     <button type="button" @click.stop="openCal('checkOut')"
-                            class="flex items-center gap-1.5 px-3 py-3 bg-gray-50 border rounded-xl transition-all text-left"
+                            class="flex items-center gap-1 px-2 sm:px-3 py-2.5 sm:py-3 bg-gray-50 border rounded-xl transition-all text-left"
                             :class="calOpen==='checkOut' ? 'border-red-400 bg-red-50' : 'border-gray-200'">
                         <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         <div class="min-w-0">
@@ -96,7 +96,7 @@
                         </div>
                     </button>
                     {{-- Guests --}}
-                    <div class="flex items-center gap-1.5 px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl">
+                    <div class="flex items-center gap-1 px-2 sm:px-3 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl">
                         <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <div class="flex-1 min-w-0">
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Guests</p>
@@ -217,7 +217,7 @@
         @endif
 
         {{-- Location chips --}}
-        <div class="flex flex-wrap justify-center gap-2 mt-5">
+        <div class="flex flex-wrap justify-center gap-2 mt-4">
             @foreach(["Cox's Bazar", "Dhaka", "Sylhet", "Sundarbans", "Bandarban", "Saint Martin"] as $loc)
             <a href="{{ route('hotels.index', array_merge(request()->only(['check_in','check_out','persons']), ['search' => $loc])) }}"
                class="text-xs font-semibold px-3.5 py-1.5 rounded-full transition {{ request('search') === $loc ? 'bg-red-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-red-300 hover:text-red-600' }}">
@@ -314,7 +314,7 @@
             <p class="section-eyebrow mb-2">Simple process</p>
             <h2 class="font-extrabold text-3xl text-gray-900">How Hotel Booking Works</h2>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 text-center">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-center">
             @php $steps = [
                 ['bg-blue-50','text-blue-600','M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z','1. Search','Enter your destination, dates and number of guests to see available hotels.'],
                 ['bg-green-50','text-green-600','M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6','2. Pick a Hotel','Browse curated hotels with real photos, star ratings and pricing.'],

@@ -97,7 +97,7 @@ class BookingController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('payments.bkash.start', $payment)->with('success', 'Booking request submitted successfully!');
+        return redirect()->route('payments.show', $payment)->with('success', 'Booking request submitted! Complete your payment below.');
     }
 
     public function confirmation(Request $request, Booking $booking)

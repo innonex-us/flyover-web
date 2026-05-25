@@ -182,7 +182,7 @@
             <p class="section-eyebrow mb-2">Simple process</p>
             <h2 class="font-extrabold text-3xl text-gray-900">How Visa Processing Works</h2>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 text-center">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-center">
             @php $steps = [
                 ['bg-blue-50','text-blue-600','M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2','1. Apply Online','Fill the booking form with your travel details and documents.'],
                 ['bg-green-50','text-green-600','M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z','2. Document Review','Our visa experts verify your documents and guide you if anything is missing.'],

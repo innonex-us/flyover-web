@@ -25,6 +25,9 @@ class TransferBooking extends Model
         'special_request',
         'status',
         'total_amount',
+        'coupon_id',
+        'discount_amount',
+        'final_amount',
         'payment_status',
         'payment_method',
         'payment_reference',
@@ -33,6 +36,9 @@ class TransferBooking extends Model
     protected $casts = [
         'travel_date' => 'date',
         'is_custom' => 'boolean',
+        'total_amount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'final_amount' => 'decimal:2',
     ];
 
     public function route()

@@ -98,7 +98,7 @@ class TransferController extends Controller
                 'status' => 'pending',
             ]);
 
-            return redirect()->route('payments.bkash.start', $payment)->with('success', 'Transfer booking submitted successfully!');
+            return redirect()->route('payments.show', $payment)->with('success', 'Booking submitted! Complete your payment below.');
         }
 
         return redirect()->route('transfers.confirmation', $booking)->with('success', 'Transfer booking submitted successfully!');

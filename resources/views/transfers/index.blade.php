@@ -49,7 +49,7 @@
                 </div>
 
                 {{-- Drop-off + Date + Passengers (grid) --}}
-                <div class="grid grid-cols-3 gap-2 mb-3">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
                     {{-- Drop-off --}}
                     <div class="flex items-center gap-1.5 px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all">
                         <svg class="w-3.5 h-3.5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -70,7 +70,7 @@
                         </div>
                     </button>
                     {{-- Passengers --}}
-                    <div class="flex items-center gap-1.5 px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl">
+                    <div class="col-span-2 sm:col-span-1 flex items-center gap-1.5 px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl">
                         <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <div class="flex-1 min-w-0">
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Persons</p>
@@ -360,7 +360,7 @@
     <div class="max-w-5xl mx-auto px-4">
         <div class="text-center mb-10">
             <p class="section-eyebrow mb-2">Simple process</p>
-            <h2 class="font-extrabold text-3xl text-gray-900">How Pick &amp; Drop Works</h2>
+            <h2 class="font-extrabold text-2xl sm:text-3xl text-gray-900">How Pick &amp; Drop Works</h2>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 text-center">
             @php $steps = [
@@ -385,7 +385,7 @@
 {{-- ── CTA ───────────────────────────────── --}}
 <section class="py-14 text-center" style="background:#18130E;color:#FAF6EE;">
     <p class="section-eyebrow mb-3" style="color:#C8102E;">Need a ride?</p>
-    <h2 class="font-extrabold text-3xl mb-3" style="font-family:'Merriweather',Georgia,serif;">We'll get you there, on time.</h2>
+    <h2 class="font-extrabold text-2xl sm:text-3xl mb-3" style="font-family:'Merriweather',Georgia,serif;">We'll get you there, on time.</h2>
     <p class="text-sm max-w-sm mx-auto mb-6" style="color:#A09890;">Airport transfers, city rides, or custom routes — book via WhatsApp or online.</p>
     <div class="flex flex-wrap justify-center gap-3">
         <a href="https://wa.me/8801335111370" target="_blank"

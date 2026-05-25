@@ -23,6 +23,9 @@ class Booking extends Model
         'payment_reference',
         'quantity',
         'total_amount',
+        'coupon_id',
+        'discount_amount',
+        'final_amount',
         'booking_date',
         'notes',
         'details',
@@ -31,6 +34,9 @@ class Booking extends Model
     protected $casts = [
         'booking_date' => 'date',
         'details' => 'array',
+        'total_amount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'final_amount' => 'decimal:2',
     ];
 
     public function user()

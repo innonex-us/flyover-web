@@ -12,6 +12,22 @@ use Illuminate\Support\Facades\URL;
 
 class PaymentController extends Controller
 {
+    public function show(Payment $payment)
+    {
+        if ($payment->status === 'paid') {
+            return redirect()->to($this->confirmationUrl($payment))->with('success', 'Payment already completed.');
+        }
+
+        match ($payment->payable_type) {
+            Booking::class        => $payment->load('payable.payable'),
+            HotelBooking::class   => $payment->load('payable.room.hotel'),
+            TransferBooking::class => $payment->load('payable.route'),
+            default               => $payment->load('payable'),
+        };
+
+        return view('payments.checkout', compact('payment'));
+    }
+
     public function start(Request $request, Payment $payment, BkashPaymentService $bkashPaymentService)
     {
         if ($payment->status === 'paid') {

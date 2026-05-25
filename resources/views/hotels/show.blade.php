@@ -22,7 +22,7 @@
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                 <div>
                     <span class="text-lg text-amber-400 font-bold block mb-1">@for($i = 1; $i <= 5; $i++){{ $i <= $hotel->star_rating ? '★' : '☆' }}@endfor</span>
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2" style="font-family:'Merriweather',Georgia,serif;">{{ $hotel->name }}</h1>
+                    <h1 class="text-2xl md:text-4xl font-extrabold text-white mb-2" style="font-family:'Merriweather',Georgia,serif;">{{ $hotel->name }}</h1>
                     <div class="flex items-center gap-2 text-white/80 text-sm">
                         <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
                         {{ $hotel->location }}
@@ -30,7 +30,7 @@
                 </div>
                 @if($hotel->rooms->count())
                 @php $minPrice = $hotel->rooms->min('price_per_night'); @endphp
-                <div class="flex-shrink-0 bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 text-white border border-white/20">
+                <div class="flex-shrink-0 self-start md:self-auto bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-3 text-white border border-white/20">
                     <p class="text-xs text-white/60 font-semibold uppercase tracking-wide">Starting from</p>
                     <p class="text-3xl font-extrabold"
                        data-price-bdt="{{ $minPrice }}"
@@ -51,7 +51,7 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                     <span class="text-xl text-amber-400 font-bold block mb-1">@for($i = 1; $i <= 5; $i++){{ $i <= $hotel->star_rating ? '★' : '☆' }}@endfor</span>
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2" style="font-family:'Merriweather',Georgia,serif;">{{ $hotel->name }}</h1>
+                    <h1 class="text-2xl md:text-4xl font-extrabold text-gray-900 mb-2" style="font-family:'Merriweather',Georgia,serif;">{{ $hotel->name }}</h1>
                     <div class="flex items-center gap-2 text-gray-500 text-sm">
                         <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
                         {{ $hotel->location }}

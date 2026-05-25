@@ -204,7 +204,7 @@
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400 transition-transform duration-300" :class="activeSection === 'itinerary' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                             </button>
-                            <div x-show="activeSection === 'itinerary'" x-collapse class="p-5 pt-0 ml-14">
+                            <div x-show="activeSection === 'itinerary'" x-collapse class="p-5 pt-0 ml-0 sm:ml-14">
                                 <div class="space-y-6 pt-4 border-t border-gray-50">
                                     @if(!empty($package->itinerary) && is_array($package->itinerary))
                                         @foreach($package->itinerary as $index => $day)
@@ -257,7 +257,7 @@
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400 transition-transform duration-300" :class="activeSection === '{{ $sec['id'] }}' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                             </button>
-                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="px-5 pb-5 pt-0 ml-14">
+                            <div x-show="activeSection === '{{ $sec['id'] }}'" x-collapse class="px-5 pb-5 pt-0 ml-0 sm:ml-14">
                                 <div class="pt-4 border-t border-gray-100 {{ in_array($sec['id'], ['included','excluded']) ? 'px-3 py-2 -mx-1 rounded-b-xl' : '' }} {{ $sec['id'] === 'included' ? 'bg-green-50/40' : '' }} {{ $sec['id'] === 'excluded' ? 'bg-orange-50/40' : '' }}">
                                     @if(isset($sec['is_list']) && is_array($sec['content']))
                                         @if(isset($sec['list_style']) && $sec['list_style'] === 'included')
@@ -376,7 +376,7 @@
                                     <p class="fb-field-label">Guest Info</p>
                                     <input type="text" name="guest_name" required value="{{ old('guest_name') }}"
                                            class="fb-input {{ $errors->has('guest_name') ? '!border-red-500' : '' }}" placeholder="Full Name">
-                                    <div class="grid grid-cols-2 gap-2">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                         <input type="email" name="guest_email" required value="{{ old('guest_email') }}"
                                                class="fb-input {{ $errors->has('guest_email') ? '!border-red-500' : '' }}" placeholder="Email">
                                         <input type="text" name="guest_phone" required value="{{ old('guest_phone') }}"

@@ -104,11 +104,11 @@ class HotelController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Booking confirmed! Redirecting to payment...',
-                'redirect_url' => route('payments.bkash.start', $payment),
+                'redirect_url' => route('payments.show', $payment),
             ]);
         }
 
-        return redirect()->route('payments.bkash.start', $payment)->with('success', 'Booking submitted successfully!');
+        return redirect()->route('payments.show', $payment)->with('success', 'Booking submitted! Complete your payment below.');
     }
 
     public function confirmation(HotelBooking $booking)

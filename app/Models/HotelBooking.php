@@ -17,6 +17,9 @@ class HotelBooking extends Model
         'nights',
         'guests',
         'total_amount',
+        'coupon_id',
+        'discount_amount',
+        'final_amount',
         'user_id',
         'guest_name',
         'guest_email',
@@ -31,6 +34,9 @@ class HotelBooking extends Model
     protected $casts = [
         'check_in' => 'date',
         'check_out' => 'date',
+        'total_amount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'final_amount' => 'decimal:2',
     ];
 
     public function room()

@@ -106,7 +106,7 @@
                 </div>
 
                 {{-- Key stats strip --}}
-                <div class="flex flex-wrap gap-5 md:gap-8 text-center md:text-right">
+                <div class="grid grid-cols-2 md:flex md:flex-wrap gap-4 md:gap-8 text-center md:text-right">
                     <div>
                         <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Fee</p>
                         <p class="text-2xl font-extrabold" style="color:#C8102E;"

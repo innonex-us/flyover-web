@@ -6,7 +6,7 @@
 {{-- ── Hero ─────────────────────────────── --}}
 <section style="background:#F9F6EF;border-bottom:1px solid #E4DCC9;" class="px-4 py-14 text-center">
     <p class="section-eyebrow mb-3">We're here to help</p>
-    <h1 class="font-extrabold text-4xl md:text-5xl mb-3" style="font-family:'Merriweather',Georgia,serif;color:#18130E;">
+    <h1 class="font-extrabold text-3xl sm:text-4xl md:text-5xl mb-3" style="font-family:'Merriweather',Georgia,serif;color:#18130E;">
         Contact Us
     </h1>
     <p class="max-w-md mx-auto text-sm" style="color:#7A7166;">Have questions about your next trip or visa application? Our travel experts are ready to help.</p>
