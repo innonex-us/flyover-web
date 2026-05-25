@@ -119,6 +119,45 @@
                         this.selectedRoom = room;
                         this.guests = 1;
                         this.showBooking = true;
+                    },
+                    submitting: false,
+                    async submitBooking(e) {
+                        this.submitting = true;
+                        const form = e.target;
+                        const data = new FormData(form);
+
+                        try {
+                            const res = await fetch('{{ route('hotels.book') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                    'Accept': 'application/json',
+                                },
+                                body: data,
+                            });
+
+                            const json = await res.json();
+
+                            if (res.ok && json.redirect_url) {
+                                // Trigger toast notification
+                                window.dispatchEvent(new CustomEvent('notify', {
+                                    detail: { type: 'success', message: json.message || 'Booking confirmed! Redirecting to payment...' }
+                                }));
+                                this.showBooking = false;
+                                // Redirect to payment after a short delay
+                                setTimeout(() => { window.location.href = json.redirect_url; }, 1500);
+                            } else {
+                                window.dispatchEvent(new CustomEvent('notify', {
+                                    detail: { type: 'error', message: json.message || 'Booking failed. Please try again.' }
+                                }));
+                            }
+                        } catch (err) {
+                            window.dispatchEvent(new CustomEvent('notify', {
+                                detail: { type: 'error', message: 'Something went wrong. Please try again.' }
+                            }));
+                        } finally {
+                            this.submitting = false;
+                        }
                     }
                 }">
                     <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
@@ -190,7 +229,7 @@
                                 </button>
                             </div>
 
-                            <form action="{{ route('hotels.book') }}" method="POST" class="space-y-4">
+                            <form @submit.prevent="submitBooking" class="space-y-4">
                                 @csrf
                                 <input type="hidden" name="room_id" :value="selectedRoom ? selectedRoom.id : ''">
 
@@ -245,8 +284,10 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition shadow-sm">
-                                    Confirm Booking
+                                <button type="submit"
+                                    class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition shadow-sm"
+                                    x-text="submitting ? 'Processing...' : 'Confirm Booking'"
+                                    :disabled="submitting">
                                 </button>
                             </form>
                         </div>

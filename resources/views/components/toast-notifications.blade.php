@@ -49,7 +49,7 @@
 
 <div
     x-data="toastManager"
-    class="fixed bottom-20 md:bottom-10 right-4 z-[9999] flex flex-col gap-3 pointer-events-none"
+    class="fixed bottom-[88px] md:bottom-10 right-4 left-4 md:left-auto z-[9999] flex flex-col items-end gap-3 pointer-events-none"
 >
     <template x-for="toast in toasts" :key="toast.id">
         <div
@@ -60,7 +60,7 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 flex items-start p-4"
+            class="pointer-events-auto w-full md:max-w-sm overflow-hidden rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 flex items-start p-4"
             :class="{
                 'bg-white border-l-4 border-green-500': toast.type === 'success',
                 'bg-white border-l-4 border-red-500': toast.type === 'error',
@@ -86,7 +86,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                 </svg>
             </div>
-            <div class="ml-3 w-0 flex-1">
+            <div class="ml-3 min-w-0 flex-1">
                 <p class="text-sm font-bold text-gray-900" x-text="toast.message"></p>
                 <template x-if="toast.description">
                     <p class="mt-1 text-xs text-gray-500" x-text="toast.description"></p>

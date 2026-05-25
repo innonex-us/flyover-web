@@ -90,6 +90,14 @@ class HotelController extends Controller
             'status' => 'pending',
         ]);
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Booking confirmed! Redirecting to payment...',
+                'redirect_url' => route('payments.bkash.start', $payment),
+            ]);
+        }
+
         return redirect()->route('payments.bkash.start', $payment)->with('success', 'Booking submitted successfully!');
     }
 
