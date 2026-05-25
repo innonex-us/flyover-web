@@ -1,97 +1,170 @@
-<x-admin-layout pageTitle="Add Hotel">
+<x-admin-layout pageTitle="New Hotel Facility">
 
-    <div class="mb-8">
-        <a href="{{ route('admin.hotels.index') }}" class="text-gray-500 hover:text-gray-700 flex items-center mb-4 transition">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
-            Back to Hotels
-        </a>
-        <h2 class="text-3xl font-bold text-gray-800">Add New Hotel</h2>
+@push('styles')
+    <style>
+        .form-card {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,.05), 0 10px 15px -5px rgba(0,0,0,.02);
+            border: 1px solid #f3f4f6;
+        }
+        .section-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #9ca3af;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center; gap: 0.5rem;
+        }
+        .section-label::after {
+            content: ""; flex: 1; height: 1px; background: #f3f4f6;
+        }
+        .input-label {
+            font-size: 0.75rem; font-weight: 700; color: #4b5563; margin-bottom: 0.375rem; display: block;
+        }
+        .custom-input {
+            width: 100%; padding: 0.625rem 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.75rem; font-size: 0.875rem; transition: all 0.2s ease;
+        }
+        .custom-input:focus {
+            background: #fff; border-color: #dc2626; ring: 4px; outline: none; --tw-ring-color: rgba(220, 38, 38, 0.1);
+        }
+        .btn-brand {
+            background: #dc2626; color: #fff;
+        }
+        .btn-brand:hover {
+            background: #b91c1c;
+        }
+    </style>
+@endpush
+
+<div class="max-w-5xl mx-auto" x-data="formUploader" @submit.prevent="submitForm">
+    {{-- Header --}}
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <a href="{{ route('admin.hotels.index') }}" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-red-600 transition flex items-center gap-1 mb-2">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                Back to Archive
+            </a>
+            <h1 class="text-2xl font-black text-gray-900 tracking-tight">Register New Hotel</h1>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-gray-100 shadow-sm">
+                <input type="checkbox" name="is_active" value="1" checked class="rounded border-gray-300 text-red-600 focus:ring-red-100">
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-tighter">Public</span>
+            </div>
+            <button type="submit" form="hotel-form" class="btn-brand px-8 py-3 rounded-xl font-bold shadow-lg shadow-red-900/10 transition-all transform hover:-translate-y-0.5">
+                Deploy Facility
+            </button>
+        </div>
     </div>
 
-    <form action="{{ route('admin.hotels.store') }}" method="POST" enctype="multipart/form-data" class="max-w-2xl" x-data="formUploader" @submit.prevent="submitForm">
+    <form id="hotel-form" action="{{ route('admin.hotels.store') }}" method="POST" enctype="multipart/form-data" class="relative">
         @csrf
 
         <!-- Upload Overlay -->
-        <div x-show="uploading" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center" style="display:none;">
-            <div class="w-64 bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
-                <div class="bg-red-600 h-4 rounded-full transition-all duration-300" :style="`width: ${progress}%`"></div>
+        <div x-show="uploading" x-transition class="absolute inset-0 bg-white/90 backdrop-blur-md z-50 flex flex-col items-center justify-center rounded-2xl" style="display: none;">
+            <div class="w-64 bg-gray-100 rounded-full h-2 mb-6 overflow-hidden">
+                <div class="bg-red-600 h-full transition-all duration-500" :style="`width: ${progress}%`"></div>
             </div>
-            <div class="text-gray-800 font-bold text-lg">Uploading... <span x-text="progress + '%'"></span></div>
+            <p class="text-sm font-black text-gray-900 uppercase tracking-widest">Processing Data: <span x-text="progress + '%'"></span></p>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {{-- Main Content --}}
+            <div class="lg:col-span-2 space-y-8">
+                <div class="form-card p-6 sm:p-8">
+                    <h3 class="section-label">Identity & Context</h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="input-label">Official Hotel Name</label>
+                            <input type="text" name="name" value="{{ old('name') }}" required class="custom-input font-bold" placeholder="e.g. The Grand Palace Resort">
+                            @error('name') <p class="text-[10px] text-red-600 font-bold mt-1 uppercase">{{ $message }}</p> @enderror
+                        </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Hotel Name <span class="text-red-500">*</span></label>
-                <input type="text" name="name" value="{{ old('name') }}" required
-                    placeholder="e.g. The Ocean Pearl Resort"
-                    class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
-                @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="input-label">Geo-Location</label>
+                                <input type="text" name="location" value="{{ old('location') }}" required class="custom-input" placeholder="e.g. Cox's Bazar, Bangladesh">
+                            </div>
+                            <div>
+                                <label class="input-label">Quality Rating</label>
+                                <select name="star_rating" required class="custom-input font-bold">
+                                    <option value="">Select Stars</option>
+                                    @foreach([1,2,3,4,5] as $star)
+                                    <option value="{{ $star }}" {{ old('star_rating') == $star ? 'selected' : '' }}>{{ $star }} Star{{ $star > 1 ? 's' : '' }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Location <span class="text-red-500">*</span></label>
-                <input type="text" name="location" value="{{ old('location') }}" required
-                    placeholder="e.g. Cox's Bazar, Bangladesh"
-                    class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
-                @error('location') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
+                        <div>
+                            <label class="input-label">Official Description</label>
+                            <textarea name="description" rows="5" class="custom-input text-xs" placeholder="Describe the facility, heritage, and unique features...">{{ old('description') }}</textarea>
+                        </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Star Rating <span class="text-red-500">*</span></label>
-                <select name="star_rating" required class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
-                    <option value="">Select rating...</option>
-                    @foreach([1,2,3,4,5] as $star)
-                    <option value="{{ $star }}" {{ old('star_rating') == $star ? 'selected' : '' }}>
-                        {{ $star }} Star{{ $star > 1 ? 's' : '' }}
-                    </option>
-                    @endforeach
-                </select>
-                @error('star_rating') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Description <span class="text-gray-400 font-normal">(optional)</span></label>
-                <textarea name="description" rows="5"
-                    class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200"
-                    placeholder="Describe the hotel...">{{ old('description') }}</textarea>
-                @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Amenities <span class="text-gray-400 font-normal">(comma-separated)</span></label>
-                <input type="text" name="amenities" value="{{ old('amenities') }}"
-                    placeholder="WiFi, Pool, Gym, Restaurant, Parking, Spa"
-                    class="w-full py-3 border-gray-300 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-200">
-                <p class="text-xs text-gray-400 mt-1">Separate amenities with commas, e.g. WiFi, Pool, Gym</p>
-                @error('amenities') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div x-data="fileUploader">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Thumbnail Image <span class="text-gray-400 font-normal">(optional)</span></label>
-                <input type="file" name="thumbnail" @change="handleFileChange" accept="image/*"
-                    class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
-                <div x-show="fileName" class="mt-2 text-xs text-green-600 font-medium" style="display:none;">
-                    Selected: <span x-text="fileName"></span> (<span x-text="fileSize"></span>)
+                        <div>
+                            <label class="input-label">Core Amenities (Comma Separated)</label>
+                            <input type="text" name="amenities" value="{{ old('amenities') }}" placeholder="e.g. WiFi, Pool, Spa, Gym, Breakfast" class="custom-input text-xs">
+                        </div>
+                    </div>
                 </div>
-                @error('thumbnail') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
-            <div class="flex items-center">
-                <input type="checkbox" name="is_active" value="1" checked
-                    class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50">
-                <span class="ml-2 text-sm text-gray-600">Active (visible to users)</span>
-            </div>
-
-            <div class="pt-4 border-t border-gray-100 flex justify-end gap-3">
-                <a href="{{ route('admin.hotels.index') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl transition">Cancel</a>
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition">
-                    Create Hotel
-                </button>
+            {{-- Sidebar --}}
+            <div class="space-y-8">
+                <div class="form-card p-6">
+                    <h3 class="section-label">Visual Asset</h3>
+                    <div x-data="fileUploader">
+                        <label class="input-label">Thumbnail Image</label>
+                        <input type="file" name="thumbnail" id="thumbnail-input" @change="handleFileChange" accept="image/*" class="w-full text-[10px] text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-red-50 file:text-red-700 hover:file:bg-red-100 transition">
+                        <div x-show="fileName" class="mt-2 p-2 bg-emerald-50 rounded-lg border border-emerald-100 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                                <span class="text-[9px] font-bold text-emerald-700 uppercase tracking-tighter truncate" x-text="fileName"></span>
+                            </div>
+                            <button type="button" @click="clearSelection('thumbnail-input')" class="text-emerald-500 hover:text-red-500"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-6 bg-red-50 rounded-2xl border border-red-100">
+                    <h4 class="text-[10px] font-black text-red-700 uppercase tracking-widest mb-2">Notice</h4>
+                    <p class="text-[10px] text-red-600 leading-relaxed font-medium">Hotel registration will allow you to associate specific rooms and pricing tiers in the next step.</p>
+                </div>
             </div>
         </div>
     </form>
+</div>
+
+@push('scripts')
+<script>
+    function formUploader() {
+        return {
+            uploading: false, progress: 0,
+            submitForm(e) {
+                this.uploading = true; this.progress = 0;
+                const form = e.target; const formData = new FormData(form); const xhr = new XMLHttpRequest();
+                xhr.open('POST', form.action, true); xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.upload.addEventListener('progress', (e) => { if (e.lengthComputable) this.progress = Math.round((e.loaded / e.total) * 100); });
+                xhr.addEventListener('load', () => {
+                    if (xhr.status >= 200 && xhr.status < 300) { window.location.href = "{{ route('admin.hotels.index') }}"; } 
+                    else { this.uploading = false; alert('Process failed.'); }
+                });
+                xhr.send(formData);
+            }
+        }
+    }
+    function fileUploader() {
+        return {
+            fileName: '', handleFileChange(e) { if (e.target.files.length > 0) this.fileName = e.target.files[0].name; },
+            clearSelection(inputId) { const input = document.getElementById(inputId); if (input) { input.value = ''; this.fileName = ''; } }
+        }
+    }
+</script>
+@endpush
 
 </x-admin-layout>
