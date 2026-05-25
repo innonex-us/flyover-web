@@ -278,8 +278,14 @@
                                 <div class="text-gray-900 font-medium">{{ $session['ip_address'] }}</div>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <div class="text-gray-900">{{ $session['page_title'] }}</div>
-                                <div class="text-gray-500 text-xs">{{ $session['page_path'] }}</div>
+                                <div class="text-gray-900 font-medium">{{ $session['page_title'] }}</div>
+                                <a href="{{ $session['page_url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-blue-600 text-xs mt-1 hover:text-blue-700 hover:underline">
+                                    <span>Open page</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h6m0 0v6m0-6L10 16m-4 0h2a2 2 0 002-2v-2"/>
+                                    </svg>
+                                </a>
+                                <div class="text-gray-500 text-xs mt-1">{{ $session['page_path'] }}</div>
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-900">
                                 {{ gmdate('i:s', $session['duration']) }}

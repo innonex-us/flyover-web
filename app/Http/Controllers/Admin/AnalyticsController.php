@@ -303,6 +303,7 @@ class AnalyticsController extends Controller
                 : 'Unknown location';
             $pageTitle = data_get($latestPageView, 'title') ?: data_get($latestPageView, 'url') ?: 'Unknown page';
             $pagePath = data_get($latestPageView, 'path') ?: parse_url((string) data_get($latestPageView, 'url', '/'), PHP_URL_PATH) ?: '/';
+            $pageUrl = data_get($latestPageView, 'url') ?: $pagePath;
 
             return [
                 'id' => $session->id,
@@ -316,6 +317,7 @@ class AnalyticsController extends Controller
                 'ip_address' => $visitor?->ip_address ?: 'Unknown',
                 'page_title' => $pageTitle,
                 'page_path' => $pagePath,
+                'page_url' => $pageUrl,
                 'duration' => (int) $session->duration,
                 'last_activity_at' => $session->last_activity_at,
             ];
