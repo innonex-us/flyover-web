@@ -50,7 +50,7 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-1.5">Title <span class="text-red-500">*</span></label>
                     <input type="text" name="title" value="{{ old('title') }}" maxlength="80" required
                            placeholder="e.g. 🎉 Special Offer — 20% Off Tours!"
-                           class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 @error('title') border-red-400 @enderror">
+                           class="w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-100 {{ $errors->has('title') ? 'border border-red-400 focus:border-red-400' : 'border border-gray-200 focus:border-red-400' }}">
                     @error('title')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                 </div>
 
@@ -59,7 +59,7 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-1.5">Message <span class="text-red-500">*</span></label>
                     <textarea name="body" maxlength="200" required rows="3"
                               placeholder="Short notification message visible in browser…"
-                              class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm resize-none focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 @error('body') border-red-400 @enderror">{{ old('body') }}</textarea>
+                              class="w-full px-4 py-2.5 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-100 {{ $errors->has('body') ? 'border border-red-400 focus:border-red-400' : 'border border-gray-200 focus:border-red-400' }}">{{ old('body') }}</textarea>
                     @error('body')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                 </div>
 
@@ -111,6 +111,36 @@
                 <p class="text-xs text-center text-gray-400 mt-2">No subscribers yet. Users need to allow notifications on the site.</p>
                 @endif
             </form>
+        </div>
+
+        <div class="mt-6 bg-white rounded-2xl border border-gray-200 p-6">
+            <h2 class="text-base font-semibold text-gray-800 mb-2">Registered Subscriptions</h2>
+            <p class="text-sm text-gray-500 mb-4">These are the browser endpoints currently stored in the database. Use a test send to verify the exact browser that should receive notifications.</p>
+
+            @if($subscriptions->isEmpty())
+                <div class="text-sm text-gray-500 bg-gray-50 border border-dashed border-gray-200 rounded-xl p-4">
+                    No stored push subscriptions yet.
+                </div>
+            @else
+                <div class="space-y-3">
+                    @foreach($subscriptions as $subscription)
+                        <div class="border border-gray-200 rounded-xl p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold text-gray-900 truncate">{{ $subscription->user_agent ?? 'Unknown browser' }}</p>
+                                <p class="text-xs text-gray-500 mt-1 break-all">{{ $subscription->endpoint }}</p>
+                                <p class="text-[11px] text-gray-400 mt-1">Added {{ $subscription->created_at->diffForHumans() }}</p>
+                            </div>
+
+                            <form method="POST" action="{{ route('admin.push-notifications.test', $subscription->endpoint_hash) }}">
+                                @csrf
+                                <button type="submit" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition">
+                                    Send Test
+                                </button>
+                            </form>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         {{-- Info box --}}
