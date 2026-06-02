@@ -39,22 +39,22 @@ class SiteStats
             $allDestinations = Package::where('is_active', true)->distinct()->pluck('location')
                 ->merge(Visa::where('is_active', true)->distinct()->pluck('country'))
                 ->map(fn($d) => strtolower(trim($d)))->unique()->count();
-            $destinations = $allDestinations ?: $destinations;
+            $destinationsCount = $allDestinations ?: $destinations;
+            $destinations = max($destinationsCount, (int) Setting::get('stat_destinations', 62));
 
             // Visa approval rate: completed visa bookings ÷ total visa bookings
             $visaTotal     = Booking::where('payable_type', 'App\\Models\\Visa')->count();
             $visaApproved  = Booking::where('payable_type', 'App\\Models\\Visa')
                 ->whereIn('status', ['confirmed', 'completed'])->count();
-            $visaApprovalRate = $visaTotal > 0
-                ? round(($visaApproved / $visaTotal) * 100, 1)
-                : (float) Setting::get('stat_visa_approval_rate', 94.2);
+            $calculatedApprovalRate = $visaTotal > 0 ? round(($visaApproved / $visaTotal) * 100, 1) : 0.0;
+            $visaApprovalRate = max($calculatedApprovalRate, (float) Setting::get('stat_visa_approval_rate', 94.2));
 
             // Star rating — no ratings table yet, use admin-configured value
             $rating = Setting::get('stat_rating', '4.8');
 
             return [
                 'travellers'        => static::formatTravellers($totalTravellers),
-                'destinations'      => $destinations ?: (int) Setting::get('stat_destinations', 62),
+                'destinations'      => $destinations,
                 'rating'            => $rating,
                 'visa_approval'     => $visaApprovalRate,
                 'visa_total'        => $visaTotal,
@@ -64,12 +64,14 @@ class SiteStats
 
     private static function formatTravellers(int $n): string
     {
+        $display = Setting::get('stat_travellers_display', '1.2M+');
+
         if ($n >= 1_000_000) {
             return number_format($n / 1_000_000, 1) . 'M+';
         }
         if ($n >= 1_000) {
             return number_format($n / 1_000, 0) . 'K+';
         }
-        return $n > 0 ? $n . '+' : Setting::get('stat_travellers_display', '1.2M+');
+        return $display ?: ($n > 0 ? $n . '+' : '1.2M+');
     }
 }
