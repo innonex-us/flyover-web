@@ -216,8 +216,8 @@
                                             </div>
                                             <ul class="space-y-1.5 mt-2">
                                                 @foreach($day['activities'] ?? [] as $activity)
-                                                <li class="flex items-start text-xs text-gray-600">
-                                                    <svg class="w-3.5 h-3.5 mr-2 mt-0.5 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                <li class="flex items-start text-sm text-gray-600">
+                                                    <svg class="w-4 h-4 mr-2 mt-0.5 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                                                     {{ $activity }}
                                                 </li>
                                                 @endforeach
@@ -225,7 +225,7 @@
                                         </div>
                                         @endforeach
                                     @else
-                                        <p class="text-xs text-gray-400 italic">Itinerary details coming soon.</p>
+                                        <p class="text-sm text-gray-400 italic">Itinerary details coming soon.</p>
                                     @endif
                                 </div>
                             </div>
