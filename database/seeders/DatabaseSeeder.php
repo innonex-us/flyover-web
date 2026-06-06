@@ -46,6 +46,23 @@ class DatabaseSeeder extends Seeder
             'exclusions' => ['Airfare', 'Lunch & Dinner', 'Personal Expenses'],
             'requirements' => "1. Copy of NID card\n2. Passport Validity 6 months",
             'policy' => "80% of the fees will be refunded if the booking is canceled more than Twenty-One (21) days before the beginning of the experience/tour.",
+            'hotel_details' => "3-star hotel accommodation in Bangkok and Pattaya. Rooms are air-conditioned with private bathroom, TV, and minibar. Double or twin sharing basis.",
+            'additional_info' => "Best time to visit: November to February. Peak season supplements may apply during Christmas and New Year. Indian meals available on request.",
+            'travel_tips' => "Carry light cotton clothes, comfortable walking shoes, sunscreen, and sunglasses. Keep copies of your passport and visa separately. Drink bottled water only.",
+            'pickup_note' => "Airport pickup included from Suvarnabhumi Airport (BKK). Please provide your flight details at least 48 hours before arrival. Look for our representative holding a FlyoverBD sign at the arrival gate.",
+            'travel_data' => [
+                ['label' => 'Visa Requirements', 'content' => 'Visa on arrival for Bangladeshi citizens (THB 2,000 fee). Valid passport with 6 months validity required.'],
+                ['label' => 'Currency', 'content' => 'Thai Baht (THB). 1 BDT ≈ 0.30 THB. Exchange available at airport and major tourist areas.'],
+                ['label' => 'Time Zone', 'content' => 'GMT+7 (1 hour ahead of Bangladesh)'],
+                ['label' => 'Language', 'content' => 'Thai is official. English widely spoken in tourist areas.'],
+            ],
+            'itinerary' => [
+                ['day' => 1, 'title' => 'Arrival in Bangkok', 'activities' => ['Airport pickup and transfer to hotel', 'Check-in and free time to explore', 'Welcome dinner at Indian restaurant']],
+                ['day' => 2, 'title' => 'Bangkok City Tour', 'activities' => ['Visit Grand Palace and Wat Phra Kaew', 'Cruise on Chao Phraya River', 'Shopping at MBK Center']],
+                ['day' => 3, 'title' => 'Bangkok to Pattaya', 'activities' => ['Drive to Pattaya (2 hours)', 'Visit Coral Island by speedboat', 'Evening at Walking Street']],
+                ['day' => 4, 'title' => 'Pattaya Adventure', 'activities' => ['Nong Nooch Tropical Garden', 'Alcazar Cabaret Show', 'Free time for beach activities']],
+                ['day' => 5, 'title' => 'Departure', 'activities' => ['Free time for last-minute shopping', 'Transfer to Bangkok airport', 'Fly back home']],
+            ],
         ]);
 
         Package::create([
@@ -60,9 +77,25 @@ class DatabaseSeeder extends Seeder
             'inclusions' => ['Villa Stay', 'Candle Light Dinner', 'Spa Treatment', 'Island Tour'],
             'exclusions' => ['Visa Fees', 'Travel Insurance'],
             'requirements' => "1. Passport\n2. Marriage Certificate Copy",
+            'hotel_details' => "Private pool villa in Seminyak with ocean views. Features king-size bed, outdoor shower, jacuzzi, and 24-hour butler service.",
+            'additional_info' => "Honeymoon perks include welcome champagne, flower petal decoration, and couple's massage. Best time: April to October.",
+            'travel_tips' => "Pack light summer clothes, swimwear, and reef-safe sunscreen. Respect local customs at temples (cover shoulders and knees).",
+            'pickup_note' => "Airport pickup from Ngurah Rai International Airport (DPS). Private car with cold towels and refreshments.",
+            'policy' => "50% refund if cancelled 14+ days before. No refund within 14 days.",
+            'travel_data' => [
+                ['label' => 'Visa', 'content' => 'Free visa on arrival for 30 days for Bangladeshi citizens.'],
+                ['label' => 'Currency', 'content' => 'Indonesian Rupiah (IDR). 1 BDT ≈ 135 IDR.'],
+                ['label' => 'Weather', 'content' => 'Tropical climate. Dry season April-October, wet season November-March.'],
+            ],
+            'itinerary' => [
+                ['day' => 1, 'title' => 'Arrival & Romance', 'activities' => ['Airport pickup', 'Check-in to private villa', 'Sunset beach dinner']],
+                ['day' => 2, 'title' => 'Island Exploration', 'activities' => ['Uluwatu Temple visit', 'Kecak fire dance', 'Seafood dinner at Jimbaran Bay']],
+                ['day' => 3, 'title' => 'Adventure & Relaxation', 'activities' => ['Nusa Penida day trip', 'Couples spa treatment', 'Candlelit pool dinner']],
+                ['day' => 4, 'title' => 'Departure', 'activities' => ['Breakfast in villa', 'Souvenir shopping', 'Airport transfer']],
+            ],
         ]);
 
-         Package::create([
+        Package::create([
             'title' => 'Dubai Shopping Festival',
             'slug' => 'dubai-shopping-festival',
             'description' => 'Shop till you drop in Dubai! Visit Burj Khalifa, Desert Safari, and enjoy the shopping festival.',
@@ -73,9 +106,27 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
             'inclusions' => ['Desert Safari', 'Dhow Cruise Dinner', 'Burj Khalifa Ticket', 'Hotel Stay'],
             'exclusions' => ['Shopping Expenses', 'Tips'],
+            'hotel_details' => "4-star hotel in Deira or Bur Dubai near metro and shopping centers. Modern rooms with city views.",
+            'additional_info' => "Shopping Festival dates vary yearly. Gold Souk and Mall of Emirates included in tour.",
+            'travel_tips' => "Dress modestly in public areas. Carry light layers for AC indoors. Dubai Metro is efficient for shopping areas.",
+            'pickup_note' => "Pickup from Dubai International Airport (DXB) Terminal 1 or 3. Metro card provided for easy travel.",
+            'policy' => "Full refund 30+ days before. 50% refund 15-30 days. No refund within 15 days.",
+            'requirements' => "Valid passport (6 months). UAE visa pre-approved before travel.",
+            'travel_data' => [
+                ['label' => 'Visa', 'content' => 'Pre-approved UAE visa required. We handle visa processing.'],
+                ['label' => 'Currency', 'content' => 'UAE Dirham (AED). 1 BDT ≈ 0.033 AED.'],
+                ['label' => 'Language', 'content' => 'Arabic and English widely spoken.'],
+            ],
+            'itinerary' => [
+                ['day' => 1, 'title' => 'Arrival & Check-in', 'activities' => ['Airport pickup', 'Hotel check-in', 'Evening Dubai Mall visit']],
+                ['day' => 2, 'title' => 'City Icons', 'activities' => ['Burj Khalifa observation deck', 'Dubai Fountain show', 'Gold Souk shopping']],
+                ['day' => 3, 'title' => 'Desert Adventure', 'activities' => ['Morning at leisure', 'Afternoon desert safari', 'BBQ dinner with belly dance']],
+                ['day' => 4, 'title' => 'Shopping & Culture', 'activities' => ['Global Village', 'Ibn Battuta Mall', 'Dhow cruise dinner']],
+                ['day' => 5, 'title' => 'Departure', 'activities' => ['Last minute shopping', 'Airport transfer', 'Fly home']],
+            ],
         ]);
 
-          Package::create([
+        Package::create([
             'title' => 'Cox\'s Bazar Beach Retreat',
             'slug' => 'coxs-bazar-beach-retreat',
             'description' => 'Relax at the world\'s longest natural sea beach. 3 days of sun, sand, and seafood.',
@@ -87,16 +138,21 @@ class DatabaseSeeder extends Seeder
             'inclusions' => ['AC Bus Ticket', '3 Star Hotel Stay', 'Breakfast'],
             'exclusions' => ['Lunch', 'Dinner', 'Sightseeing Entry Fees'],
             'requirements' => "Copy of NID card",
-            'policy' => "Cancellation
-To cancel any tour, an email has to be sent to tours@gozayaan.com mentioning the tour booking ID and details about the cancellation.
-Travelers are responsible for notifying GoZayaan of any cancellations as soon as possible.
-The email acts as the final application for cancellation. Phone calls to GoZayaan's hotline or contacting any team member directly will not be considered as cancellation requests.
-
-Refund
-80% of the fees will be refunded if the booking is canceled more than Twenty-One (21) days before the beginning of the experience/tour.
-50% of the fees will be refunded if the booking is canceled within Fourteen (14) to Twenty-One (21) days before the beginning of the experience/tour.
-30% of the tour fee will be refunded if the booking is canceled within Seven (7) to Fourteen (14) days before the beginning of the experience/tour.
-Refund will not be provided if the tour is cancelled less than Seven (7) days before the beginning of the experience/tour.",
+            'policy' => "80% refund 21+ days before. 50% refund 14-21 days. 30% refund 7-14 days. No refund within 7 days.",
+            'hotel_details' => "3-star beachfront hotel on Marine Drive. Sea-facing rooms with AC, TV, and attached bath. Rooftop restaurant available.",
+            'additional_info' => "Best visited October to March. Himchori and Inani Beach visits included. Seafood lunches available at extra cost.",
+            'travel_tips' => "Carry swimwear, sunscreen, sunglasses, and cash. ATMs are limited. Try local seafood at Shugandha Beach.",
+            'pickup_note' => "Bus pickup from Dhaka (Kamalapur or Saydabad) at 10:00 PM. Hotel pickup from Cox's Bazar bus terminal included.",
+            'travel_data' => [
+                ['label' => 'Distance', 'content' => 'Approximately 400km from Dhaka. 8-10 hour bus journey.'],
+                ['label' => 'Weather', 'content' => 'Best time October-March. Monsoon (June-September) has rough seas.'],
+                ['label' => 'Local Transport', 'content' => 'CNG auto-rickshaws and tempo available. Hotel can arrange car rental.'],
+            ],
+            'itinerary' => [
+                ['day' => 1, 'title' => 'Arrival & Beach Time', 'activities' => ['Overnight bus from Dhaka', 'Hotel check-in', 'Sunset at Laboni Beach', 'Seafood dinner']],
+                ['day' => 2, 'title' => 'Exploration Day', 'activities' => ['Himchori waterfall visit', 'Inani Beach trip', 'Marine Drive sightseeing', 'Beach bonfire evening']],
+                ['day' => 3, 'title' => 'Return', 'activities' => ['Sunrise photography', 'Check-out', 'Souvenir shopping', 'Return bus to Dhaka']],
+            ],
         ]);
 
         $this->call([

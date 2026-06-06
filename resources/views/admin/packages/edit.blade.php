@@ -129,6 +129,28 @@
                                 <textarea name="requirements" rows="3" class="custom-input text-xs">{{ old('requirements', $package->requirements) }}</textarea>
                             </div>
                         </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="input-label">Hotel Details</label>
+                                <textarea name="hotel_details" rows="3" class="custom-input text-xs" placeholder="Accommodation details...">{{ old('hotel_details', $package->hotel_details) }}</textarea>
+                            </div>
+                            <div>
+                                <label class="input-label">Additional Information</label>
+                                <textarea name="additional_info" rows="3" class="custom-input text-xs" placeholder="Extra notes for travelers...">{{ old('additional_info', $package->additional_info) }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="input-label">Travel Tips</label>
+                                <textarea name="travel_tips" rows="3" class="custom-input text-xs" placeholder="Packing tips, local customs...">{{ old('travel_tips', $package->travel_tips) }}</textarea>
+                            </div>
+                            <div>
+                                <label class="input-label">Pickup Note</label>
+                                <textarea name="pickup_note" rows="3" class="custom-input text-xs" placeholder="Airport pickup instructions...">{{ old('pickup_note', $package->pickup_note) }}</textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
